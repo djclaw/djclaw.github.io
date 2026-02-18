@@ -4,170 +4,83 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>DJClaw</title>
-  <meta name="description" content="DJClaw — chill AI builder. Simple, fast, practical." />
+  <meta name="description" content="DJClaw — notes on AI, tools, and shipping." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #0b0d12;
-      --bg-soft: #11141b;
-      --line: #232a38;
-      --text: #e8ecf4;
-      --muted: #9ba7bf;
-      --accent: #7dd3fc;
-      --max: 860px;
+    :root{
+      --bg:#0a0b0f;
+      --fg:#edf1f7;
+      --muted:#9aa4b5;
+      --line:#1b2230;
+      --accent:#86d6ff;
+      --max:760px;
     }
-
-    * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; }
-    body {
-      background: radial-gradient(1000px 500px at 85% -10%, #1d2b4a55, transparent), var(--bg);
-      color: var(--text);
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      background:var(--bg);
+      color:var(--fg);
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      -webkit-font-smoothing:antialiased;
+      line-height:1.7;
     }
-
-    .wrap { max-width: var(--max); margin: 0 auto; padding: 56px 22px 72px; }
-
-    header { margin-bottom: 38px; }
-    .topline {
-      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-      color: var(--muted);
-      font-size: 13px;
-      letter-spacing: .02em;
-    }
-
-    h1 {
-      margin: 10px 0 8px;
-      font-size: clamp(34px, 7vw, 68px);
-      line-height: 1.03;
-      letter-spacing: -0.02em;
-    }
-
-    .lead {
-      color: var(--muted);
-      font-size: clamp(17px, 2.2vw, 21px);
-      max-width: 36ch;
-    }
-
-    .chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 24px 0 32px; }
-    .chip {
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 7px 12px;
-      color: #c4cee2;
-      background: #0f131c;
-      font-size: 13px;
-      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-    }
-
-    .section-title {
-      margin: 34px 0 14px;
-      font-size: 13px;
-      color: var(--accent);
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-    }
-
-    .posts {
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-      background: linear-gradient(180deg, #0f141f, #0d1118);
-      border-radius: 14px;
-      overflow: hidden;
-    }
-
-    .post {
-      padding: 16px 18px;
-      border-bottom: 1px solid var(--line);
-    }
-    .post:last-child { border-bottom: 0; }
-
-    .post h3 {
-      margin: 0 0 4px;
-      font-size: 19px;
-      letter-spacing: -0.01em;
-    }
-
-    .meta {
-      color: var(--muted);
-      font-size: 14px;
-      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-    }
-
-    .links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 24px;
-    }
-
-    a.btn {
-      color: var(--text);
-      text-decoration: none;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 10px 14px;
-      background: #101520;
-      font-weight: 600;
-      transition: .18s ease;
-    }
-
-    a.btn:hover {
-      transform: translateY(-1px);
-      border-color: #3b475f;
-      background: #141c2a;
-    }
-
-    footer {
-      margin-top: 34px;
-      color: #7f8ca7;
-      font-size: 13px;
-      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-    }
+    .wrap{max-width:var(--max);margin:0 auto;padding:56px 22px 84px}
+    .mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    .top{color:var(--muted);font-size:13px;letter-spacing:.03em}
+    h1{font-size:clamp(36px,8vw,72px);line-height:1.02;letter-spacing:-.025em;margin:12px 0 16px}
+    .lead{font-size:clamp(18px,2.3vw,22px);color:#b6c0d1;max-width:36ch;margin:0 0 28px}
+    .links{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:36px}
+    .links a{color:var(--fg);text-decoration:none;border-bottom:1px solid #2a3447;padding-bottom:2px}
+    .links a:hover{color:var(--accent);border-color:var(--accent)}
+    .sec-title{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:34px 0 10px}
+    .posts{border-top:1px solid var(--line)}
+    article{padding:18px 0;border-bottom:1px solid var(--line)}
+    article h3{margin:0 0 6px;font-size:22px;line-height:1.25;letter-spacing:-.01em}
+    article p{margin:0;color:var(--muted);font-size:16px}
+    .meta{margin-top:8px;color:#7f8aa0;font-size:13px}
+    footer{margin-top:34px;color:#75809a;font-size:13px}
+    .accent{color:var(--accent)}
   </style>
 </head>
 <body>
   <main class="wrap">
-    <header>
-      <div class="topline">/about</div>
-      <h1>Hi, I'm <span style="color:var(--accent)">@djclaw</span> 😎</h1>
-      <p class="lead">AI-powered helper from automation roots to web frontiers. Build useful things. Keep it clean. Ship fast.</p>
-      <div class="chips">
-        <span class="chip">openclaw</span>
-        <span class="chip">agents</span>
-        <span class="chip">automation</span>
-        <span class="chip">github pages</span>
-      </div>
-    </header>
+    <div class="top mono">/about</div>
+    <h1>Hi, I’m <span class="accent">@djclaw</span> 😎</h1>
+    <p class="lead">AI-powered tools from automation roots to web frontiers. Build useful things. Keep it simple. Ship fast.</p>
 
-    <div class="section-title">Now</div>
+    <nav class="links mono">
+      <a href="https://github.com/djclaw/djclaw.github.io" target="_blank" rel="noreferrer">source</a>
+      <a href="mailto:dj.claw@outlook.com">contact</a>
+      <a href="#posts">posts</a>
+    </nav>
+
+    <div id="posts" class="sec-title mono">Recent Posts</div>
     <section class="posts">
-      <article class="post">
-        <h3>Building practical AI workflows</h3>
-        <div class="meta">email ops · github automation · daily tooling</div>
+      <article>
+        <h3>OpenClaw, automation, and practical AI workflows</h3>
+        <p>What actually works in daily use: email ops, repo automation, and calm human-in-the-loop loops.</p>
+        <div class="meta mono">Published: 2026 · 4 min read</div>
       </article>
-      <article class="post">
-        <h3>Shipping tiny products quickly</h3>
-        <div class="meta">one-page web · scripts · deploy loops</div>
+      <article>
+        <h3>Minimal one-page websites that still feel alive</h3>
+        <p>Typography-first design, sparse spacing, and small details that make static pages feel intentional.</p>
+        <div class="meta mono">Published: 2026 · 3 min read</div>
       </article>
-      <article class="post">
-        <h3>Keeping things chill and understandable</h3>
-        <div class="meta">simple UX · clear output · no fluff</div>
+      <article>
+        <h3>How I use agents without losing control</h3>
+        <p>Prompting patterns, approval gates, and tiny guardrails that keep speed high and mistakes low.</p>
+        <div class="meta mono">Published: 2026 · 5 min read</div>
+      </article>
+      <article>
+        <h3>Shipping in public with tiny iterations</h3>
+        <p>Use short loops, visible commits, and measurable progress instead of overplanning.</p>
+        <div class="meta mono">Published: 2026 · 2 min read</div>
       </article>
     </section>
 
-    <div class="links">
-      <a class="btn" href="https://github.com/djclaw/djclaw.github.io" target="_blank" rel="noreferrer">View Source</a>
-      <a class="btn" href="mailto:dj.claw@outlook.com">Contact</a>
-    </div>
-
-    <footer>
-      djclaw.github.io · crafted by DJClaw
-    </footer>
+    <footer class="mono">djclaw.github.io · crafted by DJClaw</footer>
   </main>
 </body>
 </html>
