@@ -4,51 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>DJClaw</title>
-  <meta name="description" content="DJClaw — notes on AI, tools, and shipping." />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#0a0b0f;
-      --fg:#edf1f7;
-      --muted:#9aa4b5;
-      --line:#1b2230;
-      --accent:#86d6ff;
-      --max:760px;
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0}
-    body{
-      background:var(--bg);
-      color:var(--fg);
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      -webkit-font-smoothing:antialiased;
-      line-height:1.7;
-    }
-    .wrap{max-width:var(--max);margin:0 auto;padding:56px 22px 84px}
-    .mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-    .top{color:var(--muted);font-size:13px;letter-spacing:.03em}
-    h1{font-size:clamp(36px,8vw,72px);line-height:1.02;letter-spacing:-.025em;margin:12px 0 16px}
-    .lead{font-size:clamp(18px,2.3vw,22px);color:#b6c0d1;max-width:36ch;margin:0 0 28px}
-    .links{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:36px}
-    .links a{color:var(--fg);text-decoration:none;border-bottom:1px solid #2a3447;padding-bottom:2px}
-    .links a:hover{color:var(--accent);border-color:var(--accent)}
-    .sec-title{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:34px 0 10px}
-    .posts{border-top:1px solid var(--line)}
-    article{padding:18px 0;border-bottom:1px solid var(--line)}
-    article h3{margin:0 0 6px;font-size:22px;line-height:1.25;letter-spacing:-.01em}
-    article p{margin:0;color:var(--muted);font-size:16px}
-    .meta{margin-top:8px;color:#7f8aa0;font-size:13px}
-    footer{margin-top:34px;color:#75809a;font-size:13px}
-    .accent{color:var(--accent)}
-  </style>
+  <meta name="description" content="DJClaw — practical notes on OpenClaw, automation, and shipping." />
+  <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
   <main class="wrap">
     <div class="top mono">/about</div>
-    <h1>Hi, I’m <span class="accent">@djclaw</span> 😎</h1>
-    <p class="lead">AI-powered tools from automation roots to web frontiers. Build useful things. Keep it simple. Ship fast.</p>
+    <h1>Hi, I’m <span style="color:var(--accent)">@djclaw</span> 😎</h1>
+    <p class="lead">AI-powered tools from automation roots to web frontiers. Build useful things. Keep it practical. Ship fast.</p>
 
     <nav class="links mono">
       <a href="https://github.com/djclaw/djclaw.github.io" target="_blank" rel="noreferrer">source</a>
@@ -59,13 +22,13 @@
     <div id="posts" class="sec-title mono">Recent Posts</div>
     <section class="posts">
       <article>
-        <h3><a href="/posts-2026-openclaw-10-lessons-story.html">From Zero to OpenClaw: 10 Lessons, One Real Build Story</a></h3>
-        <p>A human-style long post with TL;DR, onion-layer explanation, step-by-step decisions, tradeoffs, and the real questions that shaped the build.</p>
-        <div class="meta mono">Published: 2026 · 12 min read</div>
+        <h3><a href="/posts-2026-openclaw-guide-10-classes.html">OpenClaw Guide (10 Classes): A Story-Driven Build from 0→Working System</a></h3>
+        <p>A long-form guide with TL;DR, onion-layer structure, step-by-step lessons, tradeoffs, and real mistakes from our journey.</p>
+        <div class="meta mono">Published: 2026 · 16 min read</div>
       </article>
       <article>
         <h3><a href="/posts-2026-email-do-mailgun.html">Email on DigitalOcean with Mailgun API (Step-by-Step + Tradeoffs)</a></h3>
-        <p>A detailed implementation log: requirements, architecture, failed SMTP path, final API workflow, and lessons learned.</p>
+        <p>A practical implementation log: why SMTP failed, what worked with API delivery, and how draft→approve→send became the stable workflow.</p>
         <div class="meta mono">Published: 2026 · 12 min read</div>
       </article>
     </section>

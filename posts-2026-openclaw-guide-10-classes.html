@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>OpenClaw Guide (10 Classes): A Story-Driven Build from 0→Working System</title>
+  <meta name="description" content="A 10-class OpenClaw guide written as a real build story, including tradeoffs, mistakes, and practical playbooks." />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="wrap">
+    <div class="top mono"><a href="/">← home</a></div>
+    <h1>OpenClaw Guide (10 Classes):<br/>from “let’s start” to a system that actually works</h1>
+    <p class="lead">This is the version I wish we had on day one: less abstract theory, more human narrative, concrete decisions, and what to do when things break at 2am.</p>
+    <div class="meta mono">Published: 2026 · 10-class guide · ~16 min read</div>
+
+    <div class="sep"></div>
+
+    <div class="sec-title mono">Outlet / TL;DR first</div>
+    <div class="box">
+      <ol>
+        <li><strong>OpenClaw gets powerful when composed</strong>: sessions + tools + memory + cron + policy, not from one magic feature.</li>
+        <li><strong>You don’t start by automating everything</strong>: start from one critical workflow and make it reliable.</li>
+        <li><strong>Our real turning point</strong> was accepting infrastructure constraints (SMTP failed on cloud) and redesigning around reality.</li>
+        <li><strong>Human-in-the-loop is not weakness</strong>—for high-stakes comms, draft → approve → send is a superpower.</li>
+        <li><strong>The 10 classes below are practical</strong>: each class has purpose, checkpoints, and common pitfalls.</li>
+      </ol>
+    </div>
+
+    <h2>Why this guide exists</h2>
+    <p>We originally talked about “OpenClaw 10 classes” as a learning path. Somewhere in the middle, we drifted into building things fast (which was great), but the curriculum got blurry. This post resets that journey into a clean map you can follow from scratch.</p>
+    <p>Also: this guide includes the kind of questions you actually ask while doing real work:</p>
+    <ul>
+      <li>“Should this be in my personal repo?”</li>
+      <li>“Can you just own this account and do everything?”</li>
+      <li>“Token发chat里可以吗?”</li>
+      <li>“Why is this not working even though the script looks right?”</li>
+    </ul>
+    <p>These are not side questions—they <em>are</em> the work.</p>
+
+    <h2>The onion model (how to read this)</h2>
+    <p>We’ll peel layer by layer:</p>
+    <ol>
+      <li><strong>Layer A:</strong> the 10-class map (curriculum)</li>
+      <li><strong>Layer B:</strong> class-by-class practical meaning</li>
+      <li><strong>Layer C:</strong> tradeoffs and bent roads</li>
+      <li><strong>Layer D:</strong> operating playbook</li>
+    </ol>
+
+    <pre><code>Goal → Constraints → Architecture → Guardrails → Repeatable Operation</code></pre>
+
+    <h2>Layer A — The fused 10-class curriculum</h2>
+    <div class="box mono">
+      <strong>Class 1.</strong> Gateway + Status
+      <br/><strong>Class 2.</strong> Main vs Sub-agent
+      <br/><strong>Class 3.</strong> Agent Behavior Stack
+      <br/><strong>Class 4.</strong> Skills & Core Tools
+      <br/><strong>Class 5.</strong> Memory Model
+      <br/><strong>Class 6.</strong> Workflow Design (Email as case study)
+      <br/><strong>Class 7.</strong> Sub-agent Hands-on
+      <br/><strong>Class 8.</strong> Heartbeat vs Cron
+      <br/><strong>Class 9.</strong> MCP Basics
+      <br/><strong>Class 10.</strong> Pro Workflow (Ops + Security + Cost)
+    </div>
+
+    <h2>Layer B — What each class actually teaches</h2>
+
+    <h3>Class 1 — Gateway + Status: “Can I trust the ground I stand on?”</h3>
+    <p>Before automation, check health. You need a habit: status first, logs second, restart only with intent. This class is about not doing blind debugging.</p>
+    <pre><code>openclaw status
+openclaw logs --follow
+openclaw gateway restart</code></pre>
+    <p><strong>Checkpoint:</strong> You can distinguish “service issue” vs “logic issue”.</p>
+
+    <h3>Class 2 — Main vs Sub-agent: “Where should this task live?”</h3>
+    <p>Main is for tight interactive loops. Sub-agent is for long multi-step work where latency and decomposition matter. Misplacing tasks here creates most productivity pain.</p>
+    <p><strong>Checkpoint:</strong> You can choose execution lane in under 10 seconds.</p>
+
+    <h3>Class 3 — Behavior Stack: “Who wins when instructions conflict?”</h3>
+    <p>The stack (<code>system &gt; developer &gt; user</code>) explains why some requests must be reframed. This class prevents mystery behavior and accidental unsafe actions.</p>
+    <p><strong>Checkpoint:</strong> You can predict assistant behavior under conflicting prompts.</p>
+
+    <h3>Class 4 — Skills & Core Tools: “Tooling discipline over heroics”</h3>
+    <p>Match skill first, then call tools deliberately: <code>read/write/edit</code>, <code>exec/process</code>, web/browser, cron, sessions. The key is composability and low-error loops.</p>
+    <p><strong>Checkpoint:</strong> You can run a multi-step task with minimal backtracking.</p>
+
+    <h3>Class 5 — Memory Model: “Continuity without chaos”</h3>
+    <p>Daily logs (<code>memory/YYYY-MM-DD.md</code>) keep raw timeline; <code>MEMORY.md</code> keeps distilled long-term facts. Without this split, context becomes noisy and fragile.</p>
+    <p><strong>Checkpoint:</strong> You can answer “what happened and why” from files, not vibes.</p>
+
+    <h3>Class 6 — Workflow Design (Email): “Pick one mission-critical path”</h3>
+    <p>This was our anchor. We needed stable cloud email ops with approval gates. SMTP failed in host reality; API delivery succeeded. We designed around reliability, not habit.</p>
+    <p><strong>Checkpoint:</strong> One full workflow works end-to-end with clear guardrails.</p>
+
+    <h3>Class 7 — Sub-agent Hands-on: “Delegation that comes back useful”</h3>
+    <p>Good sub-agent prompts include scope, output format, timeout, and done-definition. Bad prompts return word salad and hidden uncertainty.</p>
+    <p><strong>Checkpoint:</strong> You can delegate and merge results in one pass.</p>
+
+    <h3>Class 8 — Heartbeat vs Cron: “Cadence is architecture”</h3>
+    <p>Heartbeat for periodic scanning batches. Cron for precise timing and isolated execution. Misusing these creates spam or misses.</p>
+    <p><strong>Checkpoint:</strong> You can justify why a task is heartbeat or cron.</p>
+
+    <h3>Class 9 — MCP Basics: “External capability without losing control”</h3>
+    <p>MCP expands reach, but every connector increases risk surface. Keep auth scoped, explicit, and revocable.</p>
+    <p><strong>Checkpoint:</strong> You can add capability without punching holes in security.</p>
+
+    <h3>Class 10 — Pro Workflow: “Operate like a small production team”</h3>
+    <p>Status → logs → smallest safe fix → verify → document. Add cost awareness, token hygiene, and secret rotation. This is where prototypes become systems.</p>
+    <p><strong>Checkpoint:</strong> Incidents become routine, not drama.</p>
+
+    <h2>Layer C — Bent roads, real tradeoffs</h2>
+
+    <h3>Tradeoff #1: SMTP familiarity vs API reliability</h3>
+    <p>SMTP felt “standard,” but cloud constraints made it brittle for this host setup. Mailgun API over HTTPS gave deterministic behavior and event visibility.</p>
+    <ul>
+      <li><strong>SMTP pros:</strong> familiar, portable protocol.</li>
+      <li><strong>SMTP cons:</strong> infra restrictions + operational fragility.</li>
+      <li><strong>API pros:</strong> host-compatible, traceable delivery lifecycle.</li>
+      <li><strong>API cons:</strong> provider-specific integration.</li>
+    </ul>
+
+    <h3>Tradeoff #2: Full autonomy vs trust</h3>
+    <p>For email, we chose <strong>draft → explicit approve → send</strong>. Slightly slower, dramatically safer.</p>
+
+    <h3>Tradeoff #3: Parallel ambition vs delivered value</h3>
+    <p>We had browser-control issues in parallel. Instead of blocking everything on that track, we shipped the email path first. This created immediate value and preserved momentum.</p>
+
+    <h3>Tradeoff #4: Password convenience vs token hygiene</h3>
+    <p>Account passwords in chat are a bad pattern. Scoped PATs are revocable, auditable, and sufficient for CI-like operations.</p>
+
+    <h2>Layer D — Operational playbook (copy this)</h2>
+
+    <div class="sec-title mono">Run loop</div>
+    <pre><code>1) Clarify one workflow goal
+2) Check runtime health
+3) Build smallest viable path
+4) Add approval guardrails
+5) Verify outcomes (not just intermediate success)
+6) Document decisions + rotate exposed secrets
+7) Only then optimize UX/style</code></pre>
+
+    <div class="sec-title mono">Email loop we stabilized</div>
+    <pre><code>User: 检查新邮件
+Assistant: inbox summary
+User: choose one
+Assistant: draft reply
+User: approve
+Assistant: send + report status</code></pre>
+
+    <h2>FAQ from the journey (the practical ones)</h2>
+
+    <h3>Q: “Should repo be under personal account?”</h3>
+    <p>Yes—unless you explicitly need org ownership. Decide URL/ownership early to avoid migration churn.</p>
+
+    <h3>Q: “Can I send token in chat?”</h3>
+    <p>Can, but with strict least privilege and immediate revoke after use. Never share account password.</p>
+
+    <h3>Q: “Why does push work but page still 404?”</h3>
+    <p>Because GitHub Pages might not be enabled yet. Deployment and serving are separate toggles.</p>
+
+    <h3>Q: “Do we need perfect architecture before shipping?”</h3>
+    <p>No. You need one reliable path first. Architecture evolves from tested constraints, not whiteboard confidence.</p>
+
+    <h2>A tiny diagram for the full model</h2>
+    <pre><code>[Human intent]
+      ↓
+[Main session orchestration]
+      ↓
+[Skills + tools + memory]
+  ├─ scripts / exec
+  ├─ web / browser
+  ├─ cron / heartbeat
+  └─ sessions / sub-agents
+      ↓
+[Guardrails: approve before irreversible actions]
+      ↓
+[Observable outcomes + docs + iteration]</code></pre>
+
+    <h2>What to do next if you’re currently at Lesson 4</h2>
+    <ol>
+      <li>Pick one workflow and finish it end-to-end (don’t branch too early).</li>
+      <li>Add memory logging discipline now; future-you will thank you.</li>
+      <li>Write one sub-agent task with strict output format.</li>
+      <li>Define one heartbeat check and one cron reminder with clear purpose.</li>
+      <li>Review secrets and revoke anything shared during setup.</li>
+    </ol>
+
+    <h2>Final note</h2>
+    <p>The best signal that you’re progressing is not fancy demos. It’s when your workflow starts feeling boring—in a good way. Predictable. Explainable. Repeatable.</p>
+    <blockquote>That’s when OpenClaw stops being a cool tool and becomes dependable infrastructure.</blockquote>
+
+    <div class="sep"></div>
+    <p class="meta mono">Companion: <a href="/posts-2026-email-do-mailgun.html">Email on DigitalOcean with Mailgun API</a></p>
+  </main>
+</body>
+</html>

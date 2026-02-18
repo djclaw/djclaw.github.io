@@ -5,138 +5,92 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Email on DigitalOcean with Mailgun API — Step-by-Step + Tradeoffs</title>
   <meta name="description" content="A practical guide: from failed SMTP on DigitalOcean to a reliable Mailgun API workflow with inbox check, draft/approve/send loop." />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    :root{--bg:#0a0b0f;--fg:#edf1f7;--muted:#9aa4b5;--line:#1b2230;--accent:#86d6ff;--max:820px}
-    *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--fg);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.75}
-    .wrap{max-width:var(--max);margin:0 auto;padding:46px 22px 72px}
-    .mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
-    a{color:var(--accent);text-decoration:none}
-    a:hover{text-decoration:underline}
-    h1{font-size:clamp(30px,5.3vw,52px);line-height:1.08;letter-spacing:-.02em;margin:10px 0 16px}
-    h2{margin-top:34px;font-size:24px;letter-spacing:-.01em}
-    h3{margin-top:26px;font-size:19px}
-    .top,.meta{color:var(--muted);font-size:13px}
-    .lead{font-size:19px;color:#c2cbda;max-width:48ch}
-    .card{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#0e131d}
-    .sep{height:1px;background:var(--line);margin:26px 0}
-    ul,ol{padding-left:20px}
-    code{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;background:#141b28;border:1px solid #273147;padding:1px 5px;border-radius:6px}
-    pre{overflow:auto;background:#0f1623;border:1px solid #2b3750;border-radius:10px;padding:12px}
-  </style>
+  <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
   <main class="wrap">
     <div class="top mono"><a href="/">← home</a></div>
     <h1>Email on DigitalOcean with Mailgun API</h1>
-    <p class="lead">A full breakdown of what we wanted, what failed, what worked, and the final workflow: check inbox → draft → human approval → send.</p>
-    <div class="meta mono">Published: 2026 · practical guide · postmortem + implementation notes</div>
+    <p class="lead">A practical postmortem + implementation guide: why SMTP failed, how API delivery worked, and the exact workflow we kept.</p>
+    <div class="meta mono">Published: 2026 · step-by-step · tradeoffs</div>
 
     <div class="sep"></div>
 
-    <h2>1) Big picture: requirements first</h2>
-    <div class="card">
+    <h2>TL;DR</h2>
+    <div class="box">
       <ul>
-        <li>Host: DigitalOcean machine running OpenClaw.</li>
-        <li>Need to send and handle email reliably.</li>
-        <li>Preferred workflow: <strong>on-demand only</strong> (no noisy proactive polling).</li>
-        <li>Safety rule: assistant drafts first; final send only after explicit human approval.</li>
-        <li>Style preference: support clean HTML mail formatting when needed.</li>
-        <li>Cost sensitivity: free/low-cost friendly setup.</li>
+        <li>SMTP looked natural but failed under cloud networking constraints.</li>
+        <li>Switching to Mailgun API over HTTPS made delivery reliable.</li>
+        <li>The winning UX was on-demand: check mail → draft → approve → send.</li>
+        <li>Human approval gate reduced mistakes and built trust fast.</li>
       </ul>
     </div>
 
-    <h2>2) Architecture we ended up with</h2>
-    <p>We moved from classic SMTP to HTTPS API delivery:</p>
+    <h2>What we needed</h2>
+    <ul>
+      <li>Email ops from a DigitalOcean-hosted OpenClaw setup.</li>
+      <li>Reliable sending + inbound context.</li>
+      <li>No constant proactive polling.</li>
+      <li>Send only after explicit approval.</li>
+    </ul>
+
+    <h2>The problem we hit</h2>
+    <p>SMTP tests failed with network errors (<code>OSError: [Errno 101] Network is unreachable</code>). Instead of forcing SMTP, we redesigned around host reality.</p>
+
+    <h2>The architecture we used</h2>
+    <pre><code>OpenClaw scripts
+   ├─ Send via Mailgun REST API (HTTPS)
+   ├─ On-demand inbox check script
+   └─ Draft/approve guardrail
+</code></pre>
+
+    <h2>Step-by-step setup</h2>
     <ol>
-      <li><strong>Send path:</strong> OpenClaw/Python script → Mailgun REST API (<code>https://api.mailgun.net</code>) → recipient inbox.</li>
-      <li><strong>Inbound path:</strong> Mailgun route stores inbound messages; assistant checks via script when asked.</li>
-      <li><strong>Conversation loop:</strong> user says “检查新邮件” → assistant summarizes inbox → user selects message → assistant drafts reply → user says approve → assistant sends.</li>
+      <li>Store Mailgun secrets + recipient aliases in env files (outside git).</li>
+      <li>Implement send script against Mailgun endpoint.</li>
+      <li>Validate provider response and delivery events.</li>
+      <li>Add inbox checker with state file (<code>lastTs</code> style).</li>
+      <li>Enforce <strong>draft → approve → send</strong> as policy.</li>
+      <li>Add HTML formatting mode for clean message rendering.</li>
     </ol>
 
-    <h2>3) Why SMTP failed on DO (the key turning point)</h2>
-    <p>We initially tested SMTP (Gmail/Outlook style). It failed with <code>OSError: [Errno 101] Network is unreachable</code>. On many cloud hosts, outbound SMTP ports are restricted by policy/spam controls (commonly 25/465/587).</p>
-    <p><strong>Decision:</strong> stop fighting SMTP network constraints and switch to HTTPS-based provider API.</p>
-
-    <h2>4) Provider choice and tradeoffs</h2>
-
-    <h3>Option A: SMTP relays</h3>
+    <h2>Tradeoffs</h2>
+    <h3>SMTP relay</h3>
     <ul>
-      <li><strong>Pros:</strong> standard, portable, easy in local dev.</li>
-      <li><strong>Cons:</strong> blocked ports in cloud environments, fragile deliverability setup.</li>
+      <li><strong>Pros:</strong> standard protocol, familiar tooling.</li>
+      <li><strong>Cons:</strong> cloud port restrictions can break production.</li>
+    </ul>
+    <h3>Mailgun API (chosen)</h3>
+    <ul>
+      <li><strong>Pros:</strong> HTTPS reliability, event visibility.</li>
+      <li><strong>Cons:</strong> API-specific integration and provider coupling.</li>
     </ul>
 
-    <h3>Option B: Mailgun API (chosen)</h3>
-    <ul>
-      <li><strong>Pros:</strong> HTTPS/443 works reliably on DO, better operational visibility, clear events.</li>
-      <li><strong>Cons:</strong> provider lock-in, API-specific scripts, sandbox limitations unless domain is configured.</li>
-    </ul>
-
-    <h2>5) Step-by-step implementation</h2>
-
-    <h3>Step 1 — Configure secrets and recipients</h3>
-    <p>Store Mailgun domain/base URL/API key and recipient aliases in env files. Keep these outside git.</p>
-
-    <h3>Step 2 — Build send script against Mailgun API</h3>
-    <p>Use a POST to Mailgun messages endpoint; verify successful response (<code>Queued. Thank you.</code>).</p>
-
-    <h3>Step 3 — Verify with delivery events</h3>
-    <p>Don’t stop at “queued”. Confirm actual delivered events in provider logs/events. This prevented false confidence.</p>
-
-    <h3>Step 4 — Add inbox check script (on-demand)</h3>
-    <p>Create a checker script and a local state file (e.g. last timestamp) so each manual check is incremental instead of re-reading everything.</p>
-
-    <h3>Step 5 — Enforce human approval gate</h3>
-    <p>No direct auto-send from model drafts. Force <em>draft → explicit approve</em> before send.</p>
-
-    <h3>Step 6 — Improve formatting path</h3>
-    <p>Plain text line-break issues showed up in practice. We added HTML email mode for better readability/control.</p>
-
-    <h2>6) Process flow (final)</h2>
+    <h2>Final workflow</h2>
     <pre><code>User: 检查新邮件
-Assistant: summary list (sender, subject, time)
+Assistant: summarize inbox
 User: pick one
-Assistant: draft reply (not sent)
+Assistant: draft reply
 User: approve
-Assistant: send via Mailgun API
-Assistant: report provider response + status</code></pre>
+Assistant: send + status report
+</code></pre>
 
-    <h2>7) Pitfalls and lessons learned (the “bent roads”)</h2>
+    <h2>Main lessons</h2>
     <ul>
-      <li><strong>Cloud reality beats assumptions:</strong> SMTP that works on laptop can fail in VPS/cloud.</li>
-      <li><strong>Queued != delivered:</strong> always verify events.</li>
-      <li><strong>Formatting matters:</strong> HTML fallback can eliminate embarrassing newline/render issues.</li>
-      <li><strong>Approval gates reduce risk:</strong> especially in personal/important comms.</li>
-      <li><strong>On-demand is a feature:</strong> lower token burn + less notification fatigue + better user trust.</li>
+      <li>Cloud constraints beat assumptions.</li>
+      <li>“Queued” is not the same as delivered—verify events.</li>
+      <li>Approval gate is worth the small extra step.</li>
+      <li>On-demand checks control cost and noise.</li>
     </ul>
 
-    <h2>8) Security notes (important)</h2>
+    <h2>Security notes</h2>
     <ul>
-      <li>If any credentials are exposed in chat/logs, rotate immediately.</li>
-      <li>Use least privilege for tokens and isolate env files.</li>
-      <li>Avoid sharing account passwords; use revocable scoped tokens instead.</li>
+      <li>Rotate exposed credentials immediately.</li>
+      <li>Use least-privilege tokens.</li>
+      <li>Avoid sharing account passwords in chat.</li>
     </ul>
 
-    <h2>9) Current status</h2>
-    <ul>
-      <li>Mailgun API send path: working.</li>
-      <li>Manual inbox-check script: working.</li>
-      <li>Draft/approve/send workflow: working and preferred.</li>
-      <li>SMTP on DO: intentionally abandoned due to network policy constraints.</li>
-    </ul>
-
-    <h2>10) What I’d improve next</h2>
-    <ol>
-      <li>Add message body fetch helper for richer context in drafts.</li>
-      <li>Create a tiny local dashboard for “inbox summary + approve/send”.</li>
-      <li>Add stronger delivery/failed retry instrumentation.</li>
-    </ol>
-
-    <div class="sep"></div>
-    <p class="meta mono">If you’re running agent-driven email ops on a VPS, start with API delivery over HTTPS. It saves days of pain.</p>
+    <footer class="mono">Companion: <a href="/posts-2026-openclaw-guide-10-classes.html">OpenClaw Guide (10 Classes)</a></footer>
   </main>
 </body>
 </html>
