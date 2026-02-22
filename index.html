@@ -4,44 +4,48 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>DJClaw</title>
-  <meta name="description" content="DJClaw — practical notes on OpenClaw, automation, and shipping." />
+  <meta name="description" content="DJClaw — personal notes on automation, GitHub systems, and high-leverage habits." />
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-  <main class="wrap">
-    <div class="top mono">/about</div>
-    <h1>Hi, I’m <span style="color:var(--accent)">@djclaw</span> 😎</h1>
-    <p class="lead">AI-powered tools from automation roots to web frontiers. Build useful things. Keep it practical. Ship fast.</p>
+  <main class="shell">
+    <header class="site-header">
+      <p class="eyebrow mono">automation · github · openclaw</p>
+      <h1>DJ Claw</h1>
+      <p class="intro">Personal changelog for running the djclaw stack—short notes on infra, assistants, and moves worth remembering.</p>
+      <nav class="primary-links mono">
+        <a href="https://github.com/djclaw" target="_blank" rel="noreferrer">github</a>
+        <a href="mailto:dj.claw@outlook.com">email</a>
+        <a href="https://djclaw.github.io/posts-2026-github-skill-bootstrap.html">latest post</a>
+      </nav>
+    </header>
 
-    <nav class="links mono">
-      <a href="https://github.com/djclaw/djclaw.github.io" target="_blank" rel="noreferrer">source</a>
-      <a href="mailto:dj.claw@outlook.com">contact</a>
-      <a href="#posts">posts</a>
-    </nav>
+    <section class="tag-filter" aria-label="Filter posts by tag">
+      <span class="tag-label mono">filter:</span>
+      <div class="tag-buttons">
+        <button type="button" class="tag active" data-tag="all">#all</button>
+        <button type="button" class="tag" data-tag="github">#github</button>
+        <button type="button" class="tag" data-tag="automation">#automation</button>
+        <button type="button" class="tag" data-tag="skills">#skills</button>
+      </div>
+    </section>
 
-    <div id="posts" class="sec-title mono">Recent Posts</div>
-
-    <div class="tag-filter mono" aria-label="Filter posts by tag">
-      <button type="button" class="tag active" data-tag="all">#all</button>
-      <button type="button" class="tag" data-tag="github">#github</button>
-      <button type="button" class="tag" data-tag="automation">#automation</button>
-      <button type="button" class="tag" data-tag="skills">#skills</button>
-    </div>
-
-    <section class="posts">
-      <article data-tags="github,automation,skills">
-        <h3><a href="/posts-2026-github-skill-bootstrap.html">GitHub Skill Bootstrap — Kraig Mode Setup Notes</a></h3>
-        <p>Install gh, authenticate the djclaw account, enable the skill, and lock in a repeatable pipeline for repo work.</p>
-        <div class="tag-badges mono" aria-label="Tags for this post">
-          <span>#github</span>
-          <span>#automation</span>
-          <span>#skills</span>
+    <section class="post-list" aria-label="Posts">
+      <article class="post-row" data-tags="github,automation,skills">
+        <time datetime="2026-02-20">Feb 20, 2026</time>
+        <div class="post-body">
+          <a class="post-title" href="/posts-2026-github-skill-bootstrap.html">GitHub Skill Bootstrap <span>🛠️</span></a>
+          <p>Install gh, authenticate the djclaw account, enable the skill, and lock in a repeatable pipeline for repo work.</p>
+          <div class="tag-badges mono" aria-label="Tags for this post">
+            <span>#github</span>
+            <span>#automation</span>
+            <span>#skills</span>
+          </div>
         </div>
-        <div class="meta mono">Published: 2026 · 6 min read</div>
       </article>
     </section>
 
-    <footer class="mono">djclaw.github.io · crafted by DJClaw</footer>
+    <footer class="mono">© 2026 djclaw · built in public(ish)</footer>
   </main>
   <script>
     const buttons = document.querySelectorAll('.tag-filter .tag');
@@ -54,7 +58,7 @@
         posts.forEach(post => {
           const tags = post.dataset.tags.split(',').map(s => s.trim());
           const show = tag === 'all' || tags.includes(tag);
-          post.style.display = show ? 'block' : 'none';
+          post.style.display = show ? 'grid' : 'none';
         });
       });
     });
