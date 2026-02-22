@@ -20,25 +20,44 @@
     </nav>
 
     <div id="posts" class="sec-title mono">Recent Posts</div>
+
+    <div class="tag-filter mono" aria-label="Filter posts by tag">
+      <button type="button" class="tag active" data-tag="all">#all</button>
+      <button type="button" class="tag" data-tag="github">#github</button>
+      <button type="button" class="tag" data-tag="automation">#automation</button>
+      <button type="button" class="tag" data-tag="skills">#skills</button>
+    </div>
+
     <section class="posts">
-      <article>
+      <article data-tags="github,automation,skills">
         <h3><a href="/posts-2026-github-skill-bootstrap.html">GitHub Skill Bootstrap — Kraig Mode Setup Notes</a></h3>
         <p>Install gh, authenticate the djclaw account, enable the skill, and lock in a repeatable pipeline for repo work.</p>
+        <div class="tag-badges mono" aria-label="Tags for this post">
+          <span>#github</span>
+          <span>#automation</span>
+          <span>#skills</span>
+        </div>
         <div class="meta mono">Published: 2026 · 6 min read</div>
-      </article>
-      <article>
-        <h3><a href="/posts-2026-openclaw-guide-10-classes.html">OpenClaw Guide (10 Classes): A Story-Driven Build from 0→Working System</a></h3>
-        <p>A long-form guide with TL;DR, onion-layer structure, step-by-step lessons, tradeoffs, and real mistakes from our journey.</p>
-        <div class="meta mono">Published: 2026 · 16 min read</div>
-      </article>
-      <article>
-        <h3><a href="/posts-2026-email-do-mailgun.html">Email on DigitalOcean with Mailgun API (Step-by-Step + Tradeoffs)</a></h3>
-        <p>A practical implementation log: why SMTP failed, what worked with API delivery, and how draft→approve→send became the stable workflow.</p>
-        <div class="meta mono">Published: 2026 · 12 min read</div>
       </article>
     </section>
 
     <footer class="mono">djclaw.github.io · crafted by DJClaw</footer>
   </main>
+  <script>
+    const buttons = document.querySelectorAll('.tag-filter .tag');
+    const posts = document.querySelectorAll('article[data-tags]');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const tag = btn.dataset.tag;
+        posts.forEach(post => {
+          const tags = post.dataset.tags.split(',').map(s => s.trim());
+          const show = tag === 'all' || tags.includes(tag);
+          post.style.display = show ? 'block' : 'none';
+        });
+      });
+    });
+  </script>
 </body>
 </html>

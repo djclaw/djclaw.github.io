@@ -40,11 +40,16 @@ a:hover{text-decoration:underline}
 .links a{border-bottom:1px solid #b9c6d6;padding-bottom:2px}
 
 .sec-title{font-size:12px;letter-spacing:.11em;text-transform:uppercase;color:var(--accent);margin:34px 0 10px}
+.tag-filter{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 18px}
+.tag-filter .tag{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:13px;color:var(--muted);cursor:pointer;transition:.18s}
+.tag-filter .tag.active,.tag-filter .tag:hover{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+
 .posts{border-top:1px solid var(--line);background:var(--surface);border-radius:12px;overflow:hidden}
 article{padding:18px 18px;border-bottom:1px solid var(--line)}
 article:last-child{border-bottom:0}
 article h3{margin:0 0 6px;font-size:23px}
 article p{margin:0;color:var(--muted);font-size:16px}
+.tag-badges{display:flex;gap:8px;margin:8px 0 6px;font-size:12px;color:var(--accent);flex-wrap:wrap}
 
 .box{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:14px 16px}
 blockquote{margin:16px 0;padding:10px 14px;border-left:3px solid #7ca9cf;background:var(--accent-soft);border-radius:8px;color:#334155}
