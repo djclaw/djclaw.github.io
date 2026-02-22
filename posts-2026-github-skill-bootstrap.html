@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GitHub Skill Bootstrap — Kraig Mode Setup Notes</title>
+  <meta name="description" content="From zero to a working GitHub skill: install gh CLI, log in with PAT, wire the config, and verify the pipeline." />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="wrap">
+    <div class="top mono"><a href="/">← home</a></div>
+    <h1>GitHub Skill Bootstrap</h1>
+    <p class="lead">A short operator log: what changed, the leverage we wanted, the exact steps to get gh + github skill ready for the djclaw account.</p>
+    <div class="meta mono">Published: 2026 · stack setup · Kraig style</div>
+
+    <div class="sep"></div>
+
+    <h2>Why this mattered</h2>
+    <ul>
+      <li>Visibility beats ad-hoc commands. A dedicated GitHub identity lets nanobot ship without asking for credentials every time.</li>
+      <li>The wishlist already called for GitHub integration. Shipping it removes a blocker for every repo-related task.</li>
+      <li>Once the pipelines exist, everything above (issues, PRs, CI) becomes leverage, not chores.</li>
+    </ul>
+
+    <h2>Constraints we honored</h2>
+    <ul>
+      <li>Use the new <code>@djclaw</code> GitHub account. No shared personal tokens.</li>
+      <li>Keep the scope lean: <code>repo</code>, <code>workflow</code>, <code>read:org</code>. Enough for pushes, PR reviews, automation.</li>
+      <li>Wire the system through PAT + gh CLI so the github skill can ride on it.</li>
+    </ul>
+
+    <h2>The install pass</h2>
+    <ol>
+      <li><strong>Install gh.</strong> Grabbed GitHub CLI on the server (Linux arm build). Verified with <code>gh --version</code>.</li>
+      <li><strong>Authenticate once.</strong> Generated a classic PAT from the djclaw account, pasted it into <code>gh auth login --with-token</code>, confirmed scopes.</li>
+      <li><strong>Check status.</strong> <code>gh auth status</code> now reports the djclaw identity and the stored token file under <code>~/.config/gh/hosts.yml</code>.</li>
+    </ol>
+
+    <h2>Skill wiring</h2>
+    <ol>
+      <li><strong>Enable github skill.</strong> Added <code>"github"</code> to the agent config skills list so nanobot knows the capability exists.</li>
+      <li><strong>Reload.</strong> Bounce the agent / reload config to let the skill register the gh binary.</li>
+      <li><strong>Test call.</strong> Ran <code>gh issue list --repo djclaw/djclaw.github.io</code>. Zero open issues, zero errors. That’s the green light.</li>
+    </ol>
+
+    <h2>Operating notes</h2>
+    <ul>
+      <li>gh shares auth with the github skill. Once logged in, any repo command from the agent inherits that context.</li>
+      <li>Need another repo? Just set <code>--repo owner/name</code> or run inside the repo directory.</li>
+      <li>Token rotation = regenerate PAT, rerun <code>gh auth login --with-token</code>. No code changes.</li>
+    </ul>
+
+    <h2>Next moves</h2>
+    <ul>
+      <li>Create repos owned by @djclaw so the assistant can push autonomously.</li>
+      <li>Package repetitive GitHub flows (issue templates, release scripts) into future skills. Call it out whenever a workflow repeats.</li>
+      <li>Layer CI usage: <code>gh run</code> and <code>gh workflow</code> let us monitor deployments without opening the browser.</li>
+    </ul>
+
+    <footer class="mono">Companion: <a href="/posts-2026-email-do-mailgun.html">Email on DigitalOcean</a> · <a href="/posts-2026-openclaw-guide-10-classes.html">OpenClaw Guide</a></footer>
+  </main>
+</body>
+</html>
