@@ -79,6 +79,13 @@ summarize "OpenClaw 背后的 agent harness 核心库值得学习：https://gith
       <li>When Node.js lacks optional built-ins (like <code>node:sqlite</code>), check if the CLI lets you disable that subsystem via env vars. <code>SUMMARIZE_CACHE_DISABLED</code> saved the day here.</li>
     </ul>
 
+    <h2>Bonus: raise exec timeout in nanobot config</h2>
+    <p>After the manual install was done, we also noticed the local <code>nanobot.config.json</code> already allows bumping the command timeout. Setting</p>
+    <pre><code>"exec": {
+  "timeout": 300
+}</code></pre>
+    <p>means future <code>npm install -g</code> runs get a full five minutes before the host kills them. With that knob and the patch/heredoc trick ready, the next CLI installation should need far less improvisation.</p>
+
     <div class="sep"></div>
     <p class="meta mono">Example command: <code>summarize "OpenClaw harness core library worth studying: https://github.com/badlogic/pi-mono"</code></p>
   </main>
