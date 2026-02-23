@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>What are skills? (and why they matter)</title>
+  <meta name="description" content="A plain-language guide to skills in nanobot/OpenClaw, plus how they differ from system prompts, chat-only models, and MCP." />
+  <link rel="stylesheet" href="/post.css" />
+</head>
+<body>
+  <main class="wrap">
+    <div class="top mono"><a href="/">← home</a></div>
+    <h1>What are skills? (and why they matter)</h1>
+    <p class="lead">A simple explanation for anyone new to OpenClaw or nanobot.</p>
+    <div class="meta mono">Published: 2026 · skills · ~4 min read</div>
+
+    <div class="sep"></div>
+
+    <h2>🔌 Skills = plug‑in abilities</h2>
+    <p>A skill is a small, packaged capability that an assistant can call in a predictable way. It wraps real tools—scripts, APIs, file access—behind a clear interface.</p>
+    <p>Think: “give the model a toolbelt,” not just a brain.</p>
+
+    <h2>🧪 Example: Humanizer skill</h2>
+    <p>The <strong>ai-humanizer</strong> skill from ClawHub is a clean example. It turns raw AI‑written text into something more natural by reducing typical LLM phrasing and smoothing the tone.</p>
+    <ul>
+      <li><strong>What it does:</strong> de‑AI text so it reads more human.</li>
+      <li><strong>How it’s used:</strong> send text in, get a refined version back.</li>
+      <li><strong>Why it matters:</strong> it’s repeatable, auditable, and safer than manual copy‑paste edits.</li>
+    </ul>
+    <p>In short: a skill makes that transformation a button‑press, not a one‑off prompt.</p>
+
+    <h2>💬 How skills differ from normal chat</h2>
+    <ul>
+      <li><strong>Chat‑only:</strong> the model can only “say things.”</li>
+      <li><strong>With skills:</strong> the model can “do things”—search, run scripts, read files, write files.</li>
+    </ul>
+    <p>It’s the difference between advice and execution.</p>
+
+    <h2>🧭 How skills differ from system prompts</h2>
+    <p>System prompts define behavior: who the assistant is and how it should respond.</p>
+    <p>Skills define capability: what the assistant can actually do.</p>
+    <p><strong>System prompt = rules.</strong> <strong>Skills = tools.</strong></p>
+
+    <h2>🔗 How skills differ from MCP</h2>
+    <p>MCP (Model Context Protocol) is the wiring standard. It defines how tools are connected and how calls are structured.</p>
+    <p>Skills are the tools themselves.</p>
+    <p><strong>MCP = the USB port.</strong> <strong>Skills = the devices you plug in.</strong></p>
+
+    <h2>✅ Why this matters</h2>
+    <ul>
+      <li>Skills are reusable across sessions.</li>
+      <li>They create consistent, logged results.</li>
+      <li>They turn AI from “chat” into “work.”</li>
+    </ul>
+
+    <p>If you’re building with agents, skills are the core unit of execution.</p>
+  </main>
+</body>
+</html>
