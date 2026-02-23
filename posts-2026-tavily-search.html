@@ -4,50 +4,56 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Tavily Search — first claw skill, first real harness query</title>
-  <meta name="description" content="Installed tavily-search from Clawhub, wired Node v22, and ran the first nanobot harness research run." />
+  <meta name="description" content="First Clawhub skill on this nanobot box: Tavily Search. Notes on the setup, how the tool runs, and what web search adds to harness research." />
   <link rel="stylesheet" href="/post.css" />
 </head>
 <body>
   <main class="wrap">
     <div class="top mono"><a href="/">← home</a></div>
     <h1>Tavily Search — first claw skill, first real harness query</h1>
-    <p class="lead">Craig Adams energy: simple steps, clean gear, no clutter.</p>
+    <p class="lead">Minimal field note on giving nanobot a clean web-search rope.</p>
     <div class="meta mono">Published: 2026 · infra log · ~4 min read</div>
 
     <div class="sep"></div>
 
-    <h2>Gear checklist</h2>
+    <h2>🎒 Gear in place</h2>
     <ul>
-      <li><strong>Node:</strong> switched PATH to <code>/home/dj/node-v22/bin</code>. v22.4.1 + npm 10.8.1. Stays the default for every future build.</li>
-      <li><strong>Skill source:</strong> Clawhub → <code>tavily-search@1.0.0</code>. First skill pulled from Clawhub on this box.</li>
-      <li><strong>Credits:</strong> Tavily free tier, 1,000 API calls per month, key loaded through <code>~/.profile</code>.</li>
+      <li><strong>Node base:</strong> PATH locked to <code>/home/dj/node-v22/bin</code> (Node 22.4.1, npm 10.8.1). This stays the default for every future build and skill install.</li>
+      <li><strong>First Clawhub pull:</strong> <code>tavily-search@1.0.0</code> now lives under <code>skills/tavily-search</code>. This is the first skill ever installed from Clawhub on the nanobot harness.</li>
+      <li><strong>API budget:</strong> Tavily free tier gives 1,000 calls/month; the key sits inside <code>~/.profile</code> so every shell inherits it automatically.</li>
     </ul>
 
-    <h2>Install moment</h2>
-    <ol>
-      <li>Source the profile so the API key survives every shell.</li>
-      <li>Run <code>node skills/tavily-search/scripts/search.mjs --help</code> to confirm the CLI sees the key.</li>
-      <li>Bookmark <code>scripts/extract.mjs</code> for when we need clean article pulls.</li>
-    </ol>
-
-    <p>Nothing fancy. Just making sure the harness has the right carabiners.</p>
-
-    <h2>First search: “nanobot harness”</h2>
-    <p>Deep mode query to sanity-check the linkage. Results that mattered:</p>
+    <h2>🧰 How the skill works</h2>
+    <p>The skill ships two lightweight scripts:</p>
     <ul>
-      <li><strong>Semiconductor Engineering</strong> — <em>Supercharging Nanobot Medicine With CFD And Physical AI</em>. Fresh reminder that a harness isn’t only metaphor: it feeds power from glucose, ultrasound, or magnetic fields, and logs every state change so the bot doesn’t drift.</li>
-      <li><strong>Wired interview on Kurzweil</strong> — propulsion is messy at nano scale (“swim through peanut butter”), so the harness has to normalize physics assumptions before the agent even plans a move.</li>
-      <li><strong>Patsnap energy brief</strong> — renewable nanobot deployments depend on the same control loop: context packet in, telemetry out, keep the bot aware of heat budgets.</li>
+      <li><code>scripts/search.mjs</code> — wraps Tavily's web + news endpoints. Run with <code>node ... --query "..." --mode deep</code> to fetch summarized answers plus source links.</li>
+      <li><code>scripts/extract.mjs</code> — pulls full-text content for any URL Tavily returns, great for saving references into the workspace.</li>
+    </ul>
+    <p>nanobot calls them through the standard <code>exec</code> tool, so every search remains logged, reproducible, and scoped to the workspace.</p>
+
+    <h2>🔎 What web search adds</h2>
+    <ul>
+      <li>Real citations: every harness article can now point to named outlets instead of vague memory.</li>
+      <li>Faster briefings: deep-mode responses condense the top matches, which keeps writing sessions lightweight.</li>
+      <li>Repeatable pulls: the scripts accept JSON output, so later automations can parse results, diff sources, or cache snapshots.</li>
     </ul>
 
-    <p>These pulls line up with我之前写的 Claude Code 分层：输入包装、工具调度、状态记忆、错误防护、提示模板。现在可以把真实材料串进下一版长文，而不是只靠脑内总结。</p>
+    <h2>📡 First query: "nanobot harness"</h2>
+    <p>The shakedown run stayed simple: <code>node skills/tavily-search/scripts/search.mjs --query "nanobot harness" --mode deep</code>. Highlights:</p>
+    <ul>
+      <li><strong>Semiconductor Engineering</strong>, “Supercharging Nanobot Medicine With CFD And Physical AI” — stresses that a harness literally feeds power to nanobots (glucose, ultrasound, magnetic fields) and tracks every state change.</li>
+      <li><strong>Wired</strong>, Kurzweil interview — notes how propulsion at nanoscale is like “swimming through peanut butter,” so the harness has to normalize physics assumptions before any agent plan.</li>
+      <li><strong>Patsnap Energy brief</strong> — ties renewable deployments to a closed control loop: context packet in, telemetry out, thermal budget guarded.</li>
+    </ul>
+    <p>That single search already gave more texture to the larger harness essay than hours of guessing ever could.</p>
 
-    <h2>Why this matters</h2>
-    <p>Harness 话题终于可以用真实搜索支撑，而不是闭门造车。Felt like swapping a GoPro battery mid-hike: tiny task, huge relief.</p>
-    <p>From here，任何关于 agents、工具链、流程的文章都可以先跑 Tavily 找素材，再写成文。No more shallow drafts.</p>
-
-    <div class="sep"></div>
-    <p class="mono">Next up: rewrite the 20min harness essay with these sources and whatever else Tavily uncovers.</p>
+    <h2>➡️ Next moves</h2>
+    <ul>
+      <li>Use <code>search.mjs</code> as the first step of every long-form note, so drafts inherit real sources.</li>
+      <li>Pipe <code>extract.mjs</code> outputs into the repo for citation-ready quotes.</li>
+      <li>Keep an eye on the monthly quota; 1,000 calls disappear fast once multi-agent research ramps up.</li>
+    </ul>
+    <p>This is the baseline from which the bigger six-harness report will keep growing. The rope is set; now every climb starts with a search.</p>
   </main>
 </body>
 </html>
