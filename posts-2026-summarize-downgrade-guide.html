@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Downgrade to Upgrade: Summarize CLI + Skill Recovery on ARMv7</title>
+  <meta name="description" content="Full playbook for reverting @steipete/summarize, wiring Gemini/Gemma models, exercising the skill, and comparing CLI vs ad‑hoc LLM prompts." />
+  <link rel="stylesheet" href="/post.css" />
+</head>
+<body>
+  <main class="wrap">
+    <div class="top mono"><a href="/">← home</a></div>
+    <h1>Downgrade to Upgrade:<br/>Summarize CLI + Skill Recovery on ARMv7</h1>
+    <p class="lead">“Power down to power up” — Krag Adams mode</p>
+    <div class="meta mono">Published: 2026 · recovery log · ~10 min read</div>
+
+    <div class="sep"></div>
+
+    <h2>Why this exists</h2>
+    <p>The summarize skill stopped working after <code>@steipete/summarize</code> jumped to a SQLite-backed cache. Our host is a 32-bit ARMv7 board with a custom Node 22 build that does <em>not</em> bundle <code>node:sqlite</code>, so every CLI call crashed before the model request. This post documents the full downgrade + reconfiguration + skill test, then contrasts the CLI against ad-hoc LLM prompting in true Krag Adams fashion.</p>
+
+    <h2>Timeline at a glance</h2>
+    <ol>
+      <li><strong>Breakage confirmed:</strong> Latest summarize CLI demanded <code>node:sqlite</code> → crash.</li>
+      <li><strong>Version audit:</strong> traced back to <code>summarize@0.7.1</code>, the last release without the sqlite cache.</li>
+      <li><strong>Downgrade:</strong> uninstall, then <code>PATH=$HOME/node-v22/bin:$PATH npm install -g @steipete/summarize@0.7.1</code>.</li>
+      <li><strong>Config reset:</strong> rewrote <code>~/.summarize/config.json</code>; default model = <code>google/gemini-3-flash-preview</code>, length = <code>medium</code>, backups listed.</li>
+      <li><strong>Secrets normalized:</strong> <code>export GEMINI_API_KEY="..."</code> placed in <code>~/.profile</code>, so every non-interactive shell inherits it.</li>
+      <li><strong>Skill verification:</strong> CLI runs cleanly, so the summarize skill (which shells out to the CLI) now works again.</li>
+    </ol>
+
+    <h2>Config snapshot</h2>
+    <pre><code>{
+  "model": {
+    "id": "google/gemini-3-flash-preview",
+    "options": {
+      "language": "auto",
+      "length": "medium"
+    }
+  },
+  "models": {
+    "gemini-2.5-flash": { "id": "google/gemini-2.5-flash" },
+    "gemini-2.5-flash-lite": { "id": "google/gemini-2.5-flash-lite" },
+    "gemma-3-27b-it": { "id": "google/gemma-3-27b-it" }
+  },
+  "cli": { "enabled": ["codex"] }
+}
+</code></pre>
+    <p>Add your real key somewhere global:</p>
+    <pre><code># ~/.profile
+export PATH="$HOME/node-v22/bin:$PATH"
+export GEMINI_API_KEY="sk-..."
+source ~/.profile</code></pre>
+
+    <h2>Skill trigger demo (default model · medium · bilingual)</h2>
+    <h3>Target: summarize CLI homepage</h3>
+    <div class="box">
+      <strong>中文输出</strong>
+      <ul>
+        <li>summarize 是集 CLI 与浏览器扩展于一体的多模态摘要工具，能抓网页、Podcast、YouTube、本地文件。</li>
+        <li>内建长度预设、OCR 幻灯片提取、时间戳标注、媒体感知下载流程（yt-dlp + ffmpeg + tesseract + whisper.cpp 等）。</li>
+        <li>支持 OpenAI、Anthropic、Gemini、xAI 及 Codex/Claude CLI；推荐安装守护进程 <code>summarize daemon install --token</code> 并执行 <code>summarize refresh-free --set-default</code> 以快速配置模型。</li>
+      </ul>
+    </div>
+    <div class="box">
+      <strong>English output</strong>
+      <ul>
+        <li>Summarize ships as a CLI + browser add-on that handles URLs, videos, podcasts, and local docs with built-in transcription, OCR, and slide extraction.</li>
+        <li>Preset lengths, timestamped bullets, and multi-provider routing (OpenAI, Anthropic, Gemini, xAI, local CLIs) keep summaries consistent.</li>
+        <li>The recommended flow is npm/brew install, run the daemon installer with your token, and optionally pull ready-made free OpenRouter settings via <code>summarize refresh-free --set-default</code>.</li>
+      </ul>
+    </div>
+    <p><em>How to trigger via skill:</em> in chat say “帮我总结 https://github.com/steipete/summarize（中文，medium）” or “Summarize this URL in English.” The skill shells out to the CLI with the same config.</p>
+
+    <h2>Pi Monorepo case (why downgrade even mattered)</h2>
+    <p>Pi’s environment needed summarize inside an agent runtime, but the sqlite dependency bricked the Node 22 ARM build. Rolling back restored the skill, so we could publish production-ready blurbs again. Example snippet (short, bilingual, site-ready):</p>
+    <div class="box">
+      <strong>中文</strong>：Pi Monorepo 是 badlogic 团队的开源 AI Agent 集合，提供统一多云 LLM API、可扩展的 Agent Runtime、交互式 Coding Agent CLI、TUI/Web UI 组件、以及 GPU Pod 管理工具。仓库暂休至 2026-03-02，可先通过 README、Discord、文档熟悉各 package。<br/><br/>
+      <strong>English</strong>: Pi Monorepo is badlogic’s agent harness suite with a unified LLM API, runtime, coding-agent CLI, shared UIs, and GPU pod tooling. The repo is on OSS vacation until March 2, 2026; read the README, docs, or Discord to map each package.
+    </div>
+
+    <h2>Krag Adams Guide — CLI vs direct LLM prompts</h2>
+    <div class="sec-title mono">Power assertions</div>
+    <ul>
+      <li><strong>“Downgrade to upgrade”</strong>: cut features (sqlite cache) to get reliability on constrained hardware.</li>
+      <li><strong>“Automate the boring stuff”</strong>: once CLI works, let the skill own routine summaries.</li>
+      <li><strong>“Know your stack”</strong>: Node build details and env propagation matter more than the fancy prompt.</li>
+    </ul>
+
+    <div class="sec-title mono">Flow checklist</div>
+    <pre><code>1) Uninstall broken CLI
+2) npm install -g @steipete/summarize@0.7.1
+3) Rewrite ~/.summarize/config.json
+4) Put GEMINI_API_KEY in ~/.profile and source it
+5) Test CLI in zh/en; confirm skill mirrors CLI
+6) Document outputs for website publishing</code></pre>
+
+    <div class="sec-title mono">CLI vs ad-hoc LLM</div>
+    <table>
+      <thead>
+        <tr><th>Dimension</th><th>Summarize CLI</th><th>Manual LLM Prompt</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Context ingestion</td><td>Auto-fetch URLs, video/audio via yt-dlp, OCR slides</td><td>Must download/convert yourself</td></tr>
+        <tr><td>Consistency</td><td>Preset lengths, tokens, formatting in config</td><td>Prompt drift every run</td></tr>
+        <tr><td>Providers</td><td>Multi-model fallback, CLI switching, free presets</td><td>Manual API juggling</td></tr>
+        <tr><td>Automation</td><td>Scriptable + skill + browser extension</td><td>One-off chats/scripts</td></tr>
+        <tr><td>Cost control</td><td>Caching + TTL + short outputs</td><td>Every run fresh tokens</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sec-title mono">When to pick what</div>
+    <ul>
+      <li><strong>Use CLI + skill</strong> for multi-source research dumps, bilingual website blurbs, or anything you’ll repeat.</li>
+      <li><strong>Use raw LLM prompts</strong> for exploratory Q&A or one-off ideation where setup overhead outweighs benefits.</li>
+    </ul>
+
+    <h2>Publishing checklist for DJClaw ops</h2>
+    <ol>
+      <li>Keep <code>PATH</code> + <code>GEMINI_API_KEY</code> in <code>~/.profile</code> so future cron/skill shells inherit them.</li>
+      <li>Store config + this guide in version control (already in <code>djclaw.github.io</code>).</li>
+      <li>When new summarize releases ship, test on staging first; only upgrade if node-sqlite returns to optional.</li>
+      <li>For new posts, reuse the bilingual snippet format to keep site output consistent.</li>
+    </ol>
+
+    <div class="sep"></div>
+    <p class="meta mono">Example command: <code>summarize "https://github.com/steipete/summarize" --language zh</code> + skill trigger in chat.</p>
+  </main>
+</body>
+</html>
