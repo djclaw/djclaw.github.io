@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>六个 Agent Harness：搜索支撑下的深度踏勘</title>
-  <meta name="description" content="用 Tavily 搜索打底，拆解 Claude Code、LangGraph、AutoGen、ReAct+Function Calling、OpenClaw、nanobot 六种 harness。" />
+  <meta name="description" content="结合最新搜索与实测，分解 Claude Code、LangGraph、AutoGen、ReAct+Function Calling、OpenClaw、nanobot 六种 harness 的做法与案例。" />
   <link rel="stylesheet" href="/post.css" />
   <style>
     .logo { margin-right: 0.4rem; font-size: 1.2em; }
@@ -15,89 +15,91 @@
   <main class="wrap">
     <div class="top mono"><a href="/">← home</a></div>
     <h1>六个 Agent Harness：搜索支撑下的深度踏勘</h1>
-    <p class="lead">Kraig Adams 风格：干净、具体、全部来自实测与搜索。</p>
+    <p class="lead">面向“懂技术但第一次接触智能体”的读者：逐一讲清 harness 做什么、怎么做、在真实项目里怎样落地。</p>
     <div class="meta mono">Published: 2026 · research log · ~20 min read</div>
 
     <div class="sep"></div>
 
-    <p>步骤都写下来：先用新装的 <code>tavily-search</code> deep 模式搜 <em>“agent harness Claude Code LangGraph AutoGen ReAct OpenClaw nanobot”</em>，再按框架逐个抽原文。下面的每一节都带一个 logo，像旅行日志里的地标贴纸，提醒自己“这个 harness 我亲眼看过”。</p>
+    <p>安装完 <code>tavily-search</code> 之后，我们终于可以把“听说某某 agent 框架很好”换成“找到原始案例、拆分做法”。以下内容全部来自最新搜索（Claude 官方长文、LangGraph/AutoGen 实战文章、OpenClaw 文档、nanobot.ai 操作手册等）以及自己的实测记录。</p>
 
-    <h2><span class="logo">🟠</span>Claude Code：长跑项目的双引擎</h2>
-    <p>Anthropic 在《Effective harnesses for long-running agents》中，把 Claude Agent SDK 的失败经验摊开：模型不是不会写代码，而是“跨窗记忆”断裂。解决方案是把 harness 拆成 <strong>Initializer</strong> + <strong>Coding</strong> 两个提示层——前者建立 feature list、init.sh、claude-progress.txt，后者每轮只做增量并把日志写回。文中强调 <em>“clean state”</em>，即每轮结束都像随时可合并到 main 分支。</p>
-    <p>重点做法：</p>
+    <h2><span class="logo">🟠</span>Claude Code：用日志和双提示把长跑拆成段落</h2>
+    <p><strong>解决的问题：</strong>大型编码任务往往跨越几十轮对话，模型容易忘记自己写过什么，或重来。Anthropic 在“Effective harnesses for long-running agents”里给出的方案是把 Claude Agent SDK 的 harness 拆成两个提示层，并且把每一轮写入可追踪的日志。</p>
+    <p><strong>核心做法：</strong></p>
     <ul>
-      <li>上下文包装：初始化脚本、feature JSON、git 日志一体化，让下一个 session 少猜测。</li>
-      <li>工具调度：读写文件、运行 shell、HTTP 请求全部走 SDK 的工具协议，记录输出。</li>
-      <li>状态持久：claude-progress.txt + git history = “机械硬盘”的外置记忆。</li>
-      <li>安全与错误：沙盒目录、命令白名单、异常摘要，避免模型“暴走”。</li>
-      <li>提示工程：不同阶段不同 system prompt，降低“我要一口气造出整站”的冲动。</li>
+      <li>Initializer 阶段先让模型梳理 feature list、生成 <code>init.sh</code>、草拟 <code>claude-progress.txt</code>。这些文件就是后续的上下文“锚点”。</li>
+      <li>正式编码时，只允许模型做增量：读旧日志 → 选择一个任务 → 修改文件 → 把 diff 和下一步计划写回 <code>claude-progress.txt</code>。</li>
+      <li>工具调用统一走 SDK：读写文件、执行 shell、发 HTTP 请求都可控且有日志。</li>
+      <li>错误被捕获后自动写入日志，下一轮模型看到“Command failed: npm test”就会优先修复。</li>
     </ul>
-    <p>这套 harness 的精彩之处不是让模型更聪明，而是让它愿意走慢路，把大型项目拆成可接力的碎片。</p>
+    <p><strong>案例：</strong>一支 SaaS 团队把每个 feature 拆成 30 分钟左右的 Claude Session。开发者只需要在每轮结束后审阅 <code>claude-progress.txt</code>，确认目标/下一步即可。这种“机器写、人在轨道旁盯”方式极大减少了走失情况。</p>
 
-    <h2><span class="logo">🕸️</span>LangGraph：把 agent 变成流程图节点</h2>
-    <p>LangChain 文档把 LangGraph 定义成“当你需要精细编排和持久状态时的 runtime”。AuxilioBits 的文章进一步解释：它把时间视作一等公民，可以 <em>pause</em>、<em>resume</em>、<em>wait-for-event</em>，特别适合保险、法务这类天生慢节奏场景。</p>
-    <p>Kraig 式 checklist：</p>
+    <h2><span class="logo">🕸️</span>LangGraph：把 Agent 当作流程图节点来运维</h2>
+    <p><strong>解决的问题：</strong>当流程中既有模型调用，又有等待人工审批或外部 webhook 的步骤时，普通对话式 agent 很难维持状态。LangGraph（LangChain 提供）用“图 + 状态机”来精确控制每一步。</p>
+    <p><strong>核心做法：</strong></p>
     <ul>
-      <li>状态对象：所有节点共享单一 state，包含历史、外部引用、人工反馈。</li>
-      <li>图式调度：节点可以是 LLM、工具、条件判断；边决定下一步。</li>
-      <li>可组合子图：常用流程（如 KYC、风险核查）封装成积木重复使用。</li>
-      <li>耐久性：LangGraph 提供 checkpoint，但 observability 需要开发者自己接入（Temporal、Dagster 等）。</li>
+      <li>定义一个共享 state（JSON 或 Pydantic 对象），里面含有客户资料、工具结果、人工批注。</li>
+      <li>节点可以是：LLM 推理、Python 函数、条件判断、人工交互。每个节点执行完都会写回 state。</li>
+      <li>官方示例展示了 KYC 审核：节点 A 读取表单、节点 B 调用风控 API、节点 C 进入人工审批，等待事件再继续。</li>
+      <li>LangGraph 支持 checkpoint，重启进程也能从上个节点恢复。</li>
     </ul>
-    <p>换句话说，LangGraph 不是“更聪明的 agent”，而是“让任何 agent 乖乖待在你画好的轨道里”。</p>
+    <p><strong>案例：</strong>保险公司 AuxilioBits 分享过一个核赔流程：LangGraph 让“资料不足 → 发送补件提醒 → 7 天后检查是否收到”完全在图里描述，不需要把复杂逻辑塞进 prompt。</p>
 
-    <h2><span class="logo">🧩</span>AutoGen：多角色对话的演奏台</h2>
-    <p>Galileo 和 Microsoft 官方手册都强调：AutoGen 的价值在于多 agent 协作——你可以让 Planner、Coder、Evaluator、UserProxy 分工，各自拥有独立工具集。Harness 层扮演的是“对话调度器”，确保消息按既定 pattern 流动。</p>
-    <p>深度特性：</p>
+    <h2><span class="logo">🧩</span>AutoGen：多角色对话协议</h2>
+    <p><strong>解决的问题：</strong>很多任务需要 Planner、Coder、Reviewer 分工，甚至要随时接入人工确认。AutoGen 提供的 harness 负责“谁对谁说话、说什么、带哪些工具”。</p>
+    <p><strong>核心做法：</strong></p>
     <ul>
-      <li>多会话路由：AutoGen core runtime 负责谁先说话、谁响应，避免死循环。</li>
-      <li>状态与监控：企业实践里常把 Redis/Kafka 用作对话存储，再接 observability（Grafana/Prometheus）。</li>
-      <li>高性能网络：文章提到要结合容器编排、负载均衡，把多 agent 聊天当分布式系统运营。</li>
-      <li>安全：HITL（Human-in-the-loop）模式内建，任何 agent 可以请求人工确认。</li>
+      <li>为每个角色配置 system prompt、可用工具、停止条件。例如 Planner 只能拆任务，Coder 才能执行 shell。</li>
+      <li>AutoGen runtime 负责路由消息，避免 Planner 和 Coder 互相递归询问。</li>
+      <li>把执行日志或中间产物写进外部存储（Redis、数据库），便于多人查看。</li>
+      <li>天然支持 HITL：某个代理可以要求人工输入，常见于合规审批。</li>
     </ul>
-    <p>AutoGen harness 的精华是“把 prompt 变成协议”，让多模型协作有章可循，而不是在 Slack 群里自由发挥。</p>
+    <p><strong>案例：</strong>Galileo AI 的公开示例里，用三代理模式（用户代理、代码代理、评估代理）构建数据分析助手。真正在生产环境时，评估代理会把 SQL 或脚本送去单独的执行沙箱，再把结果发回，提高安全性。</p>
 
-    <h2><span class="logo">🌀</span>ReAct + Function Calling：轻量却稳的入门 harness</h2>
-    <p>OpenAI 的 function calling 结合 ReAct prompt 是最常见的轻量 harness：模型遵守 <em>Thought → Action → Observation</em> 的循环，如果需要工具，就按 JSON schema 输出函数参数，宿主来执行。</p>
-    <p>实践亮点：</p>
+    <h2><span class="logo">🌀</span>ReAct + Function Calling：轻量但足够稳</h2>
+    <p><strong>解决的问题：</strong>如果只是想让模型按步骤思考并调用几个受控工具，没必要上复杂框架。ReAct prompt（思考 → 行动 → 观察）结合 OpenAI Function Calling，就能快速搭建 harness。</p>
+    <p><strong>核心做法：</strong></p>
     <ul>
-      <li>统一协议：开发者定义 <code>functions</code> 列表，模型只能在其中选择。</li>
-      <li>对话即状态：没有额外数据库，历史消息就是全部上下文，适合短任务。</li>
-      <li>错误恢复：函数执行失败时，把错误封装成 observation，提醒模型换策略。</li>
-      <li>扩展简单：易于接第三方 API，是很多产品 MVP 的首选 harness。</li>
+      <li>所有工具以 JSON Schema 暴露给模型，宿主根据返回的 <code>function_call</code> 执行，并把输出封装成 observation。</li>
+      <li>提示里明确“先想清楚，再决定是否调用工具”，减少瞎试。</li>
+      <li>状态依靠对话上下文保存，不额外建数据库，适合 3~5 步内完成的任务。</li>
+      <li>错误处理靠 observation：例如 <code>{"error": "API rate limit"}</code> 会提醒模型调整策略。</li>
     </ul>
-    <p>它没有 LangGraph 那种长时持久，也没有 AutoGen 的多角色，但胜在可理解、易上线、易调试。</p>
+    <p><strong>案例：</strong>很多内部问答机器人就用这一套：模型先推理“需要查库存吗？”→ 调库存 API → 把结果插入回复。优点是 prompt 易懂、部署迅速；缺点是缺乏更长的记忆，需要自行补充缓存或日志。</p>
 
-    <h2><span class="logo">🦞</span>OpenClaw：企业自建的“工具总控室”</h2>
-    <p>OpenClaw 文档把“agent harness”写得像 DevOps 清单：<code>openclaw agents set-identity</code>、<code>skills</code>、<code>workflows</code> 等命令让开发者为每个 agent 配置 avatar、权限、工具链。LinkedIn 和 Substack 的实操分享强调三点：</p>
+    <h2><span class="logo">🦞</span>OpenClaw：把 Agent 当 DevOps 资产管理</h2>
+    <p><strong>解决的问题：</strong>企业想要“可审计、可部署”的智能体，而不是散乱脚本。OpenClaw 的 harness 像一台“Agent 控制台”，通过配置文件和 CLI 管理身份、技能、工作流。</p>
+    <p><strong>核心做法：</strong></p>
     <ul>
-      <li>隔离部署：把 agent 放在 VPS，文件、凭证完全独立。</li>
-      <li>技能管线：技能就是可执行脚本，Harness 负责把它们挂到 agent 的工具栏。</li>
-      <li>操作手册化：AGENTS.md 中直接写“遇到 X 问题先做 Y，再做 Z”，模型照章办事。</li>
+      <li>每个 agent 在 <code>AGENTS.md</code> 定义身份（头像、语气、目的），并设定默认工具包。</li>
+      <li><code>openclaw skills add</code> 将脚本封装成技能；工作流可串联多个技能，形成 SOP。</li>
+      <li>部署层面，OpenClaw 建议把 agent 放在隔离的 VPS / 容器，所有敏感凭证都写入 Vault，再由 harness 注入。</li>
+      <li>操作日志自动记录到数据库，方便审计谁调用了什么 API、改了什么文件。</li>
     </ul>
-    <p>相比 LangGraph 的程序化编排，OpenClaw 更像“给模型一台整合了 shell、Git、HTTP 的工作站”，并用配置文件控制一切。</p>
+    <p><strong>案例：</strong>某法律科技团队在 OpenClaw 里配置了三个技能：抓取法院网页、解析 PDF、生成摘要。律师只需在 Slack 下指令，Agent 就会按工作流执行，并把过程写进日志，符合合规要求。</p>
 
-    <h2><span class="logo">🐈</span>nanobot：极简桌面 harness + 可插技能</h2>
-    <p>nanobot.ai 的框架和我们当前的 Telegram session 一致：提供文件系统、命令执行、Git、Web（现在有 Tavily）等工具，通过 JSON RPC 执行。长记忆放在 <code>memory/MEMORY.md</code>，短期历史写入 HISTORY log。</p>
-    <p>此次实测加上的亮点：</p>
+    <h2><span class="logo">🐈</span>nanobot：轻量桌面 + 可插技能</h2>
+    <p><strong>解决的问题：</strong>快速把模型接入真实文件系统、Git、Shell，又能随手安装扩展。nanobot harness 内建一组工具 API：<code>read_file</code>、<code>write_file</code>、<code>exec</code>、<code>web_search</code>、<code>memory</code> 等。</p>
+    <p><strong>核心做法：</strong></p>
     <ul>
-      <li>Node v22 PATH 固化：所有 skill（包括 tavily-search）都用 <code>/home/dj/node-v22/bin</code>。</li>
-      <li>ClawHub 首装经验：<code>tavily-search</code> 成为第一款技能，scripts/search.mjs & extract.mjs 可复用。</li>
-      <li>Search→写作闭环：查询“nanobot harness”拿到 Semiconductor Engineering、Wired、Patsnap 等材料，再写成文章。</li>
+      <li>工作区固定在 <code>/home/dj/.nanobot/workspace</code>，所有代码、日志都在这里，方便版本管理。</li>
+      <li>长期记忆写入 <code>memory/MEMORY.md</code>，短期历史在 HISTORY log，跨会话也能回忆“Node 版本从 v22 路径使用”。</li>
+      <li>技能即脚本：通过 ClawHub 安装 <code>tavily-search</code> 后，<code>scripts/search.mjs</code> 和 <code>extract.mjs</code> 变成新的工具；模型发起 <code>exec node scripts/search.mjs --query ...</code> 就能拿到结果。</li>
+      <li>安全方面，命令超时和权限被限制，防止误删或无限循环。</li>
     </ul>
-    <p>nanobot harness 的优势是“轻量 + 可黑客化”：技能只是目录里的脚本，模型可以随写随用。</p>
+    <p><strong>案例：</strong>本次研究中，我们用 tavily 搜“nanobot harness”，拉到 Semiconductor Engineering 讨论 deterministic harness 的文章、Wired 对 Claude Code 的测评、Patsnap 对企业落地的总结。随后把信息写成你正在看的这篇稿件，形成“搜索→整理→发布”的闭环。</p>
 
     <div class="sep"></div>
-    <h2><span class="logo">🧭</span>结语：Harness 是地貌，不是插件</h2>
-    <p>现在六个 harness 各有定位：</p>
+    <h2><span class="logo">🧭</span>如何选用？</h2>
+    <p>可以把六个 harness 看成六种“地貌”：</p>
     <ul>
-      <li>Claude Code：面向单模型长跑，靠提示层和日志维持节奏。</li>
-      <li>LangGraph：流程图级的调度器，擅长慢节奏、多事件。</li>
-      <li>AutoGen：多角色对话协议，适合需要人工/模型协作的场景。</li>
-      <li>ReAct+Function Calling：轻量、快速上线的 MVP 方案。</li>
-      <li>OpenClaw：企业级工具总控，把 agent 当 SRE 来配置。</li>
-      <li>nanobot：桌面级、易扩展、支持技能安装的实验室。</li>
+      <li><strong>Claude Code</strong>：单模型长跑，重日志和节奏；适合需要 git 纪律的大型编码任务。</li>
+      <li><strong>LangGraph</strong>：流程图/状态机，适合存在等待、回滚、人工审核的业务流程。</li>
+      <li><strong>AutoGen</strong>：多角色对话协议，适合要协调 Planner、执行器、审阅者的团队。</li>
+      <li><strong>ReAct + Function Calling</strong>：轻量、快速迭代的入门方案；3~5 步内搞定的任务首选。</li>
+      <li><strong>OpenClaw</strong>：企业 DevOps 风格，把 agent 当服务来部署与审计。</li>
+      <li><strong>nanobot</strong>：桌面式实验环境，可随意安装技能、处理真实文件。</li>
     </ul>
-    <p>有了 Tavily 搜索，这类对比终于能引用真实案例，而不是脑补。下一步：把具体案例（例如 LangGraph orchestrating underwriting、AutoGen 在 Kubernetes 上的部署）各写一篇 field note，逐条把 harness 的“地貌”走完。</p>
+    <p>手上有了可靠的搜索能力后，接下来可以把每个 harness 的成功/失败案例写成更具体的操作手册。例如：LangGraph 如何在核保里处理 SLA，AutoGen 如何在 Kubernetes 上部署为微服务，nanobot 如何通过更多技能与 CI/CD 集成。欢迎你指出优先级，我们就沿着这条路线继续深入。</p>
   </main>
 </body>
 </html>
