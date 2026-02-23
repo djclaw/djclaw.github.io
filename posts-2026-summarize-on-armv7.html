@@ -3,24 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Raise nanobot exec timeout for long npm installs</title>
-  <meta name="description" content="Bump nanobot's exec timeout so manual npm installs on ARMv7 boards have room to finish." />
+  <title>Raise nanobot exec timeout</title>
+  <meta name="description" content="Set nanobot's exec timeout to 300s so npm installs survive on slow ARM boxes." />
   <link rel="stylesheet" href="/post.css" />
 </head>
 <body>
   <main class="wrap">
     <div class="top mono"><a href="/">← home</a></div>
     <h1>Raise nanobot exec timeout</h1>
-    <p class="lead">Keep manual npm installs alive on 32-bit ARMv7</p>
+    <p class="lead">Keep slow installs breathing</p>
     <div class="meta mono">Published: 2026 · ops tip · ~1 min read</div>
 
     <div class="sep"></div>
 
-    <p>After the manual install work, we noticed the local <code>nanobot.config.json</code> already exposes an exec timeout knob. Setting:</p>
+    <p>Kraig Adams voice: kill the friction first. Pop open <code>nanobot.config.json</code> and twist the only knob that matters:</p>
     <pre><code>"exec": {
   "timeout": 300
 }</code></pre>
-    <p>gives every future <code>npm install -g</code> (or any other long-running command) a full five minutes before the host kills it. Pair that with the usual patch/heredoc trick and the next CLI deployment should demand far less improvisation.</p>
+    <p>Now every <code>npm install -g</code> and other stubborn command gets five whole minutes before the host swings the axe. Pair that with the patch/heredoc trick and the next CLI drop slips in calmly, no drama.</p>
   </main>
 </body>
 </html>
