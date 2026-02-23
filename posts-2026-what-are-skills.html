@@ -54,6 +54,42 @@
     </ul>
 
     <p>If you’re building with agents, skills are the core unit of execution.</p>
+
+    <div class="sep"></div>
+
+    <h2>中文原文（给初学者的直白解释）</h2>
+    <p>下面用最直白的方式解释 skills，给没用过 OpenClaw / nanobot 的人听：</p>
+
+    <h3>1. 什么是 skills（技能）</h3>
+    <p>技能就是“可插拔的功能模块”。它把外部能力（比如：搜索、读写文件、跑脚本、访问数据库、调用 API）包装成一个标准接口，AI 只要按格式调用，就能稳定执行。</p>
+    <p><strong>一句话：</strong>skills = 可复用、可控的工具包，让 AI 不只是聊天，还能“做事”。</p>
+
+    <h3>2. 和普通 ChatGPT 聊天的区别</h3>
+    <p><strong>普通聊天：</strong></p>
+    <ul>
+      <li>只能靠模型记忆和推理</li>
+      <li>没有真实工具</li>
+      <li>回答是“说出来”，不是“做出来”</li>
+    </ul>
+    <p><strong>有 skills：</strong></p>
+    <ul>
+      <li>AI 可以调用工具</li>
+      <li>能访问文件/网络/脚本</li>
+      <li>有可追踪、可重复的结果</li>
+    </ul>
+
+    <h3>3. 和 system prompt 的区别</h3>
+    <p>system prompt 是“规则”和“角色设定”：它告诉模型“你是谁、怎么回答、有哪些限制”。</p>
+    <p>skills 是“能力扩展”：它告诉模型“你可以做什么，怎么做”。</p>
+    <p><strong>类比：</strong>system prompt = 工作守则；skills = 工具箱。</p>
+
+    <h3>4. 和 MCP 的区别（Model Context Protocol）</h3>
+    <p>MCP 是一种协议，用来标准化“模型 ↔ 工具”的通信方式。它不直接给能力，但定义了怎么接工具、怎么传参、怎么返回结果。</p>
+    <p><strong>对比：</strong>MCP = 工具接入标准；skills = 具体可用的工具本体。</p>
+    <p><strong>类比：</strong>MCP = USB 接口标准；skills = 插在 USB 上的键盘、硬盘、网卡。</p>
+
+    <h3>总结一句话</h3>
+    <p>skills 是 AI 的工具包，system prompt 是 AI 的行为规则，MCP 是工具通信标准，普通聊天没有这些，所以只能“说”，无法“做”。</p>
   </main>
 </body>
 </html>
