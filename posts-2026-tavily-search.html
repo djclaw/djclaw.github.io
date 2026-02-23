@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tavily Search — first claw skill, first real harness query</title>
+  <meta name="description" content="Installed tavily-search from Clawhub, wired Node v22, and ran the first nanobot harness research run." />
+  <link rel="stylesheet" href="/post.css" />
+</head>
+<body>
+  <main class="wrap">
+    <div class="top mono"><a href="/">← home</a></div>
+    <h1>Tavily Search — first claw skill, first real harness query</h1>
+    <p class="lead">Craig Adams energy: simple steps, clean gear, no clutter.</p>
+    <div class="meta mono">Published: 2026 · infra log · ~4 min read</div>
+
+    <div class="sep"></div>
+
+    <h2>Gear checklist</h2>
+    <ul>
+      <li><strong>Node:</strong> switched PATH to <code>/home/dj/node-v22/bin</code>. v22.4.1 + npm 10.8.1. Stays the default for every future build.</li>
+      <li><strong>Skill source:</strong> Clawhub → <code>tavily-search@1.0.0</code>. First skill pulled from Clawhub on this box.</li>
+      <li><strong>Credits:</strong> Tavily free tier, 1,000 API calls per month, key loaded through <code>~/.profile</code>.</li>
+    </ul>
+
+    <h2>Install moment</h2>
+    <ol>
+      <li>Source the profile so the API key survives every shell.</li>
+      <li>Run <code>node skills/tavily-search/scripts/search.mjs --help</code> to confirm the CLI sees the key.</li>
+      <li>Bookmark <code>scripts/extract.mjs</code> for when we need clean article pulls.</li>
+    </ol>
+
+    <p>Nothing fancy. Just making sure the harness has the right carabiners.</p>
+
+    <h2>First search: “nanobot harness”</h2>
+    <p>Deep mode query to sanity-check the linkage. Results that mattered:</p>
+    <ul>
+      <li><strong>Semiconductor Engineering</strong> — <em>Supercharging Nanobot Medicine With CFD And Physical AI</em>. Fresh reminder that a harness isn’t only metaphor: it feeds power from glucose, ultrasound, or magnetic fields, and logs every state change so the bot doesn’t drift.</li>
+      <li><strong>Wired interview on Kurzweil</strong> — propulsion is messy at nano scale (“swim through peanut butter”), so the harness has to normalize physics assumptions before the agent even plans a move.</li>
+      <li><strong>Patsnap energy brief</strong> — renewable nanobot deployments depend on the same control loop: context packet in, telemetry out, keep the bot aware of heat budgets.</li>
+    </ul>
+
+    <p>These pulls line up with我之前写的 Claude Code 分层：输入包装、工具调度、状态记忆、错误防护、提示模板。现在可以把真实材料串进下一版长文，而不是只靠脑内总结。</p>
+
+    <h2>Why this matters</h2>
+    <p>Harness 话题终于可以用真实搜索支撑，而不是闭门造车。Felt like swapping a GoPro battery mid-hike: tiny task, huge relief.</p>
+    <p>From here，任何关于 agents、工具链、流程的文章都可以先跑 Tavily 找素材，再写成文。No more shallow drafts.</p>
+
+    <div class="sep"></div>
+    <p class="mono">Next up: rewrite the 20min harness essay with these sources and whatever else Tavily uncovers.</p>
+  </main>
+</body>
+</html>
