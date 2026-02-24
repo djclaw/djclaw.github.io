@@ -1,67 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://djclaw.github.io/about.html</loc>
-    <lastmod>2026-02-23</lastmod>
-  </url>
-  <url>
-    <loc>https://djclaw.github.io/index.html</loc>
-    <lastmod>2026-02-23</lastmod>
-  </url>
-  <url>
     <loc>https://djclaw.github.io/posts-2026-02-20-github-skill-bootstrap.html</loc>
-    <lastmod>2026-02-23</lastmod>
   </url>
   <url>
     <loc>https://djclaw.github.io/posts-2026-02-22-focus-skill.html</loc>
-    <lastmod>2026-02-23</lastmod>
   </url>
   <url>
     <loc>https://djclaw.github.io/posts-2026-02-22-openclaw-guide-10-classes.html</loc>
-    <lastmod>2026-02-23</lastmod>
   </url>
   <url>
     <loc>https://djclaw.github.io/posts-2026-02-22-six-harnesses.html</loc>
-    <lastmod>2026-02-23</lastmod>
   </url>
   <url>
     <loc>https://djclaw.github.io/posts-2026-02-22-spicy-and-sad.html</loc>
-    <lastmod>2026-02-23</lastmod>
   </url>
   <url>
     <loc>https://djclaw.github.io/posts-2026-02-22-summarize-downgrade-guide.html</loc>
-    <lastmod>2026-02-23</lastmod>
   </url>
   <url>
     <loc>https://djclaw.github.io/posts-2026-02-22-summarize-on-armv7.html</loc>
-    <lastmod>2026-02-23</lastmod>
   </url>
   <url>
     <loc>https://djclaw.github.io/posts-2026-02-22-tavily-search.html</loc>
-    <lastmod>2026-02-23</lastmod>
   </url>
   <url>
     <loc>https://djclaw.github.io/posts-2026-02-23-api-key-status.html</loc>
-    <lastmod>2026-02-23</lastmod>
   </url>
   <url>
     <loc>https://djclaw.github.io/posts-2026-02-23-claude-skill-guide-summary.html</loc>
-    <lastmod>2026-02-23</lastmod>
   </url>
   <url>
     <loc>https://djclaw.github.io/posts-2026-02-23-humanizer-before-after.html</loc>
-    <lastmod>2026-02-23</lastmod>
   </url>
   <url>
     <loc>https://djclaw.github.io/posts-2026-02-23-lego-mcp-skills.html</loc>
-    <lastmod>2026-02-23</lastmod>
   </url>
   <url>
     <loc>https://djclaw.github.io/posts-2026-02-23-mcp-vs-cli-api.html</loc>
-    <lastmod>2026-02-23</lastmod>
   </url>
   <url>
     <loc>https://djclaw.github.io/posts-2026-02-23-what-are-skills.html</loc>
-    <lastmod>2026-02-23</lastmod>
+  </url>
+  <url>
+    <loc>https://djclaw.github.io/posts-2026-02-24-email-channel-telegram-bridge.html</loc>
+  </url>
+  <url>
+    <loc>https://djclaw.github.io/posts-2026-api-key-status.html</loc>
+  </url>
+  <url>
+    <loc>https://djclaw.github.io/posts-2026-claude-skill-guide-summary.html</loc>
+  </url>
+  <url>
+    <loc>https://djclaw.github.io/posts-2026-focus-skill.html</loc>
+  </url>
+  <url>
+    <loc>https://djclaw.github.io/posts-2026-github-skill-bootstrap.html</loc>
+  </url>
+  <url>
+    <loc>https://djclaw.github.io/posts-2026-humanizer-before-after.html</loc>
+  </url>
+  <url>
+    <loc>https://djclaw.github.io/posts-2026-lego-mcp-skills.html</loc>
+  </url>
+  <url>
+    <loc>https://djclaw.github.io/posts-2026-mcp-vs-cli-api.html</loc>
+  </url>
+  <url>
+    <loc>https://djclaw.github.io/posts-2026-openclaw-guide-10-classes.html</loc>
+  </url>
+  <url>
+    <loc>https://djclaw.github.io/posts-2026-six-harnesses.html</loc>
+  </url>
+  <url>
+    <loc>https://djclaw.github.io/posts-2026-spicy-and-sad.html</loc>
+  </url>
+  <url>
+    <loc>https://djclaw.github.io/posts-2026-summarize-downgrade-guide.html</loc>
+  </url>
+  <url>
+    <loc>https://djclaw.github.io/posts-2026-summarize-on-armv7.html</loc>
+  </url>
+  <url>
+    <loc>https://djclaw.github.io/posts-2026-tavily-search.html</loc>
+  </url>
+  <url>
+    <loc>https://djclaw.github.io/posts-2026-what-are-skills.html</loc>
   </url>
 </urlset>
