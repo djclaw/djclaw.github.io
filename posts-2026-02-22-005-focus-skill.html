@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
-<title>005 Focus Skill — Quadrants without noise</title>
+<title>005 Focus Skill — quadrants without noise</title>
 <meta content="A calm, quadrant-based focus skill for Telegram that keeps Personal, Work, Routine, and Admin tasks in view." name="description"/>
 <link href="/post.css" rel="stylesheet"/>
 </head>
@@ -12,60 +12,49 @@
 <main class="wrap">
 <div class="top mono"><a href="/">← home</a></div>
 <h1><span class="post-number">005</span> Focus skill — quadrants without noise</h1>
-<p class="lead">a tiny CLI that lets my four boxes breathe</p>
-<div class="meta mono">Published: 2026 · workflow note · ~3 min read</div>
+<p class="lead">four boxes. one quiet list.</p>
+<div class="meta mono">Published: 2026 · workflow note · ~2 min read</div>
 <div class="sep"></div>
+
 <h2>Why this exists</h2>
-<p>I live inside four mental boxes: Personal, Work, Routine, Admin. The labels never change, the gravity does. I needed a way to speak that structure out loud inside Telegram without re-explaining it every time. So I wrote <code>focus</code>, a single Python file living as a nanobot skill, and let it be boring on purpose.</p>
-<p>Every task carries three truths: the quadrant, the project tag, and whether it deserves a ⚡. Nothing else is mandatory. The moment I say “add a Personal priority for Link,” the skill writes JSON, stamps a P-number, and the list stays in the shape my brain expects.</p>
-<h2>How it’s wired</h2>
+<p>My week has four lanes: Personal, Work, Routine, Admin. The labels don’t change. The weight does. I wanted one steady view in Telegram, so I built <code>focus</code>.</p>
+<p>Each task is just a quadrant, a project tag, and a ⚡ if it matters now. Everything else is silence.</p>
+
+<h2>What it is</h2>
 <ul>
-<li><strong>Files:</strong> <code>skills/focus/focus.py</code> handles commands, <code>focus_data.json</code> stores tasks, <code>SKILL.md</code> documents usage.</li>
-<li><strong>Commands:</strong> <code>focus add</code>, <code>focus list</code>, <code>focus done</code>, <code>focus remove</code>. Nothing fancy, just enough verbs to stay honest.</li>
-<li><strong>ID scheme:</strong> Quadrant letter + sequence (P1, W3, R2, A7). Priority tasks float to the top and show a ⚡ immediately after the ID.</li>
-<li><strong>Output:</strong> Four blocks in compass order. Project tags are bold, task notes and due dates live in parentheses. No color, no tables, just rhythm.</li>
+<li><strong>Core:</strong> a tiny skill with four commands: <code>add</code>, <code>list</code>, <code>done</code>, <code>remove</code>.</li>
+<li><strong>IDs:</strong> quadrant letter + number (P1, W3, R2, A7).</li>
+<li><strong>View:</strong> four blocks in compass order. Bold project tags. Notes in parentheses.</li>
 </ul>
-<h2>Flow I follow</h2>
+
+<h2>How I use it</h2>
 <ol>
-<li>Say what lane it lives in: "+ focus add --category personal --project Link --priority --title '拍摄 vlog 初稿'".</li>
-<li>Ask for a pulse: "+ focus list" inside Telegram drops the four-box map.</li>
-<li>When something finishes, run <code>focus done --id P2</code> and let the skill mark the timestamp. I can still choose to archive later.</li>
+<li>Add: <code>+ focus add --category personal --project Link --priority --title "拍摄 vlog 初稿"</code>.</li>
+<li>List: <code>+ focus list</code>.</li>
+<li>Finish: <code>focus done --id P2</code>.</li>
 </ol>
-<p>The entire point is consistency. I don’t want to remember custom markdown every time I’m out walking and texting myself. The skill keeps the formatting strict so I can think about the work, not the report.</p>
-<h2>Mockup list with real volume</h2>
-<p>This is what the list looks like when the week is full but still legible:</p>
+<p>The format stays strict so my brain can stay loose.</p>
+
+<h2>Mockup</h2>
 <pre><code>↖️ Personal (P)
-  P1 ⚡ **Link** | 拍视频：暮色城市段 (due 2026-02-25; 剪辑优先)
+  P1 ⚡ **Link** | 拍视频：暮色城市段
   P2 ⚡ **Foot Locker** | Campaign moodboard v2
-  P3 **Link** | 写 newsletter 草稿
-  P4 **Studio** | 器材保养日
 
 ↗️ Work (W)
-  W1 ⚡ **ClientX** | Paid social tagline (due 2026-02-23)
-  W2 ⚡ **ClientY** | 年度复盘 deck
-  W3 **SideProject** | API cleanup for beta
-  W4 **Production** | 录音室走查
-  W5 **Ops** | 团队一对一 (note: 14:00)
+  W1 ⚡ **ClientX** | Paid social tagline
+  W2 **Ops** | 团队一对一
 
 ↙️ Routine (R)
-  R1 ⚡ **BJJ** | Nogi 晚课 (19:00)
-  R2 ⚡ **Running** | Interval 6x400 (note: track)
-  R3 **Boxing** | Mitt work 周四
-  R4 **Reading** | Finish "Creative Quest"
-  R5 **Spanish** | Duo tree checkpoint 34
-  R6 **Recovery** | Mobility + sauna
+  R1 ⚡ **BJJ** | Nogi 晚课
+  R2 **Reading** | Finish "Creative Quest"
 
 ↘️ Admin (A)
-  A1 ⚡ **ID** | 更新身份证 (due 2026-03-01)
-  A2 ⚡ **Finance** | 税务预估表
-  A3 **Bank** | 更换 debit 卡
-  A4 **Travel** | 签证材料翻译
-  A5 **Home** | 房租自动扣款确认
+  A1 ⚡ **ID** | 更新身份证
+  A2 **Finance** | 税务预估表
 </code></pre>
-<p>Even at fifteen lines per block, the hierarchy stays obvious. Priorities hit first, every task reminds me which project birthed it, and the compass keeps me from losing context when the chat scrolls.</p>
+
 <h2>What’s next</h2>
-<p>Right now it’s just for me. Later I might wrap it as a proper CLI with <code>console_scripts</code> so anyone can run <code>pip install focus-grid</code> and sync their own <code>~/.config/focus/data.json</code>. Maybe I’ll add cron hooks for due dates. But today, the win is having a four-quadrant answer ready every time I type “现在 focus 是什么?”</p>
-<p>Quiet tools age better when they start honest.</p>
+<p>Today it’s personal. Later I might ship a small CLI. For now, one quiet list is enough.</p>
 </main>
 </body>
 </html>
