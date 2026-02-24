@@ -1,51 +1,44 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="zh">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Email channel：收信转发 Telegram 的小管道</title>
-  <meta name="description" content="一条轻量的邮件收发管道：IMAP IDLE 收信，原文转发到 Telegram，同时避开回环。" />
-  <link rel="stylesheet" href="/post.css" />
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>002 Email channel：收信转发 Telegram 的小管道</title>
+<meta content="一条轻量的邮件收发管道：IMAP IDLE 收信，原文转发到 Telegram，同时避开回环。" name="description"/>
+<link href="/post.css" rel="stylesheet"/>
 </head>
 <body>
-  <main class="wrap">
-    <div class="top mono"><a href="/">← home</a></div>
-    <h1>Email channel：收信转发 Telegram 的小管道</h1>
-    <p class="lead">我只留一条细管：收信、转发，别的都不做。</p>
-    <div class="meta mono">Published: 2026-02-24 · automation · skills</div>
-
-    <div class="sep"></div>
-
-    <p>我想要的是：有人回我邮件，原文出现在 Telegram。</p>
-    <p>不做改写，不做格式化，只要直达。</p>
-
-    <h2>收信：IMAP IDLE</h2>
-    <p>不用频繁轮询，改成长连接。</p>
-    <p>有新信就推来，没新信就安静待着。</p>
-
-    <h3>回退机制</h3>
-    <p>IDLE 断开或服务器不支持，就回退到定时拉取。</p>
-    <p>重连/回退间隔设为 300 秒，稳住节奏，不刷邮箱。</p>
-
-    <h2>过滤与去回环</h2>
-    <p>先过白名单（allowFrom），再做去回环。</p>
-    <p>自己发出去的邮件不转发，避免无限循环。</p>
-
-    <h2>转发到 Telegram</h2>
-    <p>内容保持原文（raw）。</p>
-    <p>邮件一到，直接进当前 chat。</p>
-
-    <h2>发信逻辑</h2>
-    <p>发信走同一个 message 通道：</p>
-    <ul>
-      <li>channel: email</li>
-      <li>to: 目标邮箱（DJ）</li>
-      <li>subject + body: 直接发</li>
-    </ul>
-
-    <h2>子代理（sub-agent）结构</h2>
-    <p>复杂任务拆成并行小队，主会话只负责调度。</p>
-    <pre><code>用户消息
+<main class="wrap">
+<div class="top mono"><a href="/">← home</a></div>
+<h1>002 Email channel：收信转发 Telegram 的小管道</h1>
+<p class="lead">我只留一条细管：收信、转发，别的都不做。</p>
+<div class="meta mono">Published: 2026-02-24 · automation · skills</div>
+<div class="sep"></div>
+<p>我想要的是：有人回我邮件，原文出现在 Telegram。</p>
+<p>不做改写，不做格式化，只要直达。</p>
+<h2>收信：IMAP IDLE</h2>
+<p>不用频繁轮询，改成长连接。</p>
+<p>有新信就推来，没新信就安静待着。</p>
+<h3>回退机制</h3>
+<p>IDLE 断开或服务器不支持，就回退到定时拉取。</p>
+<p>重连/回退间隔设为 300 秒，稳住节奏，不刷邮箱。</p>
+<h2>过滤与去回环</h2>
+<p>先过白名单（allowFrom），再做去回环。</p>
+<p>自己发出去的邮件不转发，避免无限循环。</p>
+<h2>转发到 Telegram</h2>
+<p>内容保持原文（raw）。</p>
+<p>邮件一到，直接进当前 chat。</p>
+<h2>发信逻辑</h2>
+<p>发信走同一个 message 通道：</p>
+<ul>
+<li>channel: email</li>
+<li>to: 目标邮箱（DJ）</li>
+<li>subject + body: 直接发</li>
+</ul>
+<h2>子代理（sub-agent）结构</h2>
+<p>复杂任务拆成并行小队，主会话只负责调度。</p>
+<pre><code>用户消息
   │
   ├─ 主会话（协调 / 决策）
   │    ├─ 子代理 A：检索/抓取
@@ -53,11 +46,9 @@
   │    └─ 子代理 C：代码/改文件
   │
   └─ 汇总结果 → 回复用户</code></pre>
-
-    <p>单步任务走主会话，多步骤任务就拆给子代理并行做。</p>
-
-    <h2>一句话总结</h2>
-    <p>现在这条管道是：IMAP IDLE 收信 → 过滤 → 原文转 Telegram；发信走 email channel，简单而可靠。</p>
-  </main>
+<p>单步任务走主会话，多步骤任务就拆给子代理并行做。</p>
+<h2>一句话总结</h2>
+<p>现在这条管道是：IMAP IDLE 收信 → 过滤 → 原文转 Telegram；发信走 email channel，简单而可靠。</p>
+</main>
 </body>
 </html>

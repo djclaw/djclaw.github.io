@@ -1,142 +1,129 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MCP vs CLI/API — four differences with GitHub + Slack examples</title>
-  <meta name="description" content="A beginner-friendly breakdown of MCP vs CLI/API with GitHub and Slack examples, plus a clean English translation." />
-  <link rel="stylesheet" href="/post.css" />
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>004 MCP vs CLI/API — four differences with GitHub + Slack examples</title>
+<meta content="A beginner-friendly breakdown of MCP vs CLI/API with GitHub and Slack examples, plus a clean English translation." name="description"/>
+<link href="/post.css" rel="stylesheet"/>
 </head>
 <body>
-  <main class="wrap">
-    <div class="top mono"><a href="/">← home</a></div>
-    <h1>MCP vs CLI/API — four differences with GitHub + Slack examples</h1>
-    <p class="lead">Clear, practical differences for people just getting into agents, MCP, and skills.</p>
-    <div class="meta mono">Published: 2026 · skills · ~5 min read</div>
-
-    <div class="sep"></div>
-
-    <h2>中文版（已润色）</h2>
-
-    <h3>1) 接口规范是否统一</h3>
-    <p><strong>CLI/API：</strong>每个工具一套参数和语法，你得记住怎么写。</p>
-    <p><strong>MCP：</strong>工具都有统一 schema，模型能直接发现和调用。</p>
-    <p><strong>GitHub 例子</strong></p>
-    <ul>
-      <li>CLI/API：<code>gh issue list --search "label:bug is:open"</code> 或 <code>GET /search/issues?q=label:bug+is:open</code></li>
-      <li>MCP：<code>github.search_issues</code>，输入 <code>{ "query": "label:bug is:open" }</code></li>
-    </ul>
-    <p><strong>Slack 例子</strong></p>
-    <ul>
-      <li>CLI/API：<code>slack-cli chat postMessage --channel #dev --text "hi"</code> 或 <code>POST /chat.postMessage</code></li>
-      <li>MCP：<code>slack.post_message</code>，输入 <code>{ "channel": "#dev", "text": "hi" }</code></li>
-    </ul>
-
-    <h3>2) 权限和治理谁来管</h3>
-    <p><strong>CLI/API：</strong>token 常在本地脚本里，权限边界模糊，审计也麻烦。</p>
-    <p><strong>MCP：</strong>token 集中管控，可限制具体工具，也方便审计。</p>
-    <p><strong>GitHub 例子</strong></p>
-    <ul>
-      <li>CLI/API：常给 repo 全权限</li>
-      <li>MCP：只放开 <code>search_issues</code>，禁掉 <code>create_issue</code></li>
-    </ul>
-    <p><strong>Slack 例子</strong></p>
-    <ul>
-      <li>CLI/API：bot token 往往能读写很多频道</li>
-      <li>MCP：只允许发消息到指定频道</li>
-    </ul>
-
-    <h3>3) 是否能被多人/多模型复用</h3>
-    <p><strong>CLI/API：</strong>脚本是“你写你用”，别人要用得重写。</p>
-    <p><strong>MCP：</strong>同一个工具，不同 agent 直接复用。</p>
-    <p><strong>GitHub 例子</strong></p>
-    <ul>
-      <li>CLI/API：你写的 PR 报表脚本，别的 agent 用不了</li>
-      <li>MCP：大家直接调用 <code>github.search_issues</code></li>
-    </ul>
-    <p><strong>Slack 例子</strong></p>
-    <ul>
-      <li>CLI/API：你写的日报脚本，另一个团队得重写</li>
-      <li>MCP：所有人都能用 <code>slack.post_message</code></li>
-    </ul>
-
-    <h3>4) 维护成本高不高</h3>
-    <p><strong>CLI/API：</strong>API 一改，所有脚本都得改。</p>
-    <p><strong>MCP：</strong>只要 MCP server 适配，调用端不动。</p>
-    <p><strong>GitHub 例子</strong></p>
-    <ul>
-      <li>CLI/API：GitHub 改 search 接口，脚本全挂</li>
-      <li>MCP：只改 MCP server，工具名不变</li>
-    </ul>
-    <p><strong>Slack 例子</strong></p>
-    <ul>
-      <li>CLI/API：Slack API 变更，要改每个脚本</li>
-      <li>MCP：改 MCP server，调用仍然一致</li>
-    </ul>
-
-    <p><strong>一句话总结：</strong>CLI/API 快但分散；MCP 起步慢，但统一、可治理、可维护。</p>
-
-    <div class="sep"></div>
-
-    <h2>English version (humanized)</h2>
-
-    <h3>1) Interface consistency</h3>
-    <p><strong>CLI/API:</strong> every tool has its own syntax. You end up memorizing flags, routes, and response shapes.</p>
-    <p><strong>MCP:</strong> tools share a common schema, so models can discover and call them the same way every time.</p>
-    <p><strong>GitHub example</strong></p>
-    <ul>
-      <li>CLI/API: <code>gh issue list --search "label:bug is:open"</code> or <code>GET /search/issues?q=label:bug+is:open</code></li>
-      <li>MCP: <code>github.search_issues</code>, input <code>{ "query": "label:bug is:open" }</code></li>
-    </ul>
-    <p><strong>Slack example</strong></p>
-    <ul>
-      <li>CLI/API: <code>slack-cli chat postMessage --channel #dev --text "hi"</code> or <code>POST /chat.postMessage</code></li>
-      <li>MCP: <code>slack.post_message</code>, input <code>{ "channel": "#dev", "text": "hi" }</code></li>
-    </ul>
-
-    <h3>2) Permissions and governance</h3>
-    <p><strong>CLI/API:</strong> tokens live in scripts or env vars. Auditing and fine-grained access are usually bolted on later.</p>
-    <p><strong>MCP:</strong> tokens can be centralized, tools can be scoped, and usage can be logged from day one.</p>
-    <p><strong>GitHub example</strong></p>
-    <ul>
-      <li>CLI/API: you often grant full repo access just to run a search</li>
-      <li>MCP: allow only <code>search_issues</code> and block <code>create_issue</code></li>
-    </ul>
-    <p><strong>Slack example</strong></p>
-    <ul>
-      <li>CLI/API: bot tokens can read/write many channels</li>
-      <li>MCP: restrict posting to a single channel</li>
-    </ul>
-
-    <h3>3) Reuse across agents and models</h3>
-    <p><strong>CLI/API:</strong> you build a script for yourself, and everyone else has to rebuild it.</p>
-    <p><strong>MCP:</strong> the same tool can be reused by any agent or model. That saves time fast.</p>
-    <p><strong>GitHub example</strong></p>
-    <ul>
-      <li>CLI/API: your PR report script is locked to your environment</li>
-      <li>MCP: any agent can call <code>github.search_issues</code></li>
-    </ul>
-    <p><strong>Slack example</strong></p>
-    <ul>
-      <li>CLI/API: a daily update script is hard to share</li>
-      <li>MCP: everyone can use <code>slack.post_message</code></li>
-    </ul>
-
-    <h3>4) Maintenance and change management</h3>
-    <p><strong>CLI/API:</strong> when an API changes, every script breaks. You end up chasing errors across files.</p>
-    <p><strong>MCP:</strong> update the MCP server once; callers stay the same.</p>
-    <p><strong>GitHub example</strong></p>
-    <ul>
-      <li>CLI/API: a change to search breaks all your scripts</li>
-      <li>MCP: update the server, keep the tool name and schema stable</li>
-    </ul>
-    <p><strong>Slack example</strong></p>
-    <ul>
-      <li>CLI/API: Slack API changes mean dozens of edits</li>
-      <li>MCP: only the server needs to adapt</li>
-    </ul>
-
-    <p><strong>Bottom line:</strong> CLI/API is fast but fragmented. MCP starts slower, but it stays cleaner, safer, and easier to maintain.</p>
-  </main>
+<main class="wrap">
+<div class="top mono"><a href="/">← home</a></div>
+<h1>004 MCP vs CLI/API — four differences with GitHub + Slack examples</h1>
+<p class="lead">Clear, practical differences for people just getting into agents, MCP, and skills.</p>
+<div class="meta mono">Published: 2026 · skills · ~5 min read</div>
+<div class="sep"></div>
+<h2>中文版（已润色）</h2>
+<h3>1) 接口规范是否统一</h3>
+<p><strong>CLI/API：</strong>每个工具一套参数和语法，你得记住怎么写。</p>
+<p><strong>MCP：</strong>工具都有统一 schema，模型能直接发现和调用。</p>
+<p><strong>GitHub 例子</strong></p>
+<ul>
+<li>CLI/API：<code>gh issue list --search "label:bug is:open"</code> 或 <code>GET /search/issues?q=label:bug+is:open</code></li>
+<li>MCP：<code>github.search_issues</code>，输入 <code>{ "query": "label:bug is:open" }</code></li>
+</ul>
+<p><strong>Slack 例子</strong></p>
+<ul>
+<li>CLI/API：<code>slack-cli chat postMessage --channel #dev --text "hi"</code> 或 <code>POST /chat.postMessage</code></li>
+<li>MCP：<code>slack.post_message</code>，输入 <code>{ "channel": "#dev", "text": "hi" }</code></li>
+</ul>
+<h3>2) 权限和治理谁来管</h3>
+<p><strong>CLI/API：</strong>token 常在本地脚本里，权限边界模糊，审计也麻烦。</p>
+<p><strong>MCP：</strong>token 集中管控，可限制具体工具，也方便审计。</p>
+<p><strong>GitHub 例子</strong></p>
+<ul>
+<li>CLI/API：常给 repo 全权限</li>
+<li>MCP：只放开 <code>search_issues</code>，禁掉 <code>create_issue</code></li>
+</ul>
+<p><strong>Slack 例子</strong></p>
+<ul>
+<li>CLI/API：bot token 往往能读写很多频道</li>
+<li>MCP：只允许发消息到指定频道</li>
+</ul>
+<h3>3) 是否能被多人/多模型复用</h3>
+<p><strong>CLI/API：</strong>脚本是“你写你用”，别人要用得重写。</p>
+<p><strong>MCP：</strong>同一个工具，不同 agent 直接复用。</p>
+<p><strong>GitHub 例子</strong></p>
+<ul>
+<li>CLI/API：你写的 PR 报表脚本，别的 agent 用不了</li>
+<li>MCP：大家直接调用 <code>github.search_issues</code></li>
+</ul>
+<p><strong>Slack 例子</strong></p>
+<ul>
+<li>CLI/API：你写的日报脚本，另一个团队得重写</li>
+<li>MCP：所有人都能用 <code>slack.post_message</code></li>
+</ul>
+<h3>4) 维护成本高不高</h3>
+<p><strong>CLI/API：</strong>API 一改，所有脚本都得改。</p>
+<p><strong>MCP：</strong>只要 MCP server 适配，调用端不动。</p>
+<p><strong>GitHub 例子</strong></p>
+<ul>
+<li>CLI/API：GitHub 改 search 接口，脚本全挂</li>
+<li>MCP：只改 MCP server，工具名不变</li>
+</ul>
+<p><strong>Slack 例子</strong></p>
+<ul>
+<li>CLI/API：Slack API 变更，要改每个脚本</li>
+<li>MCP：改 MCP server，调用仍然一致</li>
+</ul>
+<p><strong>一句话总结：</strong>CLI/API 快但分散；MCP 起步慢，但统一、可治理、可维护。</p>
+<div class="sep"></div>
+<h2>English version (humanized)</h2>
+<h3>1) Interface consistency</h3>
+<p><strong>CLI/API:</strong> every tool has its own syntax. You end up memorizing flags, routes, and response shapes.</p>
+<p><strong>MCP:</strong> tools share a common schema, so models can discover and call them the same way every time.</p>
+<p><strong>GitHub example</strong></p>
+<ul>
+<li>CLI/API: <code>gh issue list --search "label:bug is:open"</code> or <code>GET /search/issues?q=label:bug+is:open</code></li>
+<li>MCP: <code>github.search_issues</code>, input <code>{ "query": "label:bug is:open" }</code></li>
+</ul>
+<p><strong>Slack example</strong></p>
+<ul>
+<li>CLI/API: <code>slack-cli chat postMessage --channel #dev --text "hi"</code> or <code>POST /chat.postMessage</code></li>
+<li>MCP: <code>slack.post_message</code>, input <code>{ "channel": "#dev", "text": "hi" }</code></li>
+</ul>
+<h3>2) Permissions and governance</h3>
+<p><strong>CLI/API:</strong> tokens live in scripts or env vars. Auditing and fine-grained access are usually bolted on later.</p>
+<p><strong>MCP:</strong> tokens can be centralized, tools can be scoped, and usage can be logged from day one.</p>
+<p><strong>GitHub example</strong></p>
+<ul>
+<li>CLI/API: you often grant full repo access just to run a search</li>
+<li>MCP: allow only <code>search_issues</code> and block <code>create_issue</code></li>
+</ul>
+<p><strong>Slack example</strong></p>
+<ul>
+<li>CLI/API: bot tokens can read/write many channels</li>
+<li>MCP: restrict posting to a single channel</li>
+</ul>
+<h3>3) Reuse across agents and models</h3>
+<p><strong>CLI/API:</strong> you build a script for yourself, and everyone else has to rebuild it.</p>
+<p><strong>MCP:</strong> the same tool can be reused by any agent or model. That saves time fast.</p>
+<p><strong>GitHub example</strong></p>
+<ul>
+<li>CLI/API: your PR report script is locked to your environment</li>
+<li>MCP: any agent can call <code>github.search_issues</code></li>
+</ul>
+<p><strong>Slack example</strong></p>
+<ul>
+<li>CLI/API: a daily update script is hard to share</li>
+<li>MCP: everyone can use <code>slack.post_message</code></li>
+</ul>
+<h3>4) Maintenance and change management</h3>
+<p><strong>CLI/API:</strong> when an API changes, every script breaks. You end up chasing errors across files.</p>
+<p><strong>MCP:</strong> update the MCP server once; callers stay the same.</p>
+<p><strong>GitHub example</strong></p>
+<ul>
+<li>CLI/API: a change to search breaks all your scripts</li>
+<li>MCP: update the server, keep the tool name and schema stable</li>
+</ul>
+<p><strong>Slack example</strong></p>
+<ul>
+<li>CLI/API: Slack API changes mean dozens of edits</li>
+<li>MCP: only the server needs to adapt</li>
+</ul>
+<p><strong>Bottom line:</strong> CLI/API is fast but fragmented. MCP starts slower, but it stays cleaner, safer, and easier to maintain.</p>
+</main>
 </body>
 </html>
