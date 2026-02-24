@@ -31,8 +31,8 @@ body{
 .site-nav a:hover{border-color:var(--ink)}
 .site-nav a + a::before{content:"·";color:var(--muted);margin:0 10px 0 2px}
 .eyebrow{font-size:13px;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
-.site-header h1{font-size:clamp(36px,6vw,58px);margin:0 0 14px;letter-spacing:-.02em}
-.intro{font-size:20px;color:#353c48;margin:0 0 22px;max-width:46ch}
+.site-header h1{font-size:clamp(30px,4.8vw,48px);margin:0 0 12px;letter-spacing:-.02em}
+.intro{font-size:17px;color:#353c48;margin:0 0 20px;max-width:46ch}
 
 .primary-links{display:flex;gap:20px;font-size:15px;text-transform:uppercase}
 .primary-links a{color:var(--ink);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px}
@@ -48,10 +48,10 @@ body{
 .post-list{display:flex;flex-direction:column;border-top:1px solid var(--line)}
 .post-row{display:grid;grid-template-columns:130px 1fr;gap:18px;padding:20px 0;border-bottom:1px solid var(--line)}
 .post-row time{font-size:14px;color:var(--muted);font-family:var(--mono)}
-.post-body p{margin:6px 0 10px;color:var(--muted);font-size:16px}
-.post-title{font-size:22px;color:var(--ink);text-decoration:none;font-weight:600}
-.post-title .post-number{font-size:14px;color:var(--muted);font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-right:8px}
-.post-title span{font-size:18px;margin-left:6px}
+.post-body p{margin:6px 0 10px;color:var(--muted);font-size:15px}
+.post-title{font-size:20px;color:var(--ink);text-decoration:none;font-weight:600}
+.post-title .post-number{font-size:20px;color:var(--muted);font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-right:8px}
+.post-title span{font-size:16px;margin-left:6px}
 .post-title:hover{text-decoration:underline}
 .tag-badges{display:flex;gap:10px;font-size:13px;color:var(--accent);flex-wrap:wrap}
 

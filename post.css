@@ -26,13 +26,13 @@ body{
 .top{color:var(--muted);font-size:13px;letter-spacing:.03em}
 .meta{color:var(--muted);font-size:13px}
 
-h1{font-size:clamp(34px,6vw,62px);line-height:1.06;letter-spacing:-.02em;margin:10px 0 14px}
-.post-number{font-size:16px;color:var(--muted);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-right:10px}
- h2{margin-top:36px;font-size:28px;line-height:1.2;letter-spacing:-.01em}
- h3{margin-top:26px;font-size:21px;line-height:1.35}
+h1{font-size:clamp(28px,4.8vw,52px);line-height:1.06;letter-spacing:-.02em;margin:10px 0 12px}
+.post-number{font-size:14px;color:var(--muted);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-right:10px}
+ h2{margin-top:32px;font-size:24px;line-height:1.2;letter-spacing:-.01em}
+ h3{margin-top:22px;font-size:19px;line-height:1.35}
  
- .lead{font-size:21px;color:#3e4958;max-width:46ch;margin:0 0 24px}
- .smalllead{font-size:18px;color:#4d5766;max-width:56ch}
+ .lead{font-size:18px;color:#3e4958;max-width:46ch;margin:0 0 22px}
+ .smalllead{font-size:16px;color:#4d5766;max-width:56ch}
  
  a{color:var(--accent);text-decoration:none}
  a:hover{text-decoration:underline}
@@ -65,7 +65,7 @@ h1{font-size:clamp(34px,6vw,62px);line-height:1.06;letter-spacing:-.02em;margin:
  .toc a{display:block;padding:2px 0}
  
  @media (max-width:700px){
-   h2{font-size:24px}
-   article h3{font-size:20px}
-   .lead{font-size:19px}
+   h2{font-size:22px}
+   article h3{font-size:18px}
+   .lead{font-size:17px}
  }
