@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html lang="zh">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>010 Claude Skills 完整指南（XL 中文总结）</title>
+<meta content="对《The Complete Guide to Building Skills for Claude》的超长中文总结：结构、设计、测试、分发与常见问题。" name="description"/>
+<link href="/post.css" rel="stylesheet"/>
+</head>
+<body>
+<main class="wrap">
+<div class="top mono"><a href="/">← home</a></div>
+<h1><span class="post-number">010</span> Claude Skills 完整指南（XL 中文总结）</h1>
+<p class="lead">基于 Anthropic 官方 PDF《The Complete Guide to Building Skills for Claude》的超长中文总结，适合快速理解“技能”体系的结构、设计方法与落地流程。</p>
+<div class="meta mono">Published: 2026 · skills · ~8 min read</div>
+<div class="sep"></div>
+<h2>1) Skills 的核心概念</h2>
+<p>Skills 是“可打包的任务说明书”。它把一组可复用的工作流、工具调用方式、错误处理、输出格式等内容，封装成固定结构，交给 Claude 在需要时自动加载并执行。</p>
+<p>技能的目标不是让模型更聪明，而是让流程更稳定：减少反复解释、提升一致性、降低错误率。</p>
+<h2>2) 目录结构与渐进披露（Progressive Disclosure）</h2>
+<p>一个 skill 至少包含 <code>SKILL.md</code>，可选包含 <code>scripts/</code>、<code>references/</code>、<code>assets/</code> 等目录。加载分三层：</p>
+<ul>
+<li><strong>第一层：YAML frontmatter</strong>（始终加载）——决定“什么时候该用这个技能”。</li>
+<li><strong>第二层：SKILL.md 正文</strong>（按需加载）——给出操作步骤、判断规则与输出要求。</li>
+<li><strong>第三层：链接文件</strong>（再按需加载）——更多细节、素材或模板。</li>
+</ul>
+<p>目的：减少 token 浪费，让模型只在必要时读取更深的内容。</p>
+<h2>3) 技能与 MCP 的关系</h2>
+<p>MCP 负责“连工具”，skill 负责“教怎么用”。</p>
+<ul>
+<li>MCP 提供连接、权限和工具清单。</li>
+<li>Skill 提供流程、规则与最佳实践。</li>
+</ul>
+<h2>4) 三类典型用例</h2>
+<ol>
+<li><strong>文档与资产生成</strong>：输出更稳定的文案、报告、代码、PPT 等。</li>
+<li><strong>流程自动化</strong>：多步骤工作流（含校验与回退）。</li>
+<li><strong>MCP 强化</strong>：为特定工具组合提供“固定打法”。</li>
+</ol>
+<h2>5) 评估成功的标准</h2>
+<ul>
+<li><strong>触发准确率</strong>：该触发时能触发，不该触发时保持安静。</li>
+<li><strong>工具调用效率</strong>：调用正确、顺序合理、少走弯路。</li>
+<li><strong>用户负担降低</strong>：用户不必重复解释。</li>
+<li><strong>输出一致性</strong>：在不同会话/时间点仍能保持风格与结构一致。</li>
+</ul>
+<h2>6) 技术规范与硬性要求</h2>
+<ul>
+<li><strong>文件名必须是</strong> <code>SKILL.md</code>。</li>
+<li><strong>目录与 name 均为 kebab-case</strong>（短横线命名）。</li>
+<li><strong>YAML frontmatter 必填</strong>：name + description（描述需明确触发条件，且 &lt; 1024 字符）。</li>
+<li><strong>安全与合规</strong>：frontmatter 禁止 XML 角括号，名称禁止保留字（如 claude / anthropic）。</li>
+<li><strong>指令必须可执行</strong>：避免抽象描述，必须让模型“知道怎么做”。</li>
+</ul>
+<h2>7) 测试与迭代建议</h2>
+<p>建议进行三层测试：</p>
+<ul>
+<li><strong>触发测试</strong>：能否在正确场景激活，并忽略错误场景。</li>
+<li><strong>功能测试</strong>：输出是否正确、调用是否成功。</li>
+<li><strong>性能对比</strong>：有无 skill 的情况下差异是否明显。</li>
+</ul>
+<p>官方建议使用 <em>skill-creator</em> 工具来生成、评审与修订技能。</p>
+<h2>8) 分发方式与组织级部署</h2>
+<ul>
+<li><strong>个人</strong>：可通过上传 ZIP 到 Claude.ai 设置。</li>
+<li><strong>团队/组织</strong>：管理员可将 skill 部署到工作区。</li>
+<li><strong>API</strong>：支持通过 <code>/v1/skills</code> 接口管理。</li>
+</ul>
+<h2>9) 常见模式（Patterns）</h2>
+<ul>
+<li><strong>顺序编排</strong>：严格步骤执行（适合有依赖的流程）。</li>
+<li><strong>多 MCP 协作</strong>：跨系统工具链（如 Figma → GitHub）。</li>
+<li><strong>迭代优化</strong>：多轮修正直到达到质量阈值。</li>
+<li><strong>上下文选择</strong>：根据文件类型/大小选工具。</li>
+<li><strong>领域增强</strong>：加上行业特定规则（如金融合规）。</li>
+</ul>
+<h2>10) 常见问题与排查点</h2>
+<ul>
+<li><strong>上传失败</strong>：多数是文件命名或 YAML 格式问题。</li>
+<li><strong>触发不足</strong>：description 太泛，缺少明确触发语。</li>
+<li><strong>模型偷懒</strong>：需要加明确要求和校验步骤。</li>
+<li><strong>输出漂移</strong>：需要明确结构模板与“不可省略项”。</li>
+</ul>
+<div class="sep"></div>
+<p class="mono">Source: Anthropic PDF — The Complete Guide to Building Skills for Claude.</p>
+</main>
+</body>
+</html>
