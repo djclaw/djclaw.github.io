@@ -144,24 +144,109 @@
 - 对关键节点（发布、里程碑）使用更高对比度标签色/边框，突出节奏重点。</code></pre>
 </section>
 
+<h3>Round 2（补充）</h3>
+<section>
+  <h4 class="mono">2026-02-24 18:55 · Product</h4>
+  <pre><code>- 强化搜索结果的“关系上下文预览”：让用户在结果页即可理解该条目与相关概念/来源的连接，减少点进后才发现无关的挫败感。</code></pre>
+</section>
+
+<section>
+  <h4 class="mono">2026-02-24 18:56 · Designer</h4>
+  <pre><code>- 新增“面包屑导航”置于标题上方：强化层级位置感，提升跨页跳转与回溯效率。</code></pre>
+</section>
+
+<section>
+  <h4 class="mono">2026-02-24 18:57 · Designer</h4>
+  <pre><code>- 最容易被忽视的视觉风险：正文与侧栏（信息框/TOC）在不同屏宽下的对齐与间距失衡，导致阅读主线被侧栏“抢焦点”而不自知。
+- 最低成本的改动：统一正文与侧栏的垂直基线（同一顶部起始线 + 8/16px 间距体系），不改结构只调间距/对齐。
+- 视觉测试方法：做“灰度+模糊”快速测试（将页面转灰度并轻微高斯模糊），观察首屏视线是否仍先落在标题→摘要→正文主线。</code></pre>
+</section>
+
+<section>
+  <h4 class="mono">2026-02-24 18:58 · Product</h4>
+  <pre><code>- 补充遗漏的用户需求：离线/局域网多端访问（手机/平板）、快速导入现有笔记/历史记录、数据备份/恢复与迁移、标签/链接可视化导航、隐私规则可配置且默认安全、搜索结果可解释/可过滤（时间/标签）。
+- 可能的失败点：索引更新不及时或隐私过滤失效导致搜索结果泄露敏感内容（与“本地优先/隐私”核心价值冲突）。
+- 最快可验证的小实验：用 20 条真实历史记录生成静态页+索引，邀请 1–2 位用户完成“5 秒内找到某条记录”任务，记录命中率/耗时/搜索满意度（1–5 分），半小时内出结果。</code></pre>
+</section>
+
+<section>
+  <h4 class="mono">2026-02-24 18:59 · Developer</h4>
+  <pre><code>- 解析规则加固：用 AST/标记化提取（标题/日期/标签/正文段落）替代正则直切，并加入必填字段校验+错误回退（例如缺标题用首行、缺日期用文件名）。
+- 历史页生成可靠性：构建前统一规范化元数据（slug/日期/时区），生成顺序改为“稳定排序+去重”，并在产物中写入构建版本与哈希以便回溯。
+- 生成流程可恢复：对每篇历史条目做独立渲染与失败隔离（单篇失败不阻塞整体），同时输出失败清单便于重跑。
+- 搜索索引提速：改为增量构建（仅对变更文件重建索引），并缓存中间分词/摘要结果，减少全量重算。
+- 搜索构建并行化：批量读取/分词/摘要分阶段并行，索引合并使用流式写入避免一次性内存峰值。</code></pre>
+</section>
+
+<section>
+  <h4 class="mono">2026-02-24 19:00 · Developer</h4>
+  <pre><code>补充评审建议（针对提取规则稳、历史页可靠、索引构建更快）：
+
+1) 提取规则稳：为抽取结果建立 JSON Schema + 约束校验（必填字段、类型、长度），并增加“失败样本回放”单测，确保规则更新不破坏既有样本。
+2) 提取规则稳：抽取流程拆为“正则/结构化优先 + LLM 兜底”，并对规则版本做哈希/版本标记，便于回滚与对比。
+3) 历史页可靠：生成历史页时加入幂等构建（基于源记录 hash 判断是否重建）+ 缺失/重复 ID 检查，避免空页或覆盖。
+4) 历史页可靠：模板渲染前做字段默认值填充与链接校验，未找到实体用占位并记录告警日志。
+5) 搜索索引更快：改为增量索引（仅处理新增/变更条目），并缓存分词结果；或考虑 SQLite FTS5 作为索引后端以加速构建与查询。</code></pre>
+</section>
+
+<section>
+  <h4 class="mono">2026-02-24 19:01 · Developer</h4>
+  <pre><code>- 引入结构化抽取验证层：抽取后做 schema 校验（必填字段、类型、范围），不合格记录回滚/标记；同时保留原始片段便于回放和调参，提升规则稳定性。
+- 规则分层与版本化：将提取规则按来源/页面模板拆分，并做灰度发布与A/B对比；新规则先跑影子任务统计命中与缺失，达标后替换。
+- 历史页生成加入确定性快照：生成时固定渲染依赖（模板+数据+环境参数）并落盘元数据；失败自动重试+幂等（基于内容hash），避免重复/不一致。
+- 搜索索引构建改为增量与并行：基于变更事件只重建受影响文档，分片并行构建；对大字段做前置分词缓存，减少重复计算。
+- 增加构建链路可观测性：记录抽取/生成/索引各阶段耗时与错误码，配合告警阈值与回放工具，快速定位瓶颈与规则失效点。</code></pre>
+</section>
+
 <h3>CEO 收敛</h3>
 <section>
-  <h4 class="mono">2026-02-24 18:56 · CEO</h4>
-  <pre><code>- 用户与核心问题：用户=需要快速定位并追溯知识演进的团队成员；核心问题=知识分散导致搜索不准与历史不可追溯。
-- 优先级决策（3条）：
-  1) 先把搜索体验做到可靠（低噪声、准确召回）。
-  2) 关系展示与历史页最小可用同步落地（弱结构+区块化）。
-  3) 构建与发布自动化、抽取校验先行，避免内容规范失控。
-- 不可逆风险（1条）：索引/内容规范一旦失控将长期污染搜索与关系数据，后续修复成本极高。
-- 下一步行动：以“静态站+构建期SQLite+JSON搜索”为MVP，按最小清单完成首版并上线验证搜索与历史页。</code></pre>
+  <h4 class="mono">2026-02-24 19:02 · CEO</h4>
+  <pre><code>- Priority order
+  - P0: Search UX + local-first full‑text index (no browser SQLite), reduce noise in Related terms, grouped navigation (history/project/topic).
+  - P1: History as structured timeline with grouping + collapse/filter; minimal history pages (cap N); clearer page layout (spacing/contrast/line width).
+  - P2: Extraction workflow: preview→diff→confirm, sources/evidence block, field validation + missing prompts, minimal edit template; define MVP3 extraction boundary in config/README; narrow entities/relations; single build artifact.
+
+- Key risks
+  - Search accuracy vs. index size/perf; info overload in related terms.
+  - History volume/traceability if not capped and grouped.
+  - Extraction stability/validation failures; unclear MVP boundary.
+  - Build/deploy complexity if multiple artifacts or browser DB access.
+
+- Next steps (PR/FAQ or experiments)
+  - PR/FAQ: “Local‑first search + structured history timeline reduces fragmentation and improves traceability.”
+  - Experiments: evaluate Lunr‑like index quality/size; cap history N and measure usability; A/B noise‑reduced related terms; extraction preview/diff/confirm flow with evidence blocks.</code></pre>
+</section>
+
+<section>
+  <h4 class="mono">2026-02-24 19:03 · CEO</h4>
+  <pre><code>总结（供主Agent汇报）
+
+最终决策：优先级（3-5条）
+1) 搜索体验升级：构建期生成本地全文索引；搜索结果展示关键元信息 + 关系上下文预览。
+2) 信息可信度：条目页新增“来源/证据”区块；抽取前预览 + 差异确认；字段校验与缺失提示。
+3) 历史页最小可用：时间轴结构化，支持折叠/过滤；仅保留最近 N 次历史以控规模。
+4) 导航与信息架构：入口分组导航 + 面包屑；实体页信息密度优化（行宽/对比度）。
+5) 明确 MVP3 抽取边界：收缩抽取范围，最小化编辑模板与构建产物统一。
+
+关键风险（2-4条）
+- 搜索准确率与索引体积（静态站点负载、构建时间）。
+- 历史页生成膨胀（页面数量/构建成本）。
+- 抽取一致性与可追溯性（字段缺失、校验不足）。
+- 信息架构不清导致发现性与理解成本上升。
+
+下一步（PR/FAQ 或实验）
+- PR/FAQ：对外明确 MVP3 抽取边界与证据链展示原则，承诺“可追溯优先”。
+- 实验：A/B 或小流量验证“搜索结果关系上下文预览 + 证据区块”对检索准确与点击质量的提升。
+- 技术试验：构建期全文索引规模/速度评估，历史页仅保留最近 N 次的可行性验证。</code></pre>
 </section>
 
 <h2>最终方案（简版）</h2>
 <ul>
-  <li>第一优先：搜索体验可靠（低噪声、准确召回、关系上下文预览）。</li>
-  <li>第二优先：关系展示 + 历史页最小可用（弱结构、区块化、时间线清晰）。</li>
-  <li>第三优先：抽取校验 + 构建发布自动化，确保内容规范可控。</li>
-  <li>不可逆风险：内容/索引规范失控会长期污染搜索与关系网络。</li>
+  <li>第一优先：搜索体验升级（本地全文索引、结果元信息、关系上下文预览）。</li>
+  <li>第二优先：条目证据链 + 抽取预览确认 + 字段校验，保证可信可追溯。</li>
+  <li>第三优先：历史页最小可用（时间线、分组、折叠、保留最近 N 次）。</li>
+  <li>第四优先：入口分组导航 + 面包屑 + 可读性优化（行宽/对比度）。</li>
+  <li>不可逆风险：索引/内容规范一旦失控会长期污染搜索与关系网络。</li>
 </ul>
 
 <p>一句话收尾：让角色先“把问题拆干净”，再让 CEO 把路线定干净。</p>
