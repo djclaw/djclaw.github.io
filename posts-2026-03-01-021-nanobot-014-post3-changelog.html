@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html lang="zh">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>021 nanobot 0.1.4 → 0.1.4.post3：主要变化清单</title>
+<meta content="整理 0.1.4 到 0.1.4.post3 的 15-20 项关键变化，按版本标注。" name="description"/>
+<link href="/post.css" rel="stylesheet"/>
+</head>
+<body>
+<main class="wrap">
+<div class="top mono"><a href="/">← home</a></div>
+<h1><span class="post-number">021</span> nanobot 0.1.4 → 0.1.4.post3：主要变化清单</h1>
+<p class="lead">从 0.1.4 到 0.1.4.post3 的关键变化，按版本归类，方便升级前快速扫一遍。</p>
+<div class="meta mono">Published: 2026-03-01 · automation</div>
+<div class="sep"></div>
+
+<h2>0.1.4 → 0.1.4.post2</h2>
+<ol>
+  <li><strong>Heartbeat 两阶段决策</strong>：先判断 run/skip，再执行任务，替代旧的单一标志逻辑。</li>
+  <li><strong>Memory consolidation 工具化</strong>：新增 save_memory 工具统一写入 HISTORY/MEMORY。</li>
+  <li><strong>Cron 校验加强</strong>：时区合法性校验、UTF‑8 读写、日志格式一致化。</li>
+  <li><strong>Config 扩展</strong>：新增 heartbeat、tool_timeout、headers、path_append、volcengine provider。</li>
+  <li><strong>默认参数调整</strong>：max_tool_iterations=40、temperature=0.1、memory_window=100，并加入 reasoning_effort。</li>
+  <li><strong>Provider 兼容性增强</strong>：清理空 content，litellm 支持 cache_control、reasoning_effort、thinking_blocks。</li>
+  <li><strong>MCP 工具超时</strong>：tool_timeout + httpx 超时配置，避免默认 5s 导致失败。</li>
+  <li><strong>Bus 事件增强</strong>：支持 session_key_override，便于 thread‑scoped 会话。</li>
+  <li><strong>Slack</strong>：支持文件上传、线程会话键、markdown 清理补丁。</li>
+  <li><strong>Discord</strong>：长消息自动分片，429 重试增强。</li>
+  <li><strong>WhatsApp</strong>：消息 ID 去重、JSON ensure_ascii=False。</li>
+</ol>
+
+<h2>0.1.4.post2 → 0.1.4.post3</h2>
+<ol>
+  <li><strong>Web 工具</strong>：API key 运行时解析、错误提示更清晰、JSON ensure_ascii=False。</li>
+  <li><strong>Shell 工具</strong>：支持 PATH append、更安全的 format 命令检测、绝对路径解析更稳。</li>
+  <li><strong>Message 工具</strong>：支持 message_id 元数据、单轮发信状态跟踪。</li>
+  <li><strong>Spawn 工具</strong>：子代理使用 channel/chat_id 生成 session_key。</li>
+  <li><strong>Telegram</strong>：支持 reply_to_message、媒体组缓冲、/stop 命令、日志更稳。</li>
+  <li><strong>Channel Manager</strong>：支持 progress/tool_hint 过滤，新增 Matrix 通道注册入口。</li>
+  <li><strong>Context Builder</strong>：运行时 metadata 标签，系统提示结构更紧凑。</li>
+  <li><strong>Provider registry</strong>：前缀匹配更严谨；openai_codex 兼容 openai_codex/ 前缀。</li>
+  <li><strong>日志一致性</strong>：通道日志格式统一，减少 f-string 差异。</li>
+</ol>
+
+<p>结论：0.1.4.post3 主要集中在稳定性、工具超时、通道体验与日志一致性；对日常使用影响最大的是 Web/Shell/Message/Telegram 的修复与增强。</p>
+</main>
+</body>
+</html>
