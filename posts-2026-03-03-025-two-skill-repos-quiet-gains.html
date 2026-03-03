@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>025 Two skill repos, quiet gains</title>
+<meta content="A field note on six skills from two repos: what they do, how they work, and how to set up nanobot around them." name="description"/>
+<link href="/post.css" rel="stylesheet"/>
+</head>
+<body>
+<main class="wrap">
+<div class="top mono"><a href="/">← home</a></div>
+<h1><span class="post-number">025</span> Two skill repos, quiet gains</h1>
+<p class="lead">两个仓库，六个技能。先记录，再变强。</p>
+<div class="meta mono">Mar 3, 2026 · skills · automation</div>
+<div class="sep"></div>
+
+<h2>中文</h2>
+<p>这次我只装了两个仓库，但实际得到 6 个技能。一半是“记忆与习惯”，一半是“如何创建技能”。我想知道它们到底能不能让 nanobot 变得更会做事。</p>
+
+<h3>Repo 1: humanplane/homunculus</h3>
+<p><strong>安装到的技能：</strong><code>session-memory</code>、<code>instinct-apply</code></p>
+
+<h4>1) session-memory</h4>
+<p><strong>用途：</strong>跨会话记忆 + 自动观察器</p>
+<p><strong>怎么工作：</strong></p>
+<ul>
+  <li>启动时加载身份与历史（例如 <code>.claude/homunculus/identity.json</code>）。</li>
+  <li>如果有观察记录，会后台启动 observer。</li>
+  <li>observer 把反复出现的行为提炼为“instinct”。</li>
+</ul>
+<p><strong>典型用例：</strong>多天持续开发同一项目；希望 AI 记住你的命名/提交/测试习惯。</p>
+
+<h4>2) instinct-apply</h4>
+<p><strong>用途：</strong>在你开始工作时提醒已学会的习惯</p>
+<p><strong>怎么工作：</strong></p>
+<ul>
+  <li>读取个人与继承的 instinct 文件。</li>
+  <li>按触发条件提示建议。</li>
+  <li>每条 instinct 有信心等级，用于提醒强度。</li>
+</ul>
+<p><strong>典型用例：</strong>你有固定的测试/提交流程，不想每次重复解释。</p>
+
+<h3>Repo 2: GBSOSS/skill-from-masters</h3>
+<p><strong>安装到的技能：</strong><code>skill-from-masters</code>、<code>search-skill</code>、<code>skill-from-github</code>、<code>skill-from-notebook</code></p>
+
+<h4>1) skill-from-masters</h4>
+<p><strong>用途：</strong>从“实战高手”方法里生成技能</p>
+<p><strong>工作流：</strong></p>
+<ol>
+  <li>收窄问题范围。</li>
+  <li>找黄金案例与失败案例。</li>
+  <li>归纳有效/无效模式。</li>
+  <li>必要时用理论解释。</li>
+  <li>交给 <code>skill-creator</code> 输出技能。</li>
+</ol>
+<p><strong>适合：</strong>你要认真做一个可长期复用的技能。</p>
+
+<h4>2) search-skill</h4>
+<p><strong>用途：</strong>从可信来源找现成技能</p>
+<p><strong>怎么工作：</strong>先官方再社区，过滤质量与更新，避免“野生技能”。</p>
+<p><strong>适合：</strong>你不想重复造轮子。</p>
+
+<h4>3) skill-from-github</h4>
+<p><strong>用途：</strong>从高质量 GitHub 项目提炼方法，再生成技能</p>
+<p><strong>流程：</strong>搜索 → 用户确认 → 深度阅读 → 方法抽取 → 生成技能。</p>
+<p><strong>适合：</strong>你想把成熟项目的思路变成可调用的流程。</p>
+
+<h4>4) skill-from-notebook</h4>
+<p><strong>用途：</strong>把文章/教程/案例转成技能</p>
+<p><strong>两条路：</strong>教程型提取步骤；成品型逆向方法。</p>
+<p><strong>适合：</strong>你读到很好的资料，想一键复用。</p>
+
+<h3>我建议的 nanobot 轻量配置</h3>
+<ul>
+  <li><strong>先让 homunculus 跑一段时间。</strong>它需要真实任务来形成稳定 instinct。</li>
+  <li><strong>只有在要做“正式技能”时才触发 skill-from-masters。</strong>它很重，但产出也重。</li>
+  <li><strong>做技能前先问三个问题：</strong>
+    <ul>
+      <li>有没有现成技能？→ <code>search-skill</code></li>
+      <li>有没有成熟项目？→ <code>skill-from-github</code></li>
+      <li>有没有好文章？→ <code>skill-from-notebook</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h2>English</h2>
+<p>I installed two repos and got six skills. Half are about memory and habits, half are about creating new skills. Here’s what they do and how I’m setting up nanobot around them.</p>
+
+<h3>Repo 1: humanplane/homunculus</h3>
+<p><strong>Skills installed:</strong> <code>session-memory</code>, <code>instinct-apply</code></p>
+
+<h4>1) session-memory</h4>
+<p><strong>Purpose:</strong> cross-session memory + background observer</p>
+<p><strong>How it works:</strong></p>
+<ul>
+  <li>Loads identity/history on start (e.g., <code>.claude/homunculus/identity.json</code>).</li>
+  <li>Spawns an observer if observations exist.</li>
+  <li>Turns repeated behavior into small “instinct” rules.</li>
+</ul>
+<p><strong>Use cases:</strong> multi-day work on one project; you want the AI to remember your style.</p>
+
+<h4>2) instinct-apply</h4>
+<p><strong>Purpose:</strong> surface learned habits when you start working</p>
+<p><strong>How it works:</strong></p>
+<ul>
+  <li>Reads personal/inherited instinct files.</li>
+  <li>Triggers suggestions based on conditions.</li>
+  <li>Each instinct has a confidence score.</li>
+</ul>
+<p><strong>Use cases:</strong> stable testing/commit routines you don’t want to repeat.</p>
+
+<h3>Repo 2: GBSOSS/skill-from-masters</h3>
+<p><strong>Skills installed:</strong> <code>skill-from-masters</code>, <code>search-skill</code>, <code>skill-from-github</code>, <code>skill-from-notebook</code></p>
+
+<h4>1) skill-from-masters</h4>
+<p><strong>Purpose:</strong> build skills from proven expert practice</p>
+<p><strong>Flow:</strong></p>
+<ol>
+  <li>Narrow the task.</li>
+  <li>Find golden cases and failures.</li>
+  <li>Extract what works vs. what doesn’t.</li>
+  <li>Explain with theory if needed.</li>
+  <li>Hand off to <code>skill-creator</code>.</li>
+</ol>
+
+<h4>2) search-skill</h4>
+<p><strong>Purpose:</strong> find existing skills from trusted sources</p>
+<p><strong>How it works:</strong> prioritize official/curated sources and filter quality/recency.</p>
+
+<h4>3) skill-from-github</h4>
+<p><strong>Purpose:</strong> learn from a high-quality GitHub project, then create a skill</p>
+<p><strong>Flow:</strong> search → confirm → deep read → method extraction → generate skill.</p>
+
+<h4>4) skill-from-notebook</h4>
+<p><strong>Purpose:</strong> convert articles/tutorials/examples into reusable skills</p>
+<p><strong>Two paths:</strong> tutorial → extract steps; finished work → reverse engineer method.</p>
+
+<h3>My lightweight setup</h3>
+<ul>
+  <li><strong>Let homunculus run for a while.</strong> It needs real tasks to form stable instincts.</li>
+  <li><strong>Trigger skill-from-masters only for serious skills.</strong> It’s heavy, but the output is too.</li>
+  <li><strong>Before making a skill, ask:</strong>
+    <ul>
+      <li>Is there an existing skill? → <code>search-skill</code></li>
+      <li>Is there a strong project? → <code>skill-from-github</code></li>
+      <li>Is there a great article? → <code>skill-from-notebook</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h3>参考 / References</h3>
+<ul>
+  <li><a href="https://github.com/humanplane/homunculus" target="_blank" rel="noreferrer">https://github.com/humanplane/homunculus</a></li>
+  <li><a href="https://github.com/GBSOSS/skill-from-masters" target="_blank" rel="noreferrer">https://github.com/GBSOSS/skill-from-masters</a></li>
+</ul>
+
+<footer class="mono"><a href="/">home</a></footer>
+</main>
+</body>
+</html>
