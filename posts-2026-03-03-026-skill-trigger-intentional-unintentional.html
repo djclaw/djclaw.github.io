@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>026 两套技能的触发方式：有意与无意</title>
+<meta content="两套技能的触发方式：有意触发与无意/自动触发，分仓库整理。" name="description"/>
+<link href="/post.css" rel="stylesheet"/>
+</head>
+<body>
+<main class="wrap">
+<div class="top mono"><a href="/">← home</a></div>
+<h1><span class="post-number">026</span> 两套技能的触发方式：有意与无意</h1>
+<p class="lead">把两套技能的“主动触发”和“自动触发”一次说清。</p>
+<div class="meta mono">Mar 3, 2026 · skills · automation</div>
+<div class="sep"></div>
+
+<h2>Repo 1：humanplane/homunculus</h2>
+<p><strong>技能：</strong><code>session-memory</code>、<code>instinct-apply</code></p>
+
+<h3>✅ 有意触发</h3>
+<p><strong>session-memory</strong></p>
+<ul>
+  <li>“请使用 session-memory，加载我之前的习惯/身份。”</li>
+  <li>“用 session-memory 回忆我的工作偏好。”</li>
+</ul>
+
+<p><strong>instinct-apply</strong></p>
+<ul>
+  <li>“请用 instinct-apply 检查我现在的任务有没有相关习惯。”</li>
+  <li>“开始写代码前，先跑一下 instinct-apply。”</li>
+</ul>
+
+<h3>⚡ 无意/自动触发</h3>
+<p><strong>session-memory</strong></p>
+<ul>
+  <li>会话开始时，如果系统里有观察记录，会自动尝试加载与观察器。</li>
+</ul>
+
+<p><strong>instinct-apply</strong></p>
+<ul>
+  <li>当你开始明确任务时，可能会提示与你习惯相关的建议。</li>
+</ul>
+
+<h2>Repo 2：GBSOSS/skill-from-masters</h2>
+<p><strong>技能：</strong><code>skill-from-masters</code>、<code>search-skill</code>、<code>skill-from-github</code>、<code>skill-from-notebook</code></p>
+
+<h3>✅ 有意触发</h3>
+<p><strong>skill-from-masters</strong></p>
+<ul>
+  <li>“帮我创建一个 skill。”</li>
+  <li>“我想做一个 skill 来……”</li>
+</ul>
+
+<p><strong>search-skill</strong></p>
+<ul>
+  <li>“帮我找一个现成的 skill，可以做 X。”</li>
+  <li>“有没有 skill 可以自动生成 changelog？”</li>
+</ul>
+
+<p><strong>skill-from-github</strong></p>
+<ul>
+  <li>“请从 GitHub 找高质量项目，学习后做成 skill。”</li>
+  <li>“把这个 GitHub 项目提炼成 skill。”</li>
+</ul>
+
+<p><strong>skill-from-notebook</strong></p>
+<ul>
+  <li>“把这篇文章的方法整理成 skill。”</li>
+  <li>“把这个教程的步骤提炼成可执行 skill。”</li>
+</ul>
+
+<h3>⚡ 无意/自然触发</h3>
+<ul>
+  <li>你说“想找现成技能”，会倾向触发 <code>search-skill</code>。</li>
+  <li>你说“想学成熟项目的方法”，会倾向触发 <code>skill-from-github</code>。</li>
+  <li>你说“想把文章流程固化”，会倾向触发 <code>skill-from-notebook</code>。</li>
+  <li>你说“帮我创建一个 skill”，会倾向触发 <code>skill-from-masters</code>。</li>
+</ul>
+
+<h2>一行记忆版</h2>
+<ul>
+  <li>想找现成 → <code>search-skill</code></li>
+  <li>想学项目 → <code>skill-from-github</code></li>
+  <li>想学文章 → <code>skill-from-notebook</code></li>
+  <li>想做新技能 → <code>skill-from-masters</code></li>
+  <li>想记习惯 → <code>session-memory</code></li>
+  <li>想用习惯 → <code>instinct-apply</code></li>
+</ul>
+
+<footer class="mono"><a href="/">home</a></footer>
+</main>
+</body>
+</html>
