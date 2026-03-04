@@ -16,52 +16,64 @@
 <div class="meta mono">Mar 4, 2026 · skills · automation</div>
 <div class="sep"></div>
 
-<h2>中文：我的技能管理思路</h2>
+<h2>中文：并行管理的核心思路</h2>
 <ul>
-  <li><strong>采集</strong>：在 <strong>Nano BOT + Raspberry Pi</strong> 上先把需要的技能跑通，记录来源（GitHub / NPX / 本地脚本）。</li>
-  <li><strong>锁定</strong>：为每个技能标注版本与依赖，确保未来还能复现。</li>
-  <li><strong>迁移</strong>：把配置与清单同步到将来的 <strong>laptop（Codex / Claude Code）</strong>，保证迁移时不靠记忆。</li>
-  <li><strong>验证</strong>：迁移后用同一套测试指令跑一遍，确认结果一致。</li>
+  <li><strong>SVC</strong>：负责本地清单与真实安装路径，保证“本机可复现”。</li>
+  <li><strong>Skillshare</strong>：负责共享的安装清单与来源，保证“跨机器可迁移”。</li>
+  <li><strong>并行使用</strong>：SVC 管本地落地，Skillshare 管跨平台流动。</li>
 </ul>
-<p>一句话：先在 Pi 上打磨，再在笔记本上复制，确保“可重复、可回滚”。</p>
+<p>一句话：<strong>本地用 SVC 稳住，跨平台用 Skillshare 传递</strong>。</p>
 
-<h2>中文：Skillshare 使用说明（简版）</h2>
+<h2>中文：在 Nano BOT + Raspberry Pi 的工作流</h2>
 <ul>
-  <li><strong>初始化</strong>：建立一个统一清单（manifest），记录 GitHub / NPX / 其他来源。</li>
-  <li><strong>安装</strong>：能用 Skillshare 装的优先用它；只能用 NPX/脚本的也写入清单。</li>
-  <li><strong>同步</strong>：在新平台直接按清单复现，避免手工遗漏。</li>
-  <li><strong>卸载</strong>：从清单移除并清理目标目录，确保无残留。</li>
+  <li><strong>本地安装</strong>：先在 Pi 上把技能跑通，写入 SVC。</li>
+  <li><strong>同步清单</strong>：把来源与版本写入 Skillshare 清单。</li>
+  <li><strong>迁移目标</strong>：未来在 <strong>laptop（Codex / Claude Code）</strong> 上用 Skillshare 重建，再用 SVC 验证。</li>
+</ul>
+
+<h2>中文：Skillshare CLI 使用说明（简版）</h2>
+<ul>
+  <li><strong>初始化</strong>：创建一个统一 manifest，记录 GitHub / NPX / 本地脚本。</li>
+  <li><strong>安装</strong>：优先用 Skillshare 可识别的来源；不支持的来源也要写进清单。</li>
+  <li><strong>同步</strong>：新机器按 manifest 执行安装，避免遗漏。</li>
+  <li><strong>卸载</strong>：从 manifest 移除并清理对应目录。</li>
 </ul>
 
 <h2>中文：CI 功能什么时候用</h2>
 <ul>
-  <li><strong>迁移后验证</strong>：新平台拉起后跑一遍基础用例。</li>
-  <li><strong>升级前后对比</strong>：升级技能后自动测试，失败就回滚。</li>
-  <li><strong>多人协作</strong>：团队同步时用 CI 保证“同一清单同一结果”。</li>
+  <li><strong>迁移后验证</strong>：新环境拉起后跑一遍基础用例。</li>
+  <li><strong>升级验证</strong>：升级前后自动测试，失败就回滚。</li>
+  <li><strong>多人协作</strong>：团队同步时，用 CI 保证“同一清单同一结果”。</li>
 </ul>
 
-<h2>English: my skill management approach</h2>
+<h2>English: parallel management idea</h2>
 <ul>
-  <li><strong>Collect</strong>: prove each skill on <strong>Nano BOT + Raspberry Pi</strong>, record the source (GitHub / NPX / local script).</li>
-  <li><strong>Lock</strong>: pin versions and dependencies so the setup is reproducible later.</li>
-  <li><strong>Move</strong>: sync the manifests to my future <strong>laptop (Codex / Claude Code)</strong> instead of relying on memory.</li>
-  <li><strong>Verify</strong>: run the same test commands after migration to confirm identical results.</li>
+  <li><strong>SVC</strong>: owns local manifests and real install paths — keeps the machine reproducible.</li>
+  <li><strong>Skillshare</strong>: owns the shared install list and sources — keeps cross‑machine portability.</li>
+  <li><strong>Run both</strong>: SVC stabilizes local state, Skillshare carries the setup across devices.</li>
 </ul>
-<p>In short: tune on the Pi, clone on the laptop, keep it reproducible and rollback-safe.</p>
+<p>In short: <strong>SVC anchors local, Skillshare moves across</strong>.</p>
 
-<h2>English: Skillshare usage (short)</h2>
+<h2>English: Nano BOT + Raspberry Pi flow</h2>
 <ul>
-  <li><strong>Init</strong>: create a single manifest that records GitHub / NPX / other sources.</li>
-  <li><strong>Install</strong>: prefer Skillshare for supported installs; still record NPX/scripts in the manifest.</li>
-  <li><strong>Sync</strong>: on a new machine, rebuild from the manifest to avoid gaps.</li>
-  <li><strong>Remove</strong>: delete from the manifest and clean the target path to leave no residue.</li>
+  <li><strong>Local install</strong>: prove each skill on the Pi, register in SVC.</li>
+  <li><strong>Sync manifest</strong>: write source + version into Skillshare.</li>
+  <li><strong>Future laptop</strong>: rebuild on <strong>Codex / Claude Code</strong> using Skillshare, then verify via SVC.</li>
+</ul>
+
+<h2>English: Skillshare CLI (short)</h2>
+<ul>
+  <li><strong>Init</strong>: create one manifest listing GitHub / NPX / local scripts.</li>
+  <li><strong>Install</strong>: prefer Skillshare‑supported sources; still record unsupported ones.</li>
+  <li><strong>Sync</strong>: rebuild on a new machine from the manifest to avoid gaps.</li>
+  <li><strong>Remove</strong>: delete from manifest and clean the target path.</li>
 </ul>
 
 <h2>English: when to use CI</h2>
 <ul>
-  <li><strong>Post-migration checks</strong>: run baseline tests after a new install.</li>
+  <li><strong>Post‑migration checks</strong>: run baseline tests after setup.</li>
   <li><strong>Upgrade verification</strong>: test before/after upgrades and rollback on failure.</li>
-  <li><strong>Team sync</strong>: keep everyone aligned with the same manifest + test results.</li>
+  <li><strong>Team sync</strong>: keep everyone aligned with the same manifest + results.</li>
 </ul>
 
 <footer class="mono"><a href="/">home</a></footer>
