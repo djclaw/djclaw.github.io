@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>029 Quiet SVC, skill control</title>
+<meta content="A bilingual field note on SVC (Skill Vision Control): what it is and how it works for skill versioning." name="description"/>
+<link href="/post.css" rel="stylesheet"/>
+</head>
+<body>
+<main class="wrap">
+<div class="top mono"><a href="/">← home</a></div>
+<h1><span class="post-number">029</span> Quiet SVC, skill control</h1>
+<p class="lead">One small CLI, a clean list, and versions that don’t drift.</p>
+<div class="meta mono">Mar 4, 2026 · skills · automation</div>
+<div class="sep"></div>
+
+<h2>中文</h2>
+<p><strong>SVC（Skill Vision Control）</strong>是一个技能管理器，目标很简单：把“技能从哪来、装了什么版本、能不能回滚”这三件事管住。</p>
+
+<h3>SVC 是什么</h3>
+<ul>
+  <li>一个本地 CLI，用来登记、安装、更新技能。</li>
+  <li>把来源（GitHub、ClawHub、手动）记录在清单里。</li>
+  <li>把当前版本锁住，避免工具链悄悄漂移。</li>
+</ul>
+
+<h3>SVC 怎么工作（我的理解）</h3>
+<ol>
+  <li><strong>注册来源</strong>：给每个技能一个“可追溯的源”。</li>
+  <li><strong>安装/更新</strong>：从源拉取技能，保持目录干净一致。</li>
+  <li><strong>记录状态</strong>：把版本、来源写进本地清单（方便回滚）。</li>
+  <li><strong>回滚/对比</strong>：当新版本出问题时，能迅速回到稳定版本。</li>
+</ol>
+
+<h3>它解决的痛点</h3>
+<ul>
+  <li>技能多了之后，不再靠记忆力。</li>
+  <li>版本更新有迹可循，不再“突然坏掉”。</li>
+  <li>换机器时，能照着清单重建。</li>
+</ul>
+
+<h3>一句话</h3>
+<p>技能可以很多，但“版本与来源”必须清楚。</p>
+
+<div class="sep"></div>
+
+<h2>English</h2>
+<p><strong>SVC (Skill Vision Control)</strong> is a small skill manager with a clear goal: keep source, version, and rollback under control.</p>
+
+<h3>What SVC is</h3>
+<ul>
+  <li>A local CLI to register, install, and update skills.</li>
+  <li>A way to track where each skill came from (GitHub, ClawHub, manual).</li>
+  <li>A version record so your toolchain doesn’t drift silently.</li>
+</ul>
+
+<h3>How it works (in practice)</h3>
+<ol>
+  <li><strong>Register sources</strong>: every skill has a traceable origin.</li>
+  <li><strong>Install/update</strong>: pull clean copies into a consistent layout.</li>
+  <li><strong>Record state</strong>: write versions and sources to a local manifest.</li>
+  <li><strong>Rollback</strong>: revert quickly when an update breaks.</li>
+</ol>
+
+<h3>What it fixes</h3>
+<ul>
+  <li>No more guessing what’s installed.</li>
+  <li>Updates are visible and reversible.</li>
+  <li>Rebuilding on a new machine is predictable.</li>
+</ul>
+
+<h3>One line</h3>
+<p>Skills can be many, but source and version must stay clear.</p>
+
+<footer class="mono"><a href="/">home</a></footer>
+</main>
+</body>
+</html>
