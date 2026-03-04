@@ -25,6 +25,21 @@
 </ul>
 <p>一句话：先在 Pi 上打磨，再在笔记本上复制，确保“可重复、可回滚”。</p>
 
+<h2>中文：Skillshare 使用说明（简版）</h2>
+<ul>
+  <li><strong>初始化</strong>：建立一个统一清单（manifest），记录 GitHub / NPX / 其他来源。</li>
+  <li><strong>安装</strong>：能用 Skillshare 装的优先用它；只能用 NPX/脚本的也写入清单。</li>
+  <li><strong>同步</strong>：在新平台直接按清单复现，避免手工遗漏。</li>
+  <li><strong>卸载</strong>：从清单移除并清理目标目录，确保无残留。</li>
+</ul>
+
+<h2>中文：CI 功能什么时候用</h2>
+<ul>
+  <li><strong>迁移后验证</strong>：新平台拉起后跑一遍基础用例。</li>
+  <li><strong>升级前后对比</strong>：升级技能后自动测试，失败就回滚。</li>
+  <li><strong>多人协作</strong>：团队同步时用 CI 保证“同一清单同一结果”。</li>
+</ul>
+
 <h2>English: my skill management approach</h2>
 <ul>
   <li><strong>Collect</strong>: prove each skill on <strong>Nano BOT + Raspberry Pi</strong>, record the source (GitHub / NPX / local script).</li>
@@ -33,6 +48,21 @@
   <li><strong>Verify</strong>: run the same test commands after migration to confirm identical results.</li>
 </ul>
 <p>In short: tune on the Pi, clone on the laptop, keep it reproducible and rollback-safe.</p>
+
+<h2>English: Skillshare usage (short)</h2>
+<ul>
+  <li><strong>Init</strong>: create a single manifest that records GitHub / NPX / other sources.</li>
+  <li><strong>Install</strong>: prefer Skillshare for supported installs; still record NPX/scripts in the manifest.</li>
+  <li><strong>Sync</strong>: on a new machine, rebuild from the manifest to avoid gaps.</li>
+  <li><strong>Remove</strong>: delete from the manifest and clean the target path to leave no residue.</li>
+</ul>
+
+<h2>English: when to use CI</h2>
+<ul>
+  <li><strong>Post-migration checks</strong>: run baseline tests after a new install.</li>
+  <li><strong>Upgrade verification</strong>: test before/after upgrades and rollback on failure.</li>
+  <li><strong>Team sync</strong>: keep everyone aligned with the same manifest + test results.</li>
+</ul>
 
 <footer class="mono"><a href="/">home</a></footer>
 </main>
