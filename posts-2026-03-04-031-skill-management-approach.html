@@ -16,64 +16,116 @@
 <div class="meta mono">Mar 4, 2026 · skills · automation</div>
 <div class="sep"></div>
 
-<h2>中文：并行管理的核心思路</h2>
+<h2>中文：总体手册（High‑level）</h2>
 <ul>
-  <li><strong>SVC</strong>：负责本地清单与真实安装路径，保证“本机可复现”。</li>
-  <li><strong>Skillshare</strong>：负责共享的安装清单与来源，保证“跨机器可迁移”。</li>
-  <li><strong>并行使用</strong>：SVC 管本地落地，Skillshare 管跨平台流动。</li>
+  <li><strong>SVC = 本地落地</strong>：管本机安装路径、可复现性、真实可用状态。</li>
+  <li><strong>Skillshare = 跨平台共享</strong>：管可迁移的清单（manifest）与来源。</li>
+  <li><strong>并行策略</strong>：本地稳定靠 SVC，跨机器流动靠 Skillshare。</li>
 </ul>
-<p>一句话：<strong>本地用 SVC 稳住，跨平台用 Skillshare 传递</strong>。</p>
+<p>一句话：<strong>SVC 管“本机稳定”，Skillshare 管“跨平台迁移”</strong>。</p>
 
-<h2>中文：在 Nano BOT + Raspberry Pi 的工作流</h2>
-<ul>
-  <li><strong>本地安装</strong>：先在 Pi 上把技能跑通，写入 SVC。</li>
-  <li><strong>同步清单</strong>：把来源与版本写入 Skillshare 清单。</li>
-  <li><strong>迁移目标</strong>：未来在 <strong>laptop（Codex / Claude Code）</strong> 上用 Skillshare 重建，再用 SVC 验证。</li>
-</ul>
+<h2>中文：完整流程（所有场景）</h2>
+<ol>
+  <li><strong>新技能安装</strong>
+    <ul>
+      <li>先在 Pi 上验证能跑通。</li>
+      <li>用 SVC 记录本地安装位置与状态。</li>
+      <li>把来源/版本写入 Skillshare 清单（即使是手动安装也要记录）。</li>
+    </ul>
+  </li>
+  <li><strong>Skillshare 注册与初始化</strong>
+    <ul>
+      <li>创建/登录 Skillshare（如果需要账户）。</li>
+      <li>初始化一个清单文件（manifest），作为唯一“共享来源”。</li>
+    </ul>
+  </li>
+  <li><strong>升级</strong>
+    <ul>
+      <li>先在本地升级并验证（SVC 侧可用）。</li>
+      <li>更新 Skillshare 清单里的版本/来源。</li>
+    </ul>
+  </li>
+  <li><strong>删除</strong>
+    <ul>
+      <li>用 SVC 删除本地安装。</li>
+      <li>同时从 Skillshare 清单移除，避免下次迁移又装回来。</li>
+    </ul>
+  </li>
+  <li><strong>新平台迁移（比如 Claude Code）</strong>
+    <ul>
+      <li>用 Skillshare CLI 按清单重建安装。</li>
+      <li>再用 SVC 检查本地状态，确保与清单一致。</li>
+    </ul>
+  </li>
+</ol>
 
-<h2>中文：Skillshare CLI 使用说明（简版）</h2>
+<h2>中文：Skillshare CLI（说明版）</h2>
 <ul>
-  <li><strong>初始化</strong>：创建一个统一 manifest，记录 GitHub / NPX / 本地脚本。</li>
-  <li><strong>安装</strong>：优先用 Skillshare 可识别的来源；不支持的来源也要写进清单。</li>
-  <li><strong>同步</strong>：新机器按 manifest 执行安装，避免遗漏。</li>
-  <li><strong>卸载</strong>：从 manifest 移除并清理对应目录。</li>
-</ul>
-
-<h2>中文：CI 功能什么时候用</h2>
-<ul>
-  <li><strong>迁移后验证</strong>：新环境拉起后跑一遍基础用例。</li>
-  <li><strong>升级验证</strong>：升级前后自动测试，失败就回滚。</li>
-  <li><strong>多人协作</strong>：团队同步时，用 CI 保证“同一清单同一结果”。</li>
-</ul>
-
-<h2>English: parallel management idea</h2>
-<ul>
-  <li><strong>SVC</strong>: owns local manifests and real install paths — keeps the machine reproducible.</li>
-  <li><strong>Skillshare</strong>: owns the shared install list and sources — keeps cross‑machine portability.</li>
-  <li><strong>Run both</strong>: SVC stabilizes local state, Skillshare carries the setup across devices.</li>
-</ul>
-<p>In short: <strong>SVC anchors local, Skillshare moves across</strong>.</p>
-
-<h2>English: Nano BOT + Raspberry Pi flow</h2>
-<ul>
-  <li><strong>Local install</strong>: prove each skill on the Pi, register in SVC.</li>
-  <li><strong>Sync manifest</strong>: write source + version into Skillshare.</li>
-  <li><strong>Future laptop</strong>: rebuild on <strong>Codex / Claude Code</strong> using Skillshare, then verify via SVC.</li>
-</ul>
-
-<h2>English: Skillshare CLI (short)</h2>
-<ul>
-  <li><strong>Init</strong>: create one manifest listing GitHub / NPX / local scripts.</li>
-  <li><strong>Install</strong>: prefer Skillshare‑supported sources; still record unsupported ones.</li>
-  <li><strong>Sync</strong>: rebuild on a new machine from the manifest to avoid gaps.</li>
-  <li><strong>Remove</strong>: delete from manifest and clean the target path.</li>
+  <li><strong>核心概念</strong>：CLI 只做“按清单重建/同步”，清单是单一真相源。</li>
+  <li><strong>常用动作</strong>：初始化清单 → 安装/同步 → 升级 → 移除。</li>
+  <li><strong>注意</strong>：具体命令以 Skillshare 官方为准，但流程固定。</li>
 </ul>
 
-<h2>English: when to use CI</h2>
+<h2>中文：CLI vs CI 的区别</h2>
 <ul>
-  <li><strong>Post‑migration checks</strong>: run baseline tests after setup.</li>
-  <li><strong>Upgrade verification</strong>: test before/after upgrades and rollback on failure.</li>
-  <li><strong>Team sync</strong>: keep everyone aligned with the same manifest + results.</li>
+  <li><strong>CLI</strong>：在本地/服务器手动执行安装、同步、升级、移除。</li>
+  <li><strong>CI</strong>：在 GitHub Actions 等流水线里自动复现清单并验证。</li>
+</ul>
+
+<h2>English: full manual (high‑level)</h2>
+<ul>
+  <li><strong>SVC = local stability</strong>: owns real install paths and reproducible local state.</li>
+  <li><strong>Skillshare = shared manifest</strong>: owns the portable list of sources for cross‑device setup.</li>
+  <li><strong>Run both</strong>: SVC stabilizes the machine; Skillshare moves the setup across devices.</li>
+</ul>
+<p>In short: <strong>SVC anchors local, Skillshare carries cross‑platform</strong>.</p>
+
+<h2>English: full flow (all scenarios)</h2>
+<ol>
+  <li><strong>Install a new skill</strong>
+    <ul>
+      <li>Validate it on the Pi first.</li>
+      <li>Register the local state in SVC.</li>
+      <li>Write source/version into the Skillshare manifest (even for manual installs).</li>
+    </ul>
+  </li>
+  <li><strong>Skillshare signup + init</strong>
+    <ul>
+      <li>Create/login if an account is required.</li>
+      <li>Initialize a manifest as the single shared truth.</li>
+    </ul>
+  </li>
+  <li><strong>Upgrade</strong>
+    <ul>
+      <li>Upgrade locally and verify first (SVC confirms usable state).</li>
+      <li>Update versions/sources in the Skillshare manifest.</li>
+    </ul>
+  </li>
+  <li><strong>Remove</strong>
+    <ul>
+      <li>Remove locally via SVC.</li>
+      <li>Remove from the Skillshare manifest to prevent re‑install on migration.</li>
+    </ul>
+  </li>
+  <li><strong>Migrate to a new platform (e.g., Claude Code)</strong>
+    <ul>
+      <li>Use Skillshare CLI to rebuild from the manifest.</li>
+      <li>Use SVC to verify the local state matches.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2>English: Skillshare CLI (guide)</h2>
+<ul>
+  <li><strong>Core idea</strong>: CLI rebuilds/syncs from the manifest — the manifest is the single source of truth.</li>
+  <li><strong>Common actions</strong>: init manifest → install/sync → upgrade → remove.</li>
+  <li><strong>Note</strong>: use official Skillshare commands, but the flow is stable.</li>
+</ul>
+
+<h2>English: CLI vs CI</h2>
+<ul>
+  <li><strong>CLI</strong>: manual install/sync/upgrade/remove on local machines or servers.</li>
+  <li><strong>CI</strong>: automated rebuild + verification in pipelines (e.g., GitHub Actions).</li>
 </ul>
 
 <footer class="mono"><a href="/">home</a></footer>
