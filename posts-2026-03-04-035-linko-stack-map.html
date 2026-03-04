@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+
+<html lang="zh">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>035 Linko 栈地图</title>
+<meta content="Linko 的目录、调用链与启动命令。插件只做可选壳。" name="description"/>
+<link href="/post.css" rel="stylesheet"/>
+</head>
+<body>
+<main class="wrap">
+<div class="top mono"><a href="/">← home</a></div>
+<h1><span class="post-number">035</span> Linko 栈地图</h1>
+<p class="mono">2026-03-04</p>
+
+<p>这份栈地图只回答三件事：文件放哪、谁调用谁、怎么启动。插件只是占位，不是主线。</p>
+
+<h2>快读版</h2>
+<ul>
+  <li><strong>目录先定型。</strong>核心在 <code>src/</code>，skills 在 <code>skills/</code>，插件可选。</li>
+  <li><strong>调用链从 CLI 开始。</strong><code>cli → mcp server → skills</code>。</li>
+  <li><strong>启动命令一条线。</strong>MCP 先跑，插件后补。</li>
+</ul>
+
+<h2>文件摆放（简化）</h2>
+<pre><code>repo/
+  pyproject.toml
+  README.md
+  src/
+    linko/
+      cli.py
+      mcp/
+        server.py
+      config/
+        default.yaml
+      plugins/             # optional placeholders
+        claude_wrapper.py
+        openai_wrapper.py
+  skills/
+    &lt;skill_name&gt;/
+      SKILL.md
+      scripts/
+      assets/
+</code></pre>
+
+<h2>调用链</h2>
+<pre><code>cli.py
+  └─ mcp/server.py
+      └─ skills/*/SKILL.md + scripts
+
+optional:
+  plugins/*_wrapper.py
+    └─ calls cli.py or mcp/server.py via stdio
+</code></pre>
+
+<h2>结构 + 启动命令</h2>
+<ul>
+  <li><strong>MCP 主线：</strong><code>linko mcp --config ~/.linko/config.yaml</code></li>
+  <li><strong>插件占位：</strong><code>linko plugin --target claude --stdio</code></li>
+</ul>
+
+<h2>插件占位说明</h2>
+<ul>
+  <li><strong>目录：</strong><code>src/linko/plugins/</code></li>
+  <li><strong>职责：</strong>平台协议 → MCP/CLI 调用。</li>
+  <li><strong>开关策略：</strong>有分发需求再开。</li>
+</ul>
+
+<hr/>
+
+<h2>English Version</h2>
+<p>A compact stack map for Linko: folders, call chain, and boot path. Plugins are placeholders only.</p>
+
+<h3>Quick take</h3>
+<ul>
+  <li><strong>Freeze layout.</strong>Core in <code>src/</code>, skills in <code>skills/</code>, plugins optional.</li>
+  <li><strong>Call chain starts at CLI.</strong><code>cli → mcp server → skills</code>.</li>
+  <li><strong>One boot path.</strong>MCP first, plugins later.</li>
+</ul>
+
+<h3>Placement map</h3>
+<pre><code>repo/
+  pyproject.toml
+  README.md
+  src/
+    linko/
+      cli.py
+      mcp/
+        server.py
+      config/
+        default.yaml
+      plugins/             # optional placeholders
+        claude_wrapper.py
+        openai_wrapper.py
+  skills/
+    &lt;skill_name&gt;/
+      SKILL.md
+      scripts/
+      assets/
+</code></pre>
+
+</main>
+</body>
+</html>
