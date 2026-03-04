@@ -5,191 +5,161 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <title>031 Skill management approach</title>
-<meta content="把技能管理拆成采集、锁定、迁移、验证四步：在 Nano BOT + Raspberry Pi 和未来的 Codex / Claude Code 笔记本之间保持稳定。" name="description"/>
+<meta content="把技能管理收束到最轻的一条线：Skillshare 负责复现，SVC 暂时不动。" name="description"/>
 <link href="/post.css" rel="stylesheet"/>
 </head>
 <body>
 <main class="wrap">
 <div class="top mono"><a href="/">← home</a></div>
 <h1><span class="post-number">031</span> Skill management approach</h1>
-<p class="lead">一个可迁移、可回滚的技能管理流程。</p>
+<p class="lead">轻一点，但不失控。</p>
 <div class="meta mono">Mar 4, 2026 · skills · automation</div>
 <div class="sep"></div>
 
-<h2>中文：总体手册（High‑level）</h2>
+<h2>中文：现在的策略</h2>
 <ul>
-  <li><strong>SVC = 本地落地</strong>：管本机安装路径、版本锁定、可复现状态。</li>
-  <li><strong>Skillshare = 跨平台共享</strong>：管可迁移的清单（manifest）与来源记录。</li>
-  <li><strong>并行策略</strong>：本地稳定靠 SVC，跨机器流动靠 Skillshare。</li>
+  <li><strong>只用 Skillshare</strong> 做跨平台迁移与复现。</li>
+  <li><strong>SVC 保留不删</strong>，需要更强版本锁定时再启用。</li>
 </ul>
-<p>一句话：<strong>SVC 管“本机稳定”，Skillshare 管“跨平台迁移”</strong>。</p>
+<p>一句话：<strong>先轻后重</strong>。</p>
 
-<h2>中文：完整流程（所有场景）</h2>
+<h2>中文：流程（所有场景）</h2>
 <ol>
   <li><strong>新技能安装</strong>
     <ul>
       <li>先在 Pi 上验证能跑通。</li>
-      <li>用 SVC 记录本地安装位置、版本与可用状态。</li>
-      <li>把来源/版本写入 Skillshare 清单（即使是手动安装也要记录）。</li>
+      <li>把来源与说明写入 Skillshare manifest。</li>
     </ul>
   </li>
-  <li><strong>Skillshare 注册与初始化</strong>
+  <li><strong>Skillshare 初始化</strong>
     <ul>
-      <li>创建/登录 Skillshare（如果需要账户）。</li>
-      <li>初始化一个 manifest，作为唯一“共享来源”。</li>
+      <li>本地 init，建立唯一“清单真相源”。</li>
     </ul>
   </li>
-  <li><strong>升级（工具选择与节奏）</strong>
+  <li><strong>升级（工具选择）</strong>
     <ul>
-      <li>先用 SVC 在本机升级并验证（安全优先）。</li>
-      <li>确认稳定后，再更新 Skillshare 清单里的版本/来源。</li>
-      <li><strong>原则</strong>：升级以 SVC 为主，Skillshare 只同步结果。</li>
+      <li>优先用 Skillshare 管理版本。</li>
+      <li>如果需要更强锁定，再回到 SVC。</li>
     </ul>
   </li>
   <li><strong>删除</strong>
     <ul>
-      <li>用 SVC 删除本地安装。</li>
-      <li>同时从 Skillshare manifest 移除，避免下次迁移又装回来。</li>
+      <li>本地删除后，清单同步移除。</li>
     </ul>
   </li>
   <li><strong>GitHub 同步</strong>
     <ul>
-      <li>将 Skillshare manifest 和 SVC 的本地锁定文件纳入 Git。</li>
-      <li>提交后推送到 GitHub，确保多机一致。</li>
+      <li>把 manifest 放进 Git 仓库。</li>
+      <li>推到 GitHub，跨设备保持一致。</li>
     </ul>
   </li>
   <li><strong>新平台迁移（比如 Claude Code）</strong>
     <ul>
-      <li>用 Skillshare CLI 按 manifest 重建安装。</li>
-      <li>再用 SVC 检查本地状态，确保与清单一致。</li>
+      <li>按 manifest 一键重建。</li>
+      <li>验证能跑通即可。</li>
     </ul>
   </li>
-  <li><strong>CLI/CI 迁移（新平台自动化）</strong>
+  <li><strong>CLI/CI 迁移</strong>
     <ul>
-      <li>CLI：本地安装、同步、升级、移除。</li>
-      <li>CI：在 GitHub Actions 等流水线里拉取 manifest 并验证。</li>
+      <li>CLI：install / sync / upgrade / remove。</li>
+      <li>CI：拉 manifest → install → 测试。</li>
     </ul>
   </li>
 </ol>
 
 <h2>中文：Skillshare CLI（命令清单）</h2>
 <ul>
-  <li><strong>init</strong>：初始化 manifest（单一真相源）。</li>
-  <li><strong>install</strong>：按 manifest 安装缺失技能。</li>
-  <li><strong>upgrade</strong>：按 manifest 升级到指定版本。</li>
-  <li><strong>delete/remove</strong>：从 manifest 与本地清理技能。</li>
-  <li><strong>sync</strong>：同步 manifest 与本机状态（拉取或校正）。</li>
-  <li><strong>migrate</strong>：在新平台按 manifest 批量重建。</li>
+  <li><strong>init</strong>：初始化 manifest。</li>
+  <li><strong>install</strong>：按清单安装。</li>
+  <li><strong>upgrade</strong>：按清单升级。</li>
+  <li><strong>remove</strong>：移除并同步清单。</li>
+  <li><strong>sync</strong>：对齐清单与本机状态。</li>
+  <li><strong>migrate</strong>：在新平台重建。</li>
 </ul>
 <p class="mono">示例：skillshare init / install / upgrade / remove / sync / migrate</p>
 
-<h2>中文：SVC CLI（命令清单）</h2>
-<ul>
-  <li><strong>add/register</strong>：登记技能来源（GitHub/ClawHub/手动）。</li>
-  <li><strong>install</strong>：本机安装并记录版本。</li>
-  <li><strong>upgrade</strong>：升级本地技能并写入锁定记录。</li>
-  <li><strong>remove</strong>：删除本机技能并更新本地清单。</li>
-  <li><strong>status/verify</strong>：检查是否与锁定版本一致。</li>
-</ul>
-<p class="mono">示例：svc add / install / upgrade / remove / status</p>
-
 <h2>中文：场景速查</h2>
 <ul>
-  <li><strong>安装新技能</strong>：SVC 安装验证 → Skillshare 写 manifest。</li>
-  <li><strong>注册 Skillshare</strong>：创建账户 → init manifest。</li>
-  <li><strong>升级</strong>：先 SVC 升级验证 → Skillshare 更新版本。</li>
-  <li><strong>删除</strong>：SVC 删除 → Skillshare manifest 同步移除。</li>
-  <li><strong>GitHub 同步</strong>：提交 manifest + SVC 锁定文件。</li>
-  <li><strong>迁移 Claude Code</strong>：Skillshare migrate → SVC verify。</li>
-  <li><strong>CI 复现</strong>：流水线拉 manifest → Skillshare install → SVC verify。</li>
+  <li><strong>安装新技能</strong>：验证 → 写 manifest。</li>
+  <li><strong>注册 Skillshare</strong>：init manifest。</li>
+  <li><strong>升级</strong>：Skillshare upgrade。</li>
+  <li><strong>删除</strong>：remove + sync。</li>
+  <li><strong>GitHub 同步</strong>：提交 manifest。</li>
+  <li><strong>迁移 Claude Code</strong>：migrate 后验证。</li>
+  <li><strong>CI 复现</strong>：拉 manifest → install → 测试。</li>
 </ul>
 
-<h2>English: full manual (high‑level)</h2>
+<h2>English: current strategy</h2>
 <ul>
-  <li><strong>SVC = local stability</strong>: owns install paths, version locks, and reproducible local state.</li>
-  <li><strong>Skillshare = shared manifest</strong>: owns the portable list of sources for cross‑device setup.</li>
-  <li><strong>Run both</strong>: SVC stabilizes the machine; Skillshare moves the setup across devices.</li>
+  <li><strong>Use Skillshare only</strong> for cross‑platform rebuilds.</li>
+  <li><strong>Keep SVC parked</strong> until tighter version locks are needed.</li>
 </ul>
-<p>In short: <strong>SVC anchors local, Skillshare carries cross‑platform</strong>.</p>
+<p>In short: <strong>stay light first</strong>.</p>
 
-<h2>English: full flow (all scenarios)</h2>
+<h2>English: full flow</h2>
 <ol>
   <li><strong>Install a new skill</strong>
     <ul>
-      <li>Validate it on the Pi first.</li>
-      <li>Register the local state in SVC (path + version + health).</li>
-      <li>Write source/version into the Skillshare manifest (even for manual installs).</li>
+      <li>Validate on the Pi.</li>
+      <li>Write source/notes into the Skillshare manifest.</li>
     </ul>
   </li>
-  <li><strong>Skillshare signup + init</strong>
+  <li><strong>Skillshare init</strong>
     <ul>
-      <li>Create/login if an account is required.</li>
-      <li>Initialize a manifest as the single shared truth.</li>
+      <li>Create a single manifest as the shared truth.</li>
     </ul>
   </li>
-  <li><strong>Upgrade (tool selection)</strong>
+  <li><strong>Upgrade (tool choice)</strong>
     <ul>
-      <li>Upgrade locally with SVC and verify first.</li>
-      <li>Then update versions/sources in the Skillshare manifest.</li>
-      <li><strong>Rule</strong>: SVC does the upgrade, Skillshare mirrors the outcome.</li>
+      <li>Use Skillshare first.</li>
+      <li>Return to SVC only if stricter locks are needed.</li>
     </ul>
   </li>
   <li><strong>Remove</strong>
     <ul>
-      <li>Remove locally via SVC.</li>
-      <li>Remove from the Skillshare manifest to prevent re‑install on migration.</li>
+      <li>Remove locally and sync the manifest.</li>
     </ul>
   </li>
   <li><strong>GitHub sync</strong>
     <ul>
-      <li>Commit the Skillshare manifest and SVC lock/state files.</li>
-      <li>Push to GitHub to keep machines consistent.</li>
+      <li>Commit the manifest to Git.</li>
+      <li>Push to GitHub for cross‑device consistency.</li>
     </ul>
   </li>
   <li><strong>Migrate to a new platform (e.g., Claude Code)</strong>
     <ul>
-      <li>Use Skillshare CLI to rebuild from the manifest.</li>
-      <li>Use SVC to verify local state matches the lock.</li>
+      <li>Rebuild from the manifest.</li>
+      <li>Verify it runs.</li>
     </ul>
   </li>
   <li><strong>CLI/CI migration</strong>
     <ul>
-      <li>CLI: manual install/sync/upgrade/remove on target machines.</li>
-      <li>CI: automated rebuild + verification in pipelines (e.g., GitHub Actions).</li>
+      <li>CLI: install / sync / upgrade / remove.</li>
+      <li>CI: pull manifest → install → test.</li>
     </ul>
   </li>
 </ol>
 
 <h2>English: Skillshare CLI (commands)</h2>
 <ul>
-  <li><strong>init</strong>: create a manifest (single source of truth).</li>
-  <li><strong>install</strong>: install missing skills from the manifest.</li>
-  <li><strong>upgrade</strong>: upgrade skills to the versions listed.</li>
-  <li><strong>delete/remove</strong>: drop skills locally + from the manifest.</li>
-  <li><strong>sync</strong>: reconcile local state with the manifest.</li>
-  <li><strong>migrate</strong>: rebuild on a new platform from the manifest.</li>
+  <li><strong>init</strong>: create the manifest.</li>
+  <li><strong>install</strong>: install from the manifest.</li>
+  <li><strong>upgrade</strong>: upgrade versions listed.</li>
+  <li><strong>remove</strong>: remove and sync the manifest.</li>
+  <li><strong>sync</strong>: reconcile local vs manifest.</li>
+  <li><strong>migrate</strong>: rebuild on a new platform.</li>
 </ul>
 <p class="mono">Example: skillshare init / install / upgrade / remove / sync / migrate</p>
 
-<h2>English: SVC CLI (commands)</h2>
-<ul>
-  <li><strong>add/register</strong>: record the source (GitHub/ClawHub/manual).</li>
-  <li><strong>install</strong>: install locally and write version locks.</li>
-  <li><strong>upgrade</strong>: upgrade locally and update the lock file.</li>
-  <li><strong>remove</strong>: remove locally and update the local manifest.</li>
-  <li><strong>status/verify</strong>: confirm the local state matches the lock.</li>
-</ul>
-<p class="mono">Example: svc add / install / upgrade / remove / status</p>
-
 <h2>English: scenario map</h2>
 <ul>
-  <li><strong>Install new skill</strong>: SVC install/verify → Skillshare manifest update.</li>
-  <li><strong>Register Skillshare</strong>: account signup → init manifest.</li>
-  <li><strong>Upgrade</strong>: SVC upgrade/verify → Skillshare version update.</li>
-  <li><strong>Delete</strong>: SVC remove → Skillshare manifest removal.</li>
-  <li><strong>GitHub sync</strong>: commit manifest + SVC lock/state.</li>
-  <li><strong>Migrate to Claude Code</strong>: Skillshare migrate → SVC verify.</li>
-  <li><strong>CI rebuild</strong>: pipeline pulls manifest → Skillshare install → SVC verify.</li>
+  <li><strong>Install new skill</strong>: validate → update manifest.</li>
+  <li><strong>Register Skillshare</strong>: init manifest.</li>
+  <li><strong>Upgrade</strong>: skillshare upgrade.</li>
+  <li><strong>Delete</strong>: remove + sync.</li>
+  <li><strong>GitHub sync</strong>: commit the manifest.</li>
+  <li><strong>Migrate to Claude Code</strong>: migrate → verify.</li>
+  <li><strong>CI rebuild</strong>: pull manifest → install → test.</li>
 </ul>
 
 <footer class="mono"><a href="/">home</a></footer>
