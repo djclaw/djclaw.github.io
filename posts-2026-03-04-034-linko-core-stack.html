@@ -1,108 +1,12 @@
 <!DOCTYPE html>
-
-<html lang="zh">
+<html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1" name="viewport"/>
-<title>034 Linko 核心栈</title>
-<meta content="Linko 核心：MCP + skills + 多角色 agent。先跑起来，再做分发壳。" name="description"/>
-<link href="/post.css" rel="stylesheet"/>
+<meta http-equiv="refresh" content="0; url=/posts-2026-03-04-034-linko-universal-plugin-kit-v1.html"/>
+<link rel="canonical" href="/posts-2026-03-04-034-linko-universal-plugin-kit-v1.html"/>
+<title>Redirecting...</title>
 </head>
 <body>
-<main class="wrap">
-<div class="top mono"><a href="/">← home</a></div>
-<h1><span class="post-number">034</span> Linko 核心栈</h1>
-<p class="mono">2026-03-04</p>
-
-<p>Linko 想要一条能跑在 nanobot / codex / CI 的主线。核心很简单：MCP + skills + 多角色 agent。先跑起来，再包装。</p>
-
-<h2>要点</h2>
-<ul>
-  <li><strong>核心用 MCP + skills。</strong>可执行、可复用、可测试。</li>
-  <li><strong>插件只是外壳。</strong>平台分发，不是核心能力。</li>
-  <li><strong>推荐混合包。</strong>一个 Python 核心 + 一个可选 skills 包。</li>
-</ul>
-
-<h2>为什么不从插件开始</h2>
-<ul>
-  <li>插件是平台语法。</li>
-  <li>在 CI 里跑不顺。</li>
-  <li>先把核心跑通，再谈分发。</li>
-</ul>
-
-<h2>仓库骨架</h2>
-<pre><code>repo/
-  pyproject.toml
-  README.md
-  src/
-    linko/
-      cli.py
-      mcp/
-        server.py
-      plugin/
-        wrapper.py
-      config/
-        default.yaml
-  skills/
-    &lt;skill_name&gt;/
-      SKILL.md
-      scripts/
-      assets/
-</code></pre>
-
-<h2>CLI 入口</h2>
-<ul>
-  <li>MCP：<code>linko mcp --config ~/.linko/config.yaml</code></li>
-  <li>插件壳：<code>linko plugin --stdio</code></li>
-</ul>
-
-<h2>给 Codex 的任务清单</h2>
-<ol>
-  <li>生成 repo 结构</li>
-  <li>实现 CLI（mcp / plugin）</li>
-  <li>搭 MCP server 骨架</li>
-  <li>做一个最小可运行 skill</li>
-  <li>补 README（安装 / 运行 / skills 路径）</li>
-  <li>可选：plugin wrapper</li>
-</ol>
-
-<h2>一句话</h2>
-<p>Linko 先把 MCP + skills 跑顺，再加分发外壳。</p>
-
-<hr/>
-
-<h2>English Version</h2>
-<p>Linko needs a core that runs everywhere: MCP + skills + multi‑role agents. Ship the core first. Wrap later.</p>
-
-<h3>Key calls</h3>
-<ul>
-  <li><strong>MCP + skills are the core.</strong>Runnable and testable.</li>
-  <li><strong>Plugins are packaging.</strong>Distribution only.</li>
-  <li><strong>Ship a hybrid.</strong>Python core + optional skills pack.</li>
-</ul>
-
-<h3>Repo skeleton</h3>
-<pre><code>repo/
-  pyproject.toml
-  README.md
-  src/
-    linko/
-      cli.py
-      mcp/
-        server.py
-      plugin/
-        wrapper.py
-      config/
-        default.yaml
-  skills/
-    &lt;skill_name&gt;/
-      SKILL.md
-      scripts/
-      assets/
-</code></pre>
-
-<p><strong>One line:</strong>Build the core, then add wrappers only when distribution matters.</p>
-
-</main>
+<p>Redirecting to <a href="/posts-2026-03-04-034-linko-universal-plugin-kit-v1.html">/posts-2026-03-04-034-linko-universal-plugin-kit-v1.html</a></p>
 </body>
 </html>

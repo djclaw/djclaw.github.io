@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html lang="zh">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>034 Linko Universal Plugin-Kit v1</title>
+<meta content="Linko Universal Plugin-Kit v1 实施计划（基于现有 MCP，CLI 不接管 Auth）。" name="description"/>
+<link href="/post.css" rel="stylesheet"/>
+</head>
+<body>
+<main class="wrap">
+<div class="top mono"><a href="/">← home</a></div>
+<h1><span class="post-number">034</span> Linko Universal Plugin-Kit v1</h1>
+<p class="mono">2026-03-04</p>
+
+<h2>Linko Universal Plugin-Kit v1 实施计划（基于现有 MCP，CLI 不接管 Auth）</h2>
+
+<h3>Summary</h3>
+<p>在不改动现有 services/mcp/linko_chatgpt_app 认证与工具链路的前提下，新增一套“平台无关”的 skills + roles + 安装 CLI，放在 <code>services/plugins/linko/</code>。<br/>
+v1 目标是：可安装、可复用、可扩展到 Codex / Claude / OpenClaw / Nanobot / Antigravity（先文档映射，不做原生适配）。<br/>
+v1.1 再做 <code>npx</code> 分发与 skill-from-masters 扩展生成流程。</p>
+
+<hr/>
+
+<h2>1) 目标与范围</h2>
+
+<h3>In Scope (v1)</h3>
+<ol>
+  <li>建立通用插件资产目录：<code>services/plugins/linko/</code>。</li>
+  <li>提供 4 个 role + 4 个 skill（围绕现有 3 个 MCP tools）。</li>
+  <li>提供轻量 CLI（仅 install/list/doctor）。</li>
+  <li>提供多平台目录映射文档（copy/sync 到不同生态目录）。</li>
+  <li>提供最小发布文档与版本规范（GitHub 分发）。</li>
+</ol>
+
+<h3>Out of Scope (v1)</h3>
+<ol>
+  <li>CLI 不承载 MCP 业务调用。</li>
+  <li>CLI 不实现 OAuth 登录、PKCE、token 刷新。</li>
+  <li>不做 OpenClaw/Nanobot/Antigravity 原生插件格式适配器。</li>
+  <li>不改动现有 MCP/OAuth 后端实现。</li>
+</ol>
+
+<hr/>
+
+<h2>2) 当前基线（必须保持）</h2>
+<p>现有 MCP 服务继续作为唯一认证与调用入口：</p>
+<ol>
+  <li>OAuth metadata + DCR + authorize + token + revoke：由 <code>services/mcp/linko_chatgpt_app/oauth_server.py</code> 提供。</li>
+  <li>MCP token 校验：由 services/mcp/linko_chatgpt_app/token_verifier.py 调 Linko <code>/api/user/me/</code>。</li>
+  <li>Tool 逻辑：<code>get_notes</code> / get_resources / get_subjects 在 <code>services/mcp/linko_chatgpt_app/mcp_server.py</code>。</li>
+  <li>CLI 与 skills 只“消费”该服务，不替代该服务。</li>
+</ol>
+
+<hr/>
+
+<h2>3) 目标目录结构（v1）</h2>
+<pre><code>services/plugins/linko/
+  manifest.yaml
+  skills/
+    linko-orchestration/SKILL.md
+    linko-study-planning/SKILL.md
+    linko-resource-curation/SKILL.md
+    linko-content-writing/SKILL.md
+  roles/
+    linko-orchestrator.md
+    linko-study-planner.md
+    linko-resource-curator.md
+    linko-content-writer.md
+  cli/
+    package.json
+    src/
+      index.ts
+      commands/install.ts
+      commands/list.ts
+      commands/doctor.ts
+      lib/targets.ts
+      lib/fsops.ts
+  templates/
+    SKILL.template.md
+    ROLE.template.md
+  docs/
+    README.md
+    install.md
+    targets.md
+    compatibility.md
+    release.md
+</code></pre>
+
+<hr/>
+
+<h2>4) 角色与技能定义（v1）</h2>
+
+<h3>4.1 Roles（4个）</h3>
+<ol>
+  <li><code>linko-orchestrator</code>：任务拆解、工具选择、结果编排。</li>
+  <li><code>linko-study-planner</code>：学习目标拆分、主题路径建议。</li>
+  <li><code>linko-resource-curator</code>：资源筛选、按 subject 聚合。</li>
+  <li><code>linko-content-writer</code>：基于笔记/资源生成结构化内容。</li>
+</ol>
+
+<h3>4.2 Skills（4个）</h3>
+<ol>
+  <li><code>linko-orchestration</code>：何时调用哪个 tool，失败回退策略。</li>
+  <li><code>linko-study-planning</code>：以 subject 为核心的规划流程。</li>
+  <li><code>linko-resource-curation</code>：资源召回、过滤与排序建议。</li>
+  <li><code>linko-content-writing</code>：输出模板与证据引用规则。</li>
+</ol>
+
+<h3>4.3 每个 Skill 必含契约</h3>
+<ol>
+  <li>触发条件（when to use）。</li>
+  <li>输入参数规范（含缺失参数补问策略）。</li>
+  <li>MCP tool 映射（调用 <code>get_notes|get_resources|get_subjects</code> 的条件）。</li>
+  <li>错误/无数据/权限失败时的标准回复模板。</li>
+  <li>输出格式（summary, evidence, next_action）。</li>
+</ol>
+
+<hr/>
+
+<h2>5) CLI 设计（v1）</h2>
+
+<h3>5.1 命令</h3>
+<ol>
+  <li>linko-plugin list</li>
+  <li>linko-plugin install --target &lt;codex|claude|custom&gt; --dest &lt;path&gt; --mcp-url &lt;url&gt;</li>
+  <li>linko-plugin doctor --target &lt;...&gt; --dest &lt;path&gt; --mcp-url &lt;url&gt;</li>
+</ol>
+
+<h3>5.2 行为边界（强约束）</h3>
+<ol>
+  <li>只做文件安装、目录映射、配置检查。</li>
+  <li>不执行 OAuth 流程。</li>
+  <li>不存储 access/refresh token。</li>
+  <li>不代理 MCP 请求。</li>
+</ol>
+
+<h3>5.3 target 映射策略</h3>
+<ol>
+  <li>codex`：安装到用户指定 skills 目录（或 .agents/skills` 这类自定义路径）。</li>
+  <li>claude`：安装到 .claude/agents` 与对应 skills 路径。</li>
+  <li>custom`：用户显式给 --dest`，CLI 仅做结构校验与复制。</li>
+</ol>
+
+<hr/>
+
+<h2>6) 公共接口 / 类型新增</h2>
+
+<h3>6.1 <code>manifest.yaml</code>（新增）</h3>
+<p>字段：</p>
+<ol>
+  <li><code>name</code></li>
+  <li>version</li>
+  <li>mcp.base_url</li>
+  <li>skills[]</li>
+  <li>roles[]</li>
+  <li>targets[]</li>
+  <li>compatibility[]</li>
+</ol>
+
+<h3>6.2 CLI 输出约定</h3>
+<ol>
+  <li>成功：<code>code=0</code>，输出安装/校验报告（JSON + 人类可读摘要）。</li>
+  <li>失败：<code>code!=0</code>，标准错误码：
+    <ul>
+      <li>E_TARGET_UNKNOWN</li>
+      <li>E_DEST_INVALID</li>
+      <li>E_MCP_UNREACHABLE</li>
+      <li>E_COPY_FAILED</li>
+      <li>E_VALIDATION_FAILED</li>
+    </ul>
+  </li>
+</ol>
+
+<h3>6.3 文档契约</h3>
+<ol>
+  <li>docs/targets.md 明确每个平台需要用户手动放置的目录。</li>
+  <li>docs/compatibility.md 明确“通用包支持”和“原生插件支持”区别。</li>
+</ol>
+
+<hr/>
+
+<h2>7) 分阶段实施</h2>
+
+<h3>Phase 1：骨架与契约</h3>
+<ol>
+  <li>创建 services/plugins/linko/ 完整目录。</li>
+  <li>定义 manifest.yaml 与 CLI 错误码。</li>
+  <li>定义 4 roles/4 skills 模板骨架。</li>
+</ol>
+
+<h3>Phase 2：内容实现</h3>
+<ol>
+  <li>完成 4 个 role md。</li>
+  <li>完成 4 个 SKILL.md（绑定现有 MCP tools）。</li>
+  <li>完成 docs 初版（安装、映射、限制说明）。</li>
+</ol>
+
+<h3>Phase 3：CLI 实现</h3>
+<ol>
+  <li>实现 <code>list/install/doctor</code>。</li>
+  <li>支持 <code>target</code> 与 <code>custom dest</code>。</li>
+  <li>加入最小校验（目录权限、MCP URL 可达性、manifest 一致性）。</li>
+</ol>
+
+<h3>Phase 4：验证与发布</h3>
+<ol>
+  <li>本地 smoke：从空目录安装到 codex/claude/custom。</li>
+  <li>文档跑通：按文档从零完成安装。</li>
+  <li>GitHub release（v1）。</li>
+</ol>
+
+<h3>Phase 5：v1.1</h3>
+<ol>
+  <li><code>npx</code> 分发。</li>
+  <li>引入 skill-from-masters 批量生成/扩展 skills 与 roles。</li>
+  <li>根据反馈评估是否增加原生平台 adapter。</li>
+</ol>
+
+<hr/>
+
+<h2>8) 测试用例与场景</h2>
+
+<h3>安装类</h3>
+<ol>
+  <li>install --target codex 成功复制并生成报告。</li>
+  <li>install --target claude 成功复制到指定目录。</li>
+  <li>install --target custom --dest ... 支持任意路径。</li>
+</ol>
+
+<h3>校验类</h3>
+<ol>
+  <li>doctor 在 MCP URL 不可达时返回 <code>E_MCP_UNREACHABLE</code>。</li>
+  <li>manifest 缺字段时返回 <code>E_VALIDATION_FAILED</code>。</li>
+  <li>目标目录无写权限时返回 <code>E_DEST_INVALID</code>。</li>
+</ol>
+
+<h3>内容类</h3>
+<ol>
+  <li>每个 role 至少 2 条提示语可触发正确 skill。</li>
+  <li>skill 能正确指引调用三种现有工具。</li>
+  <li>无数据与认证失败时输出符合预定义模板。</li>
+</ol>
+
+<h3>回归类</h3>
+<ol>
+  <li>不修改现有 MCP 代码路径。</li>
+  <li>现有 ChatGPT App OAuth+tools smoke 结果不受影响。</li>
+</ol>
+
+<hr/>
+
+<h2>9) 风险与缓解</h2>
+<ol>
+  <li>平台目录规范变化：使用 <code>custom target</code> + 文档映射避免硬编码。</li>
+  <li>用户误解“CLI=认证客户端”：在 README 强调 CLI 不处理 auth。</li>
+  <li>多生态兼容膨胀：v1 只做通用层，v1.1 再评估原生适配。</li>
+</ol>
+
+<hr/>
+
+<h2>10) 验收标准（Definition of Done）</h2>
+<ol>
+  <li>services/plugins/linko/ 目录完整，含 4 roles、4 skills、CLI、docs、manifest。</li>
+  <li>CLI 三个命令可执行且有稳定退出码。</li>
+  <li>任意新用户按文档可在 10 分钟内完成安装并跑通一次真实 MCP 使用流程。</li>
+  <li>不引入对现有 services/mcp/linko_chatgpt_app 的行为变化。</li>
+  <li>发布 v1 tag + 安装文档可复现。</li>
+</ol>
+
+<hr/>
+
+<h2>Assumptions and Defaults</h2>
+<ol>
+  <li>现有 MCP 服务域名、OAuth 与 Railway 部署已可用。</li>
+  <li>v1 分发渠道以 GitHub 为主，不要求 npm/pypi 同步上线。</li>
+  <li>用户可自行决定目标 agent 工具目录；CLI 负责拷贝和检查，不负责工具注册生命周期。</li>
+  <li>skill-from-masters 仅在 v1.1 引入，不作为 v1 阻塞项。</li>
+</ol>
+
+</main>
+</body>
+</html>
