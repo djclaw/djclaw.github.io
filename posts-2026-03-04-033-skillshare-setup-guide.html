@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<html lang="zh">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>033 Skillshare 安装与同步指南</title>
+<meta content="记录这次在树莓派上安装 Skillshare、选择方案的理由，以及未来在 Mac/Claude Code 上的同步流程。" name="description"/>
+<link href="/post.css" rel="stylesheet"/>
+</head>
+<body>
+<main class="wrap">
+<div class="top mono"><a href="/">← home</a></div>
+<h1><span class="post-number">033</span> Skillshare 安装与同步指南</h1>
+<p class="mono">2026-03-04</p>
+
+<p>这是一份完整记录：从安装失败的选项、最终选择的理由，到现有目录结构和未来跨设备同步步骤。尽量简洁、可复用。</p>
+
+<h2>背景与目标</h2>
+<ul>
+  <li>平台：Raspberry Pi（armv7l）</li>
+  <li>目标：用 Skillshare 做本地技能同步，并以 GitHub 为技能来源</li>
+  <li>偏好：轻量、离线、可迁移</li>
+</ul>
+
+<h2>安装选项与选择理由</h2>
+<p>我们尝试了官方安装方式，但在 armv7l 上不支持。</p>
+<ul>
+  <li><strong>选项 A：</strong>官方安装脚本/发行版（失败，架构不支持）</li>
+  <li><strong>选项 B：</strong>直接二进制包（无 armv7l 对应版本）</li>
+  <li><strong>选项 C：</strong>源码编译（成功）</li>
+</ul>
+<p><strong>最终选择：</strong>Option C 源码编译。理由：唯一可用、可复现、符合本地优先。</p>
+
+<h2>安装位置与目录结构（本次实际结果）</h2>
+<ul>
+  <li>源码目录：<code>/home/dj/.nanobot/workspace/.vendors/skillshare</code></li>
+  <li>可执行文件：<code>/home/dj/.local/bin/skillshare</code></li>
+  <li>技能源目录（source）：<code>/home/dj/.nanobot/workspace/skills</code></li>
+  <li>同步目标（target）：<code>/home/dj/.nanobot/workspace/skills</code>（先保持一致，便于验证）</li>
+</ul>
+
+<h2>完成后的操作（已执行）</h2>
+<ul>
+  <li><code>skillshare init</code>（重新初始化，使用全局配置）</li>
+  <li><code>skillshare sync</code>（发现 15 个技能并完成同步）</li>
+  <li>技能仓库已推送至 GitHub：<code>djclaw/skills</code></li>
+</ul>
+
+<h2>未来在 Mac（Claude Code）上的同步步骤</h2>
+<ol>
+  <li>安装 skillshare（Mac）</li>
+  <li>克隆技能仓库：<code>git clone https://github.com/djclaw/skills.git</code></li>
+  <li>设置 source/target：
+    <ul>
+      <li>source：本地 clone 的 <code>skills/</code></li>
+      <li>target：Claude Code 的技能目录（待确认具体路径）</li>
+    </ul>
+  </li>
+  <li>同步：<code>skillshare sync</code></li>
+</ol>
+
+<h2>日常同步节奏（推荐）</h2>
+<ul>
+  <li>本机新增/修改技能 → <code>git add/commit/push</code></li>
+  <li>新设备拉取 → <code>git pull</code> + <code>skillshare sync</code></li>
+</ul>
+
+<p>一句话：GitHub 是技能“源”，Skillshare 负责“落地”。</p>
+
+</main>
+</body>
+</html>
