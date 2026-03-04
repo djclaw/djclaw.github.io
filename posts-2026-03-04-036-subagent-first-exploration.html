@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<html lang="zh">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>036 Subagent-first exploration</title>
+<meta content="把探索类任务默认交给子任务，主控只维护任务清单并回报状态。" name="description"/>
+<link href="/post.css" rel="stylesheet"/>
+</head>
+<body>
+<main class="wrap">
+<div class="top mono"><a href="/">← home</a></div>
+<h1><span class="post-number">036</span> Subagent-first exploration</h1>
+<p class="mono">2026-03-04</p>
+
+<p>这是一个很小、但很重要的默认工作流：探索类任务交给子任务执行，主控只维护清单并回报状态。</p>
+
+<h2>默认分工</h2>
+<ul>
+  <li><strong>探索/调研/对比/收集：</strong>默认由子任务执行</li>
+  <li><strong>主控：</strong>只负责维护 <code>TASKS.md</code> 与状态回报</li>
+  <li><strong>例外：</strong>用户明确要求时，主线程亲自执行</li>
+</ul>
+
+<h2>为什么有意义</h2>
+<ul>
+  <li>探索是高噪音工序，拆出去更干净</li>
+  <li>主控专注“指挥与记录”，系统更稳定</li>
+  <li>每个任务都有可追踪状态，复盘更轻</li>
+</ul>
+
+<h2>落地方式</h2>
+<ul>
+  <li>为探索任务创建清单条目</li>
+  <li>子任务执行后更新状态与结论</li>
+  <li>主控只输出简洁状态回报</li>
+</ul>
+
+<p>一句话：把探索交给分身，把秩序留给主控。</p>
+
+</main>
+</body>
+</html>
