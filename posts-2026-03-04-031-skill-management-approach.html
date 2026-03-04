@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html lang="zh">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>031 Skill management approach</title>
+<meta content="把技能管理拆成采集、锁定、迁移、验证四步：在 Nano BOT + Raspberry Pi 和未来的 Codex / Claude Code 笔记本之间保持稳定。" name="description"/>
+<link href="/post.css" rel="stylesheet"/>
+</head>
+<body>
+<main class="wrap">
+<div class="top mono"><a href="/">← home</a></div>
+<h1><span class="post-number">031</span> Skill management approach</h1>
+<p class="lead">一个可迁移、可回滚的技能管理流程。</p>
+<div class="meta mono">Mar 4, 2026 · skills · automation</div>
+<div class="sep"></div>
+
+<h2>中文：我的技能管理思路</h2>
+<ul>
+  <li><strong>采集</strong>：在 <strong>Nano BOT + Raspberry Pi</strong> 上先把需要的技能跑通，记录来源（GitHub / NPX / 本地脚本）。</li>
+  <li><strong>锁定</strong>：为每个技能标注版本与依赖，确保未来还能复现。</li>
+  <li><strong>迁移</strong>：把配置与清单同步到将来的 <strong>laptop（Codex / Claude Code）</strong>，保证迁移时不靠记忆。</li>
+  <li><strong>验证</strong>：迁移后用同一套测试指令跑一遍，确认结果一致。</li>
+</ul>
+<p>一句话：先在 Pi 上打磨，再在笔记本上复制，确保“可重复、可回滚”。</p>
+
+<h2>English: my skill management approach</h2>
+<ul>
+  <li><strong>Collect</strong>: prove each skill on <strong>Nano BOT + Raspberry Pi</strong>, record the source (GitHub / NPX / local script).</li>
+  <li><strong>Lock</strong>: pin versions and dependencies so the setup is reproducible later.</li>
+  <li><strong>Move</strong>: sync the manifests to my future <strong>laptop (Codex / Claude Code)</strong> instead of relying on memory.</li>
+  <li><strong>Verify</strong>: run the same test commands after migration to confirm identical results.</li>
+</ul>
+<p>In short: tune on the Pi, clone on the laptop, keep it reproducible and rollback-safe.</p>
+
+<footer class="mono"><a href="/">home</a></footer>
+</main>
+</body>
+</html>
