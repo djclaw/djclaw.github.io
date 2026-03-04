@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+<html lang="zh">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>034 安静的总包装：MCP + Skills + 多角色 Agent</title>
+<meta content="把 MCP、skills、多角色 agent 合成一个可安装的整体包：先核心，后包装。" name="description"/>
+<link href="/post.css" rel="stylesheet"/>
+</head>
+<body>
+<main class="wrap">
+<div class="top mono"><a href="/">← home</a></div>
+<h1><span class="post-number">034</span> 安静的总包装：MCP + Skills + 多角色 Agent</h1>
+<p class="mono">2026-03-04</p>
+
+<p>目标很简单：把 MCP 做成核心，再把 skills 和多角色 agent 有序地包起来，最终变成别人能装、能用、能扩展的整体。</p>
+
+<h2>结论（先说重点）</h2>
+<ul>
+  <li><strong>核心用 MCP + skills。</strong>这是最通用、最能在 nanobot / codex / CI 里跑的组合。</li>
+  <li><strong>插件只是包装。</strong>它是平台锁定的分发形式，不是核心能力。</li>
+  <li><strong>推荐混合分发。</strong>一个 Python 核心包 + 一个可选 skills 包，未来再加插件外壳。</li>
+</ul>
+
+<h2>为什么不从 plugin 开始</h2>
+<ul>
+  <li>plugin 属于平台语法（OpenAI / Claude Code 各自一套）。</li>
+  <li>在 nanobot / codex / CI 里不能直接执行。</li>
+  <li>所以：先做可运行的核心，再做分发包装。</li>
+</ul>
+
+<h2>推荐结构（骨架）</h2>
+<pre><code>repo/
+  pyproject.toml
+  README.md
+  src/
+    auto_company/
+      cli.py
+      mcp/
+        server.py
+      plugin/
+        wrapper.py
+      config/
+        default.yaml
+  skills/
+    &lt;skill_name&gt;/
+      SKILL.md
+      scripts/
+      assets/
+</code></pre>
+
+<h2>CLI 入口（一个命令）</h2>
+<ul>
+  <li>MCP：<code>auto-company mcp --config ~/.auto-company/config.yaml</code></li>
+  <li>插件包装：<code>auto-company plugin --stdio</code></li>
+</ul>
+
+<h2>给 Codex 的任务清单</h2>
+<ol>
+  <li>生成 repo 基础结构</li>
+  <li>写 CLI 入口（mcp / plugin 子命令）</li>
+  <li>搭 MCP server 基础框架</li>
+  <li>做一个最小可运行 skill</li>
+  <li>补 README（安装 / 运行 / skills 路径）</li>
+  <li>可选：写 plugin wrapper</li>
+</ol>
+
+<h2>一句话总结</h2>
+<p>先把核心能力做成 MCP + skills，再用插件当外壳，这样既能跑、又能扩。</p>
+
+<hr/>
+
+<h2>English Version</h2>
+<p>The goal is simple: keep MCP as the core, wrap skills and multi‑role agents on top, and ship a package others can install and run.</p>
+
+<h3>Key decisions</h3>
+<ul>
+  <li><strong>MCP + skills are the core.</strong> They run across nanobot / codex / CI.</li>
+  <li><strong>Plugins are packaging.</strong> Platform‑locked wrappers, not the core logic.</li>
+  <li><strong>Ship a hybrid.</strong> One Python core package + one optional skills bundle.</li>
+</ul>
+
+<h3>Why not start from a plugin</h3>
+<ul>
+  <li>Plugins are platform‑specific (OpenAI vs Claude Code).</li>
+  <li>They don’t run directly in nanobot / codex / CI.</li>
+  <li>So build the core first, wrap later.</li>
+</ul>
+
+<h3>Suggested repo skeleton</h3>
+<pre><code>repo/
+  pyproject.toml
+  README.md
+  src/
+    auto_company/
+      cli.py
+      mcp/
+        server.py
+      plugin/
+        wrapper.py
+      config/
+        default.yaml
+  skills/
+    &lt;skill_name&gt;/
+      SKILL.md
+      scripts/
+      assets/
+</code></pre>
+
+<h3>Single CLI entry</h3>
+<ul>
+  <li>MCP: <code>auto-company mcp --config ~/.auto-company/config.yaml</code></li>
+  <li>Plugin wrapper: <code>auto-company plugin --stdio</code></li>
+</ul>
+
+<h3>Task list for Codex</h3>
+<ol>
+  <li>Generate repo structure</li>
+  <li>Implement CLI (mcp / plugin)</li>
+  <li>Set up MCP server skeleton</li>
+  <li>Create a minimal runnable skill</li>
+  <li>Write README (install / run / skills path)</li>
+  <li>Optional: plugin wrapper</li>
+</ol>
+
+<p><strong>One‑line summary:</strong> Build MCP + skills first, then wrap with plugins only when you need platform distribution.</p>
+
+</main>
+</body>
+</html>
