@@ -23,6 +23,22 @@
   <li>偏好：轻量、离线、可迁移</li>
 </ul>
 
+<h2>Project vs Global：两种模式与我们的选择</h2>
+<p>Skillshare 有两种工作方式：</p>
+<ul>
+  <li><strong>Project 模式：</strong>技能源在项目内（例如 <code>.skillshare/skills/</code>），同步到项目自己的目标目录（例如 <code>.claude/skills/</code>）。</li>
+  <li><strong>Global（Organization）模式：</strong>技能源在全局配置（例如 <code>~/.config/skillshare/skills/</code>），同步到多个全局目标目录（例如 <code>~/.claude/skills/</code>）。</li>
+</ul>
+<p>两者差别的核心是：<strong>技能源的位置与目标范围</strong>。Project 更像“每个项目自带工具箱”，Global 更像“统一技能库，多处落地”。</p>
+<p><strong>我们的选择：</strong>Global。理由：
+<ul>
+  <li>目标是跨设备复用（Raspberry Pi ↔ Mac/Claude Code）</li>
+  <li>技能仓库已统一放在 GitHub（<code>djclaw/skills</code>）</li>
+  <li>更符合“一个源，多处同步”的长期维护方式</li>
+</ul>
+</p>
+<p class="mono">参考：<a href="https://skillshare.runkids.cc/docs/#how-it-works">Skillshare 文档：How it works</a></p>
+
 <h2>安装选项与选择理由</h2>
 <p>我们尝试了官方安装方式，但在 armv7l 上不支持。</p>
 <ul>
