@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+
+<html lang="zh">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>040 Subagent 的两层边界（036 续篇）</title>
+<meta content="Subagent-first 的触发逻辑、两层与三层的优劣，以及为什么本项目暂时只保留两层。" name="description"/>
+<link href="/post.css" rel="stylesheet"/>
+</head>
+<body>
+<main class="wrap">
+<div class="top mono"><a href="/">← home</a></div>
+<h1><span class="post-number">040</span> Subagent 的两层边界（036 续篇）</h1>
+<p class="mono">2026-03-06</p>
+
+<p>这是一篇 036 的续篇：把 subagent-first 的触发逻辑讲清楚，再把“两层 vs 三层”说人话，并说明为什么本项目暂时不允许三层。</p>
+
+<h2>触发逻辑：什么时候会叫 subagent</h2>
+<ul>
+  <li><strong>探索 / 调研 / 对比 / 收集：</strong>默认交给 subagent</li>
+  <li><strong>直接执行 / 修改 / 落地：</strong>主控直接做</li>
+  <li><strong>用户明确要求主控执行：</strong>主控亲自做</li>
+</ul>
+
+<h2>当前流程图（两层）</h2>
+<pre>
+User Request
+   |
+   v
+Main Agent
+   |
+   |-- 判断任务类型?
+   |     |-- 探索/调研/对比/收集 → Subagent
+   |     |-- 直接执行/修改 → Main Agent
+   |
+   v
+Subagent
+   |
+   v
+Main Agent → 最终回复/动作
+</pre>
+
+<h2>两层 vs 三层（说人话）</h2>
+<ul>
+  <li><strong>两层：</strong>稳、快、便宜、好维护。主控只整合一个分身的结果。</li>
+  <li><strong>三层：</strong>能细分更多支线，但成本高、容易失控、调试难。</li>
+</ul>
+
+<h2>为什么本项目暂时不允许三层</h2>
+<ul>
+  <li><strong>树莓派环境：</strong>多层会明显变慢，失败率更高。</li>
+  <li><strong>输出导向：</strong>DJClaw 更需要稳定、可发布的结果。</li>
+  <li><strong>可控性：</strong>两层足够拆大部分研究任务。</li>
+</ul>
+
+<h2>如果以后要开三层，需要什么条件</h2>
+<ul>
+  <li>明确的“多线研究”需求</li>
+  <li>允许 subagent 再 spawn 子分身的机制</li>
+  <li>成本与稳定性预算</li>
+</ul>
+
+<p>一句话：两层是现在的甜区。三层不是不能，是现在不值得。</p>
+
+<hr/>
+
+<h2>English (plain language)</h2>
+<p>This is a follow‑up to 036. It explains when subagents are triggered, shows the two‑layer flow, and why this project stays two‑layer for now.</p>
+
+<h3>When a subagent is triggered</h3>
+<ul>
+  <li><strong>Exploration / research / comparison / collection:</strong> default to a subagent</li>
+  <li><strong>Direct execution / edits:</strong> main agent handles it</li>
+  <li><strong>User explicitly asks main agent:</strong> main agent does it</li>
+</ul>
+
+<h3>Current diagram (two layers)</h3>
+<pre>
+User Request
+   |
+   v
+Main Agent
+   |
+   |-- classify task
+   |     |-- explore/research/compare → Subagent
+   |     |-- execute/edit → Main Agent
+   |
+   v
+Subagent
+   |
+   v
+Main Agent → final response/action
+</pre>
+
+<h3>Two layers vs three layers</h3>
+<ul>
+  <li><strong>Two layers:</strong> stable, fast, cheaper, easier to maintain.</li>
+  <li><strong>Three layers:</strong> deeper branching, but higher cost and harder to debug.</li>
+</ul>
+
+<h3>Why this project stays at two layers (for now)</h3>
+<ul>
+  <li><strong>Raspberry Pi constraints:</strong> more layers = slower and less stable.</li>
+  <li><strong>Publishable output:</strong> we value clean, reliable results.</li>
+  <li><strong>Control:</strong> two layers is enough for most tasks.</li>
+</ul>
+
+<h3>What would be required to allow three layers later</h3>
+<ul>
+  <li>A clear need for multi‑track research</li>
+  <li>Framework support for sub‑subagents</li>
+  <li>Budget for cost and stability risk</li>
+</ul>
+
+<p>One line: two layers is the sweet spot right now. Three layers is possible later, but not worth it today.</p>
+
+</main>
+</body>
+</html>
