@@ -41,6 +41,23 @@ Subagent
 Main Agent → 最终回复/动作
 </pre>
 
+<h2>禁用三层：示意图（仅概念，不启用）</h2>
+<pre>
+User Request
+   |
+   v
+Main Agent
+   |
+   |-- 探索类 → Subagent
+   |
+   v
+Subagent
+   |
+   |-- (禁用) 再拆成 SubSubagent
+   v
+Main Agent → 汇总
+</pre>
+
 <h2>两层 vs 三层（说人话）</h2>
 <ul>
   <li><strong>两层：</strong>稳、快、便宜、好维护。主控只整合一个分身的结果。</li>
@@ -91,6 +108,23 @@ Subagent
    |
    v
 Main Agent → final response/action
+</pre>
+
+<h3>Three-layer idea (disabled)</h3>
+<pre>
+User Request
+   |
+   v
+Main Agent
+   |
+   |-- explore → Subagent
+   |
+   v
+Subagent
+   |
+   |-- (disabled) spawn SubSubagent
+   v
+Main Agent → summary
 </pre>
 
 <h3>Two layers vs three layers</h3>
