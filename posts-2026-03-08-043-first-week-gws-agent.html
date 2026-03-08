@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>043 如果只做第一周：我会怎么配置 gws agent</title>
+<meta content="先把边界收紧，再让 agent 真正跑起来：第一周的配置顺序、权限控制、试运行节奏和回滚思路。" name="description"/>
+<link href="/post.css" rel="stylesheet"/>
+</head>
+<body>
+<main class="wrap">
+<div class="top mono"><a href="/">← home</a></div>
+<h1><span class="post-number">043</span> 如果只做第一周：我会怎么配置 gws agent</h1>
+<p class="mono">2026-03-08</p>
+
+<p>前两篇已经把方向说清了：先看懂 gws 的 skills 结构，再挑三条最值得先跑通的链路。但真要开始试，不该一上来就追求“全自动办公”。第一周更像是在做一件小事：<strong>证明 agent 能在受控范围内，稳定完成少量真实工作</strong>。</p>
+
+<p>如果是我来配第一周，我会坚持四个原则：</p>
+<ul>
+<li><strong>先读后写</strong>：先让 agent 会看，再让它会改。</li>
+<li><strong>先建议后执行</strong>：先输出建议，再允许少量落地动作。</li>
+<li><strong>先单步后多步</strong>：先证明一个动作稳，再串工作流。</li>
+<li><strong>先低风险后高风险</strong>：不碰删除、不碰自动回复、不碰批量改权限。</li>
+</ul>
+
+<hr/>
+
+<h2>1) 第一天：只把环境跑通，不做自动化</h2>
+<p>第一天不要急着让 agent 真干活。目标只有两个：</p>
+<ol>
+<li><code>gws</code> 能正常安装和认证；</li>
+<li>agent 能稳定调用它，并拿到结构化输出。</li>
+</ol>
+
+<p>这一天我只做这些检查：</p>
+<ul>
+<li><code>gws --help</code> 正常；</li>
+<li>认证能完成；</li>
+<li>至少一个服务能返回 JSON；</li>
+<li>agent 能读取命令输出，不发生格式误判；</li>
+<li>失败时能看懂错误信息，而不是直接胡猜。</li>
+</ul>
+
+<p>这一步很无聊，但它其实决定了后面会不会一直返工。</p>
+
+<hr/>
+
+<h2>2) 第二天：只开放“读”能力</h2>
+<p>第二天我会让 agent 获得这几类只读能力：</p>
+<ul>
+<li>读 Gmail 列表；</li>
+<li>读今日或本周 Calendar agenda；</li>
+<li>读 Tasks 列表；</li>
+<li>查联系人；</li>
+<li>列出 Drive 文件。</li>
+</ul>
+
+<p>注意，这里我不会先问“它能不能发邮件”，而会先问：</p>
+<blockquote>
+<p><strong>它能不能稳定地看懂我现在的 Workspace 里发生了什么？</strong></p>
+</blockquote>
+
+<p>如果连读都不稳，写入只会把问题放大。</p>
+
+<h3>第二天的验收标准</h3>
+<ul>
+<li>我说“看看我今天的日程”，它能返回 agenda；</li>
+<li>我说“找最近未读邮件”，它能列出结果；</li>
+<li>我说“查一下某个联系人”，它能找到信息；</li>
+<li>结果不是自由发挥，而是基于真实返回。</li>
+</ul>
+
+<hr/>
+
+<h2>3) 第三天：只允许一类写入 —— 新建，不修改</h2>
+<p>到了第三天，才开始给 agent 很有限的“写”能力。这里我会严格限制：<strong>先允许 create，不允许 update/delete</strong>。</p>
+
+<p>也就是说，优先开放：</p>
+<ul>
+<li>创建一个 task；</li>
+<li>创建一个 calendar event；</li>
+<li>上传一个文件；</li>
+<li>创建一份草稿文档。</li>
+</ul>
+
+<p>先不开放：</p>
+<ul>
+<li>删除邮件；</li>
+<li>批量改日历；</li>
+<li>修改共享权限；</li>
+<li>自动发送消息；</li>
+<li>自动回复邮件。</li>
+</ul>
+
+<p>原因很简单：创建类动作最容易审查，也最容易回滚。删改类动作一旦错了，恢复成本会高很多。</p>
+
+<hr/>
+
+<h2>4) 第四天：先接通一条最小闭环 —— Gmail → Tasks</h2>
+<p>第一周里，我会最先正式启用的 workflow 是 <strong>Gmail → Tasks</strong>。原因不是它最厉害，而是它最像一个有真实价值、但又不太危险的闭环。</p>
+
+<h3>我会怎么设规则</h3>
+<ul>
+<li>只看未读或我指定标签下的邮件；</li>
+<li>只提取“需要行动”的邮件；</li>
+<li>只生成 task，不自动回信；</li>
+<li>task 标题尽量短；</li>
+<li>task 备注里保留邮件来源线索。</li>
+</ul>
+
+<h3>我会怎么试运行</h3>
+<ul>
+<li>先手动触发，不做定时；</li>
+<li>每天只跑 1 次；</li>
+<li>跑完人工 review；</li>
+<li>确认两三天稳定后，再考虑半自动。</li>
+</ul>
+
+<p>这一步的目标不是“自动处理收件箱”，而是证明 agent 能把输入变成行动建议。</p>
+
+<hr/>
+
+<h2>5) 第五天：加上 Calendar agenda + insert</h2>
+<p>Gmail → Tasks 稳一点之后，再加第二条：<strong>读 agenda + 新建 event</strong>。</p>
+
+<p>这一天我只会允许它做两件事：</p>
+<ul>
+<li>每天生成 agenda 摘要；</li>
+<li>在我明确说“加一个事件”时，创建新的 calendar event。</li>
+</ul>
+
+<p>我不会让它自动改已有会议，也不会让它自动发邀请。因为会议通常牵涉别人，一旦写错，社交成本会比技术成本更高。</p>
+
+<h3>最小成功标准</h3>
+<ul>
+<li>能清楚列出今天日程；</li>
+<li>能按我说的时间建一个事件；</li>
+<li>时间、时区、标题没有明显偏差；</li>
+<li>遇到模糊描述时，先问而不是乱写。</li>
+</ul>
+
+<hr/>
+
+<h2>6) 第六天：People + Drive，只做“最后一米”辅助</h2>
+<p>到了第六天，我会给它一点协作能力，但仍然保持轻量：</p>
+<ul>
+<li>查联系人；</li>
+<li>找文件；</li>
+<li>上传文件；</li>
+<li>生成共享链接。</li>
+</ul>
+
+<p>这条线我会刻意限制在“最后一米”：</p>
+<ul>
+<li>不自动群发；</li>
+<li>不自动改共享权限；</li>
+<li>不自动通知所有人；</li>
+<li>先把找人、找文件、拿链接这几个动作做顺。</li>
+</ul>
+
+<p>很多时候，系统不需要更聪明，只需要把最后一米少折腾一点。</p>
+
+<hr/>
+
+<h2>7) 第七天：做一次回顾，只回答三个问题</h2>
+<p>第一周结束时，我不会急着再加技能。我只会问三个问题：</p>
+<ol>
+<li><strong>哪一个动作最稳定？</strong></li>
+<li><strong>哪一个动作最常用？</strong></li>
+<li><strong>哪一个动作一旦出错最麻烦？</strong></li>
+</ol>
+
+<p>这三个问题能决定第二周怎么扩。不是“还能接什么”，而是“什么值得留下”。</p>
+
+<hr/>
+
+<h2>8) 如果是我，我会把权限分成三层</h2>
+<p>为了让第一周尽量稳，我会把 agent 能力分成三层：</p>
+
+<h3>Level 1：Read only</h3>
+<ul>
+<li>读邮件</li>
+<li>读日程</li>
+<li>读任务</li>
+<li>查联系人</li>
+<li>列文件</li>
+</ul>
+
+<h3>Level 2：Create only</h3>
+<ul>
+<li>建 task</li>
+<li>建 event</li>
+<li>上传文件</li>
+<li>创建草稿</li>
+</ul>
+
+<h3>Level 3：Sensitive write</h3>
+<ul>
+<li>删改邮件</li>
+<li>改共享权限</li>
+<li>自动回信</li>
+<li>批量改日历</li>
+<li>自动通知他人</li>
+</ul>
+
+<p>第一周只碰 Level 1 和 Level 2，不碰 Level 3。</p>
+
+<hr/>
+
+<h2>9) 我会怎么写第一周的 agent 提示词</h2>
+<p>如果要给第一周的 agent 一个很短的 operating rule，我会写成这样：</p>
+<blockquote>
+<p><strong>先读取真实状态，再建议下一步；仅在用户明确要求或工作流已被批准时执行创建类动作；遇到模糊时间、模糊对象、模糊权限时必须先确认；不要自动删除、修改或发送。</strong></p>
+</blockquote>
+
+<p>不用很长，关键是边界清楚。</p>
+
+<hr/>
+
+<h2>10) 一句话总结</h2>
+<blockquote>
+<p><strong>第一周不是为了证明 agent 什么都能做，而是为了证明它能在很小的边界里，持续做对几件真的有用的事。</strong></p>
+</blockquote>
+
+<p>只要第一周能稳定做到：</p>
+<ul>
+<li>看邮件；</li>
+<li>转任务；</li>
+<li>看日程；</li>
+<li>建事件；</li>
+<li>查联系人；</li>
+<li>找文件；</li>
+</ul>
+
+<p>那就已经不是 demo 了，而是一个开始接触真实工作的 agent。</p>
+
+<hr/>
+
+<h2>参考 / References</h2>
+<ul>
+<li>Google Workspace CLI 仓库：<a href="https://github.com/googleworkspace/cli" target="_blank" rel="noreferrer">https://github.com/googleworkspace/cli</a></li>
+<li>Skills 索引：<a href="https://raw.githubusercontent.com/googleworkspace/cli/main/docs/skills.md" target="_blank" rel="noreferrer">https://raw.githubusercontent.com/googleworkspace/cli/main/docs/skills.md</a></li>
+<li>前文：<a href="/posts-2026-03-08-041-gws-skills-openclaw.html">041 gws + OpenClaw：Google Workspace 的 skills 层开始成形</a></li>
+<li>前文：<a href="/posts-2026-03-08-042-three-gws-workflows.html">042 先接这三条：gws 最值得先跑通的自动化链路</a></li>
+</ul>
+
+</main>
+</body>
+</html>
