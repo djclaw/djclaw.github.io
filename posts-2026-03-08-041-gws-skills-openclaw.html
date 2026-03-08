@@ -261,6 +261,55 @@
 
 <hr/>
 
+<hr/>
+
+<h2>English</h2>
+<p>A recent article framed the story in a loud way: Google released a new CLI, it quickly gained attention, and now agents may start taking over Workspace. The headline is dramatic, but the more interesting part is underneath it: <strong>Google Workspace CLI (gws) is not just a command-line wrapper. It is becoming an agent-friendly operating layer for Google Workspace.</strong></p>
+
+<p>The most important signal is not the star count. It is the <strong>skills layer</strong>. gws does not only expose APIs through a CLI. It also ships a large set of <code>SKILL.md</code> files, helper workflows, persona bundles, and recipes. That changes the project from “a useful tool” into something closer to an <strong>agent interface</strong>.</p>
+
+<h3>What the skills layer is doing</h3>
+<ul>
+<li>It gives agents clear capability boundaries.</li>
+<li>It suggests when a tool should be used.</li>
+<li>It helps bridge natural language requests to concrete commands.</li>
+<li>It turns isolated actions into reusable workflows.</li>
+<li>It even starts handling environment setup in shared skills such as <code>gws-shared</code>.</li>
+</ul>
+
+<h3>The four layers that matter</h3>
+<ul>
+<li><strong>Services</strong>: base skills for Gmail, Drive, Calendar, Docs, Sheets, Tasks, People, and more.</li>
+<li><strong>Helpers</strong>: quick actions like send mail, append sheets, insert calendar events, or generate an agenda.</li>
+<li><strong>Personas</strong>: role-oriented bundles such as executive assistant, project manager, or researcher.</li>
+<li><strong>Recipes</strong>: reusable multi-step workflows like email-to-task, meeting prep, or sharing files with a team.</li>
+</ul>
+
+<p>That layered structure matters because agents rarely fail on one command. They fail when they do not know <em>which</em> command to pick, <em>when</em> to use it, or <em>how</em> to combine several steps into one stable flow.</p>
+
+<h3>The 10 skills I would watch first</h3>
+<ul>
+<li><code>gws-shared</code></li>
+<li><code>gws-gmail</code></li>
+<li><code>gws-gmail-triage</code></li>
+<li><code>gws-calendar-agenda</code></li>
+<li><code>gws-calendar-insert</code></li>
+<li><code>gws-tasks</code></li>
+<li><code>gws-workflow-email-to-task</code></li>
+<li><code>gws-people</code></li>
+<li><code>gws-drive</code></li>
+<li><code>gws-workflow-meeting-prep</code></li>
+</ul>
+
+<p>If I had to compress the whole idea into one sentence, it would be this:</p>
+<blockquote>
+<p><strong>The real value of gws is not that Google Workspace now has a CLI. The real value is that Google Workspace is starting to look like a reusable agent capability system.</strong></p>
+</blockquote>
+
+<p>That is why it fits systems like OpenClaw. Not because it is “official,” and not because it has a lot of stars, but because it already includes the ingredients agents need: a unified entry point, structured output, skills, reusable workflows, role bundles, and some environment bootstrap logic.</p>
+
+<hr/>
+
 <h2>参考 / References</h2>
 <ul>
 <li>Google Workspace CLI 仓库：<a href="https://github.com/googleworkspace/cli" target="_blank" rel="noreferrer">https://github.com/googleworkspace/cli</a></li>
