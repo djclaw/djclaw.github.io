@@ -64,8 +64,21 @@ body{
 
 footer{margin-top:40px;color:var(--muted);font-size:13px;text-align:left}
 
+.friend-section{margin-top:28px;padding-top:28px;border-top:1px solid var(--line)}
+.friend-section h2{font-size:clamp(24px,4vw,34px);margin:0 0 10px;letter-spacing:-.02em}
+.friend-links{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:14px;margin:0 0 24px}
+.friend-links a{color:var(--ink);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px}
+.friend-links a:hover{border-color:var(--ink)}
+.friend-links span{color:var(--muted)}
+.map-card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:16px;overflow:hidden}
+.map-card-head{margin-bottom:12px}
+.map-note{margin:0;color:var(--muted);font-size:15px;max-width:52ch}
+.map-embed{border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#f0ece5}
+.map-embed iframe{display:block;width:100%;height:480px;border:0}
+
 @media (max-width:640px){
   .avatar{width:140px;height:140px}
+  .map-embed iframe{height:360px}
 }
 
 @media (max-width:640px){
