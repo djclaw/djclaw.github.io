@@ -9,7 +9,7 @@
 </head>
 <body>
   <main class="shell">
-    <header class="site-header friend-header">
+    <header class="site-header friend-header friend-header-tight">
       <div class="site-top">
         <nav class="site-nav mono">
           <a href="/about.html">about</a>
@@ -22,23 +22,31 @@
       <h1>What’s new</h1>
     </header>
 
-    <section class="friend-feed" aria-label="Friend updates">
-      <a class="friend-event friend-event-feed" href="/friend-event-nyc-half-mar-15-2026.html">
-        <div class="friend-event-date mono">
-          <span>2026</span>
-          <span>Mar 15</span>
+    <section class="friend-timeline" aria-label="Friend updates timeline">
+      <div class="friend-group">
+        <div class="friend-group-head">
+          <h2>Upcoming</h2>
         </div>
-        <div class="calendar-badge" aria-hidden="true">
-          <span class="calendar-month">MAR</span>
-          <span class="calendar-day">15</span>
-          <span class="calendar-year">2026</span>
+
+        <a class="friend-event friend-event-apple" href="/friend-event-nyc-half-mar-15-2026.html">
+          <div class="calendar-badge calendar-badge-apple" aria-hidden="true">
+            <span class="calendar-month">MAR</span>
+            <span class="calendar-day">15</span>
+            <span class="calendar-year">2026</span>
+          </div>
+          <div class="friend-event-body">
+            <h3>NYC Half Marathon</h3>
+            <p>DJ will run the NYC Half Marathon in New York City.</p>
+            <p class="friend-event-meta mono">Open event</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="friend-group friend-group-muted">
+        <div class="friend-group-head">
+          <h2>Past</h2>
         </div>
-        <div class="friend-event-body">
-          <h3>NYC Half Marathon</h3>
-          <p>DJ will run the NYC Half Marathon in New York City.</p>
-          <p class="friend-event-meta mono">View event →</p>
-        </div>
-      </a>
+      </div>
     </section>
 
     <footer class="mono">© 2026 djclaw · built in public(ish)</footer>
