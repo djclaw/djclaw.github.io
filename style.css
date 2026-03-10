@@ -150,13 +150,13 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;text-align:left}
   .friend-line{display:none}
   .friend-event-chevron{display:none}
   .calendar-badge{width:64px;border-radius:16px;box-shadow:0 6px 14px rgba(30,34,41,.04)}
-  .calendar-badge-large{width:78px;border-radius:21px;box-shadow:0 8px 18px rgba(30,34,41,.05)}
+  .calendar-badge-large{width:90px;min-height:96px;border-radius:22px;box-shadow:0 8px 18px rgba(30,34,41,.05);display:flex;flex-direction:column}
   .calendar-month{font-size:10px;padding:6px 4px;letter-spacing:.08em}
   .calendar-day{font-size:24px;padding:8px 4px 2px;letter-spacing:-.04em}
   .calendar-year{font-size:10px;padding:0 4px 7px}
-  .calendar-badge-large .calendar-month{font-size:11px;padding:8px 5px}
-  .calendar-badge-large .calendar-day{font-size:29px;padding:10px 5px 3px}
-  .calendar-badge-large .calendar-year{font-size:10px;padding:0 5px 9px}
+  .calendar-badge-large .calendar-month{font-size:11px;padding:9px 6px}
+  .calendar-badge-large .calendar-day{font-size:30px;padding:11px 6px 4px;flex:1;display:flex;align-items:center;justify-content:center}
+  .calendar-badge-large .calendar-year{font-size:10px;padding:0 6px 10px}
   .friend-event-body{padding-top:1px;display:grid;gap:6px;min-width:0}
   .friend-event-topline{font-size:11px;gap:0;display:block;line-height:1}
   .friend-event-topline span:last-child{display:none}
