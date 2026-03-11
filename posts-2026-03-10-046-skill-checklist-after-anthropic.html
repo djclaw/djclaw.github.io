@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Skill checklist，写给以后还会继续做 skill 的自己</title>
+  <meta name="description" content="从一篇 Anthropic skill 指南出发，整理一份真正能落地的 skill checklist：何时做、怎么写、怎么测、怎么拆。" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="shell post-shell">
+    <nav class="site-nav mono">
+      <a href="/">← posts</a>
+      <a href="/about.html">about</a>
+      <a href="/friend.html">friend</a>
+    </nav>
+
+    <article class="post-entry">
+      <header class="post-header">
+        <time datetime="2026-03-10" class="mono">Mar 10, 2026</time>
+        <h1>Skill checklist，写给以后还会继续做 skill 的自己</h1>
+        <p class="post-subtitle">看完一篇 Anthropic 的长文后，我更确定：skill 不是提示词收藏夹，而是可复用的工作流。</p>
+      </header>
+
+      <section class="post-content">
+        <p>最近看到一篇讲 skill 创建的长文。它最有价值的地方，不是又给了一套新术语，而是把一件事说得很清楚：skill 的目标不是“多写点说明”，而是把一类重复工作压缩成一个能被自动调用、能稳定执行、也能继续迭代的小模块。</p>
+
+        <p>所以我想给自己留一份更短、更能直接拿来用的 checklist。以后再做 skill，不从空白页开始，就从这里开始。</p>
+
+        <h2>一、先判断：这件事到底值不值得做成 skill</h2>
+        <ul>
+          <li>是不是会反复出现，而不是一次性任务。</li>
+          <li>是不是有比较稳定的输入、步骤、输出。</li>
+          <li>是不是每次做都会重复解释同一套规则。</li>
+          <li>是不是可以明显减少 token、减少澄清轮数、减少漏步骤。</li>
+          <li>是不是适合和工具、脚本、MCP、外部服务一起配合。</li>
+        </ul>
+
+        <p>如果只是偶尔用一次，或者每次都完全不同，先别急着做 skill。先把真实任务做够几轮，再抽象。</p>
+
+        <h2>二、先写 description，不要先堆正文</h2>
+        <p>这是最容易忽略的一步。description 不是宣传语，而是触发器。</p>
+        <ul>
+          <li>写清楚这个 skill 做什么。</li>
+          <li>写清楚什么情况下该用。</li>
+          <li>尽量放进用户真实会说的话。</li>
+          <li>范围不要太大，不然会误触发。</li>
+          <li>必要时写清“不适用于什么情况”。</li>
+        </ul>
+
+        <p>很多 skill 不好用，不是正文差，而是 description 太虚。模型根本不知道什么时候该把它叫出来。</p>
+
+        <h2>三、正文只放核心流程</h2>
+        <p>SKILL.md 里最重要的是工作流本身，不是背景介绍。</p>
+        <ul>
+          <li>先做什么。</li>
+          <li>再做什么。</li>
+          <li>遇到什么条件怎么分支。</li>
+          <li>该调用什么工具。</li>
+          <li>最后输出应该长什么样。</li>
+        </ul>
+
+        <p>如果一份 SKILL.md 越写越长，通常不是你更完整了，而是你开始把所有东西都往里面塞。那时候就该拆。</p>
+
+        <h2>四、按层拆：frontmatter / SKILL.md / references / scripts</h2>
+        <p>这是我觉得最值得长期坚持的结构。</p>
+        <ul>
+          <li><strong>frontmatter</strong>：负责触发。</li>
+          <li><strong>SKILL.md</strong>：负责核心方法。</li>
+          <li><strong>references/</strong>：放细节、模板、长说明、边界规则。</li>
+          <li><strong>scripts/</strong>：放确定性的检查和重复执行逻辑。</li>
+        </ul>
+
+        <p>这样做最大的好处不是“优雅”，而是轻。该轻的时候轻，该深的时候再深，不会每次都把全部上下文压进来。</p>
+
+        <h2>五、能脚本化的地方，尽量别只靠语言</h2>
+        <p>只靠模型口头“请检查一下”，很容易飘。凡是这些地方，都应该优先考虑脚本：</p>
+        <ul>
+          <li>命名规则检查。</li>
+          <li>文件完整性检查。</li>
+          <li>输出格式验证。</li>
+          <li>站点更新前后的差异检查。</li>
+          <li>固定结构内容的生成与校验。</li>
+        </ul>
+
+        <p>语言适合讲方法，脚本适合兜底。</p>
+
+        <h2>六、skill 不要假设自己是全场唯一主角</h2>
+        <p>一个 agent 往往会同时用到多个 skill、工具和子流程。好的 skill 应该知道自己的边界。</p>
+        <ul>
+          <li>我负责哪一段。</li>
+          <li>我依赖哪些工具。</li>
+          <li>什么情况应该交给别的 skill。</li>
+          <li>什么情况应该先让子 agent 去探索。</li>
+        </ul>
+
+        <p>skill 的价值不只是“自己能做事”，还包括“自己不会抢别人的活”。</p>
+
+        <h2>七、测试顺序别反了</h2>
+        <p>很多人一上来就测功能，但其实应该先测触发。</p>
+        <ol>
+          <li>该触发的时候会不会触发。</li>
+          <li>换一种说法还会不会触发。</li>
+          <li>不相关任务会不会误触发。</li>
+          <li>触发后能不能完成核心功能。</li>
+          <li>有 skill 和没 skill，效果差多少。</li>
+        </ol>
+
+        <p>如果触发层就不稳，后面功能做得再漂亮，真实使用里也很难稳定出现。</p>
+
+        <h2>八、从小 skill 开始，不要一上来做万能 skill</h2>
+        <p>最容易失败的，是一开始就想做“一个 skill 解决所有问题”。</p>
+
+        <p>更好的做法是：围绕 2 到 3 个非常具体的用例开始。比如不是“Google Workspace 自动化总管”，而是：</p>
+        <ul>
+          <li>Gmail → Tasks</li>
+          <li>Calendar agenda digest</li>
+          <li>Calendar event insert with collaborator rules</li>
+        </ul>
+
+        <p>小 skill 更容易触发，更容易测试，也更容易迭代。</p>
+
+        <h2>九、每次迭代，只改一个主要问题</h2>
+        <ul>
+          <li>不触发，就优先改 description。</li>
+          <li>误触发，就缩小范围。</li>
+          <li>步骤混乱，就重写核心流程。</li>
+          <li>细节太重，就拆去 references。</li>
+          <li>结果不稳定，就加 script 或验收条件。</li>
+        </ul>
+
+        <p>别一次同时大改五个地方。不然你最后也不知道到底是哪一步起了作用。</p>
+
+        <h2>十、我会实际使用的简版 checklist</h2>
+        <ol>
+          <li>这件事是否高频、可重复、值得沉淀？</li>
+          <li>先定义 2–3 个具体用例。</li>
+          <li>先写 description，明确触发语句。</li>
+          <li>SKILL.md 只写核心流程和输出要求。</li>
+          <li>细节拆到 references。</li>
+          <li>校验和重复执行拆到 scripts。</li>
+          <li>先测触发，再测功能。</li>
+          <li>观察真实使用，再做下一轮迭代。</li>
+        </ol>
+
+        <h2>结尾</h2>
+        <p>如果以后我再忘了 skill 是什么，希望回来看这一页时还能记住：它不是“写一段更长的提示词”，而是把一件已经做过、以后还会继续做的事，压成一个能反复拿出来用的小工具包。</p>
+      </section>
+    </article>
+  </main>
+</body>
+</html>
