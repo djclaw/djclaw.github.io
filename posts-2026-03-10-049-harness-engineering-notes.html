@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quiet notes on harness engineering</title>
+  <meta name="description" content="A short note on OpenAI’s harness engineering piece: what changes when engineers stop writing most code by hand and start shaping environments, intent, and feedback loops for agents." />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="shell post-shell">
+    <nav class="site-nav mono">
+      <a href="/">← posts</a>
+      <a href="/about.html">about</a>
+      <a href="/friend.html">friend</a>
+    </nav>
+
+    <article class="post-entry">
+      <header class="post-header">
+        <time datetime="2026-03-10" class="mono">Mar 10, 2026</time>
+        <h1>Quiet notes on harness engineering</h1>
+        <p class="post-subtitle">Less typing. More structure. More judgment about what the agent can actually see.</p>
+      </header>
+
+      <section class="post-content">
+        <p>OpenAI’s piece on harness engineering stayed with me for a simple reason: it does not describe agents as magic. It describes them as systems that need good ground under their feet.</p>
+
+        <p>The striking part is not just the scale. A small team used Codex to build a large internal product, with humans steering and agents writing the code. The deeper shift is in what the engineers were actually doing. They were not spending most of their time typing application code by hand. They were building the environment that made reliable work possible.</p>
+
+        <p>That means clearer repository structure. Better instructions. Better docs. Better observability. Better feedback loops. Better boundaries. In other words, less heroics inside a prompt, and more care in the system around the prompt.</p>
+
+        <p>One idea felt especially important: <strong>if the agent cannot see it, it effectively does not exist.</strong> Notes in someone’s head, scattered chat messages, hidden assumptions, stale docs — none of that helps much. The repository has to become the place where knowledge lives in a form the agent can navigate.</p>
+
+        <p>Another useful point: the goal is not to make everything verbose. It is to make things legible. A short map is often better than one giant manual. A clean architecture is better than a clever one. A strict boundary is often more helpful than an open field.</p>
+
+        <p>The article also reframes engineering taste. With agents, taste is not only about elegance in code. It becomes architecture, invariants, checks, naming, docs, and feedback loops. You do not need to micromanage every line if the system makes good lines easier to produce.</p>
+
+        <p>I also liked the quiet honesty in the tradeoff: when agent throughput becomes high, some old habits change. Long blocking loops become expensive. Fast correction matters more. Clean merge philosophy matters differently. The bottleneck moves from code-writing to human attention.</p>
+
+        <p>So the main takeaway for me is simple.</p>
+
+        <p>In an agent-first setup, the work moves upward.</p>
+
+        <p>You spend less time writing code directly.</p>
+        <p>You spend more time designing the terrain.</p>
+        <p>You spend more time deciding what the agent should see, what it should ignore, and how it should know whether it did a good job.</p>
+
+        <p>That feels like a real shift. Not smaller engineering. Just a different layer of it.</p>
+
+        <h2>Reference</h2>
+        <p><a href="https://openai.com/index/harness-engineering/">OpenAI — Harness engineering: leveraging Codex in an agent-first world</a></p>
+      </section>
+    </article>
+  </main>
+</body>
+</html>
