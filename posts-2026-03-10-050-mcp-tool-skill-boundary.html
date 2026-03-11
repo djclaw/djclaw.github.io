@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MCP、Tool、Skill 到底怎么分？</title>
+  <meta name="description" content="一篇讲清：什么是连接，什么是能力，什么是方法。用最省脑子的方式分清 MCP、Tool、Skill。" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="shell post-shell">
+    <nav class="site-nav mono">
+      <a href="/">← posts</a>
+      <a href="/about.html">about</a>
+      <a href="/friend.html">friend</a>
+    </nav>
+
+    <article class="post-entry">
+      <header class="post-header">
+        <time datetime="2026-03-10" class="mono">Mar 10, 2026</time>
+        <h1>MCP、Tool、Skill 到底怎么分？</h1>
+        <p class="post-subtitle">一篇讲清：什么是连接，什么是能力，什么是方法</p>
+      </header>
+
+      <section class="post-content">
+        <p>这三个词经常被混着说，但如果按层次拆开，其实很好记。</p>
+
+        <p><strong>MCP 是连接协议。</strong><br />
+        它负责把模型接到外部世界，比如文件、数据库、浏览器、GitHub、Notion。</p>
+
+        <p><strong>Tool 是具体能力。</strong><br />
+        它是模型可以直接调用的一个动作，比如搜索网页、读文件、发请求、执行命令。</p>
+
+        <p><strong>Skill 是方法包。</strong><br />
+        它不是一个单点动作，而是一套可复用的做事流程：什么场景下用、按什么步骤做、最后产出什么。</p>
+
+        <h2>最简单的判断法</h2>
+
+        <p>如果你要解决的是<strong>怎么接上去</strong>，用 <strong>MCP</strong>。</p>
+        <p>如果你要解决的是<strong>具体做一个动作</strong>，用 <strong>Tool</strong>。</p>
+        <p>如果你要解决的是<strong>稳定地把一类任务做完</strong>，用 <strong>Skill</strong>。</p>
+
+        <h2>一个够用的关系图</h2>
+
+        <pre><code>MCP = 接口层 / 连接层
+   ↓ 提供可访问的外部资源
+
+Tool = 动作层 / 能力层
+   ↓ 调用某个具体功能
+
+Skill = 任务层 / 方法层
+   ↓ 组织多个步骤与工具，完成一类任务</code></pre>
+
+        <p>如果想再口语一点，也可以这样记：</p>
+
+        <pre><code>MCP 像插座
+Tool 像电器
+Skill 像使用说明 + 工作流程</code></pre>
+
+        <h2>三个例子</h2>
+
+        <p><strong>1. 查资料并整理成摘要</strong><br />
+        MCP 负责连上网页、知识库或搜索服务。<br />
+        Tool 负责搜索、抓取、读取。<br />
+        Skill 负责把“搜集 → 筛选 → 输出摘要”串成稳定流程。</p>
+
+        <p><strong>2. 修改代码并提交 GitHub</strong><br />
+        MCP 负责接入文件系统或 GitHub。<br />
+        Tool 负责读文件、改文件、跑测试、创建 PR。<br />
+        Skill 负责把“定位问题 → 修改 → 测试 → 提交”组织起来。</p>
+
+        <p><strong>3. 做客服自动回复</strong><br />
+        MCP 负责连上工单系统、知识库、IM 平台。<br />
+        Tool 负责查订单、检索 FAQ、发送回复。<br />
+        Skill 负责把“识别问题 → 查询信息 → 生成回复 → 必要时转人工”跑顺。</p>
+
+        <h2>一句话结论</h2>
+
+        <p><strong>MCP 解决“连哪里”。</strong><br />
+        <strong>Tool 解决“做什么”。</strong><br />
+        <strong>Skill 解决“怎么稳定做好”。</strong></p>
+
+        <p>这样一分，很多选型问题就会简单很多。你先别急着问自己要不要做一个 skill。先问：你缺的是连接、动作，还是方法。</p>
+      </section>
+    </article>
+  </main>
+</body>
+</html>
