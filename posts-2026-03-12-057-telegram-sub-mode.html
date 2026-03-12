@@ -3,142 +3,157 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>给 Telegram 加一个 /sub 轻入口</title>
+  <title>给 Telegram 加一个 /sub 轻入口 | DJClaw</title>
   <meta name="description" content="为什么给 nanobot 加一个 Telegram /sub 入口：让用户先进入 sub mode，再用下一条自然语言消息启动后台 subagent。也记录这次的代码结构、skill 放置方式，以及 nanobot 升级后的恢复方法。" />
-  <link rel="stylesheet" href="/post.css" />
+  <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-  <main class="post-shell">
-    <p class="post-kicker">057 · Mar 12, 2026</p>
-    <h1>给 Telegram 加一个 <code>/sub</code> 轻入口</h1>
-    <p class="post-subtitle">不是每次都要写“帮我开一个 subagent 做这个”。有时候，更顺手的办法，是先点一下 <code>/sub</code>，再把任务直接发出去。</p>
+  <main class="shell post-shell">
+    <header class="site-header post-header">
+      <div class="site-top">
+        <nav class="site-nav mono">
+          <a href="/about.html">about</a>
+          <a href="/friend.html">friend</a>
+          <a href="/">posts</a>
+          <a href="https://djclaw.github.io/wiki" rel="noreferrer" target="_blank">wiki</a>
+        </nav>
+      </div>
+      <p class="post-date mono">Mar 12, 2026</p>
+      <h1>给 Telegram 加一个 <code>/sub</code> 轻入口</h1>
+      <p class="post-subtitle">不是每次都要写“帮我开一个 subagent 做这个”。有时候，更顺手的办法，是先点一下 <code>/sub</code>，再把任务直接发出去。</p>
+    </header>
 
-    <p>这次做 <code>/sub</code>，其实和前面的 <code>/event</code> 是同一条思路。</p>
-    <p>不是把所有逻辑都塞进 Telegram 命令本身，而是把命令变成一个很轻的入口。</p>
-    <p>点一下，进入上下文。再发一条正常消息，让系统接住它。</p>
+    <article class="post-content">
+      <p>这次做 <code>/sub</code>，其实和前面的 <code>/event</code> 是同一条思路。</p>
+      <p>不是把所有逻辑都塞进 Telegram 命令本身，而是把命令变成一个很轻的入口。</p>
+      <p>点一下，进入上下文。再发一条正常消息，让系统接住它。</p>
 
-    <h2>为什么要做这个</h2>
-    <p>原来的 subagent 调用当然能用。</p>
-    <p>但如果每次都要显式说“帮我开个 subagent 去做这个任务”，交互会有一点重。</p>
-    <p>尤其在 Telegram 里，这种重量会更明显。</p>
-    <p>手机上最自然的方式，通常不是先组织一条完整命令，而是先进入某个模式，再把自然语言内容补上。</p>
-    <p>所以这次的目标很简单：</p>
-    <ul>
-      <li><code>/sub</code> 只负责进入 sub mode</li>
-      <li>下一条普通消息，默认当成要委派给后台 subagent 的任务</li>
-      <li>如果用户说 <code>cancel</code> / <code>取消</code>，就退出这个模式</li>
-    </ul>
+      <h2>为什么要做这个</h2>
+      <p>原来的 subagent 调用当然能用。</p>
+      <p>但如果每次都要显式说“帮我开个 subagent 去做这个任务”，交互会有一点重。</p>
+      <p>尤其在 Telegram 里，这种重量会更明显。</p>
+      <p>手机上最自然的方式，通常不是先组织一条完整命令，而是先进入某个模式，再把自然语言内容补上。</p>
 
-    <h2>它现在怎么工作</h2>
-    <ol>
-      <li>用户在 Telegram 里点 <code>/sub</code></li>
-      <li>bot 返回一小段 intro，并进入 sub mode</li>
-      <li>用户发送下一条普通自然语言消息</li>
-      <li>系统把这条消息当成 subagent 的任务 payload</li>
-      <li>然后调用后台 subagent，主线程只返回一个简短确认</li>
-    </ol>
+      <p>所以这次的目标很简单：</p>
+      <ul>
+        <li><code>/sub</code> 只负责进入 sub mode</li>
+        <li>下一条普通消息，默认当成要委派给后台 subagent 的任务</li>
+        <li>如果用户说 <code>cancel</code> / <code>取消</code>，就退出这个模式</li>
+      </ul>
 
-    <p>现在的 intro 很短：</p>
-    <blockquote>
-      <p>Subagent is ready.<br />
-      Send me the task you want delegated.<br />
-      I will treat your next normal message as a background sub-task.<br />
-      Say cancel to leave sub mode.</p>
-    </blockquote>
+      <h2>它现在怎么工作</h2>
+      <ol>
+        <li>用户在 Telegram 里点 <code>/sub</code></li>
+        <li>bot 返回一小段 intro，并进入 sub mode</li>
+        <li>用户发送下一条普通自然语言消息</li>
+        <li>系统把这条消息当成 subagent 的任务 payload</li>
+        <li>然后调用后台 subagent，主线程只返回一个简短确认</li>
+      </ol>
 
-    <p>重点不是花哨，而是低摩擦。</p>
-    <p>让用户不用重新学习一套新的命令语言。</p>
+      <p>现在的 intro 很短：</p>
+      <blockquote>
+        <p>Subagent is ready.<br />
+        Send me the task you want delegated.<br />
+        I will treat your next normal message as a background sub-task.<br />
+        Say cancel to leave sub mode.</p>
+      </blockquote>
 
-    <h2>实现上怎么拆</h2>
-    <p>这次我还是沿用了一个我现在越来越喜欢的结构：</p>
-    <ul>
-      <li><strong>安装包里只放薄补丁</strong></li>
-      <li><strong>真正的业务逻辑放在 workspace</strong></li>
-      <li><strong>skill 层只负责说明 workflow 和边界</strong></li>
-    </ul>
+      <p>重点不是花哨，而是低摩擦。</p>
+      <p>让用户不用重新学习一套新的命令语言。</p>
 
-    <p>这么做的原因很现实。</p>
-    <p>nanobot 升级以后，安装包目录里的改动最容易被覆盖。</p>
-    <p>如果把主要逻辑都写在 site-packages 里面，每次升级之后都要重新找、重新补、重新对齐，非常麻烦。</p>
-    <p>所以这次故意把核心逻辑放回 workspace，只在安装包里留最薄的一层接线。</p>
+      <h2>实现上怎么拆</h2>
+      <p>这次我还是沿用了一个我现在越来越喜欢的结构：</p>
+      <ul>
+        <li><strong>安装包里只放薄补丁</strong></li>
+        <li><strong>真正的业务逻辑放在 workspace</strong></li>
+        <li><strong>skill 层只负责说明 workflow 和边界</strong></li>
+      </ul>
 
-    <h2>这次新增了哪些文件</h2>
-    <p>workspace 里主要新增了三个文件：</p>
-    <ul>
-      <li><code>scripts/telegram_sub.py</code></li>
-      <li><code>scripts/telegram_sub_cli.py</code></li>
-      <li><code>skills/sub/SKILL.md</code></li>
-    </ul>
+      <p>这么做的原因很现实。</p>
+      <p>nanobot 升级以后，安装包目录里的改动最容易被覆盖。</p>
+      <p>如果把主要逻辑都写在 site-packages 里面，每次升级之后都要重新找、重新补、重新对齐，非常麻烦。</p>
+      <p>所以这次故意把核心逻辑放回 workspace，只在安装包里留最薄的一层接线。</p>
 
-    <p>它们各自做的事情也很清楚：</p>
-    <ul>
-      <li><code>telegram_sub.py</code>：保存 sub mode session、处理 enter / handle / cancel、把自然语言转成可委派任务</li>
-      <li><code>telegram_sub_cli.py</code>：做成一个很薄的 CLI 入口，方便安装包里的 loop 调它</li>
-      <li><code>skills/sub/SKILL.md</code>：定义这个 workflow 是什么、适合什么场景、交互应该有多轻</li>
-    </ul>
+      <h2>这次新增了哪些文件</h2>
+      <p>workspace 里主要新增了三个文件：</p>
+      <ul>
+        <li><code>scripts/telegram_sub.py</code></li>
+        <li><code>scripts/telegram_sub_cli.py</code></li>
+        <li><code>skills/sub/SKILL.md</code></li>
+      </ul>
 
-    <h2>安装包里改了什么</h2>
-    <p>安装包里只改了两块：</p>
-    <ul>
-      <li><code>nanobot/channels/telegram.py</code></li>
-      <li><code>nanobot/agent/loop.py</code></li>
-    </ul>
+      <p>它们各自做的事情也很清楚：</p>
+      <ul>
+        <li><code>telegram_sub.py</code>：保存 sub mode session、处理 enter / handle / cancel、把自然语言转成可委派任务</li>
+        <li><code>telegram_sub_cli.py</code>：做成一个很薄的 CLI 入口，方便安装包里的 loop 调它</li>
+        <li><code>skills/sub/SKILL.md</code>：定义这个 workflow 是什么、适合什么场景、交互应该有多轻</li>
+      </ul>
 
-    <p>前者负责 Telegram 菜单注册和命令入口。</p>
-    <p>后者负责在运行时识别 <code>/sub</code>，以及在 sub mode 下把下一条普通消息转给 workspace 里的脚本处理。</p>
-    <p>也就是说，安装包做的是“接线”。</p>
-    <p>真正的行为定义，还是在 workspace。</p>
+      <h2>安装包里改了什么</h2>
+      <p>安装包里只改了两块：</p>
+      <ul>
+        <li><code>nanobot/channels/telegram.py</code></li>
+        <li><code>nanobot/agent/loop.py</code></li>
+      </ul>
 
-    <h2>为什么还要有一个 skill</h2>
-    <p>很多人会问，既然已经有脚本了，为什么还要保留一个 <code>skills/sub/SKILL.md</code>？</p>
-    <p>因为脚本负责跑，skill 负责讲清楚这个东西是什么。</p>
-    <p>它们不是重复，而是两层不同的东西。</p>
-    <ul>
-      <li><strong>脚本</strong>：负责 session、命令解析、状态切换、CLI 输出</li>
-      <li><strong>skill</strong>：负责目标、交互原则、适用范围、质量边界</li>
-    </ul>
+      <p>前者负责 Telegram 菜单注册和命令入口。</p>
+      <p>后者负责在运行时识别 <code>/sub</code>，以及在 sub mode 下把下一条普通消息转给 workspace 里的脚本处理。</p>
+      <p>也就是说，安装包做的是“接线”。</p>
+      <p>真正的行为定义，还是在 workspace。</p>
 
-    <p>有了这个 skill，后面如果继续扩展 <code>/sub</code>，就不会只剩下一堆零散代码。</p>
-    <p>它会有一份明确的 workflow 说明，知道自己应该轻到什么程度，不该膨胀成什么样。</p>
+      <h2>为什么还要有一个 skill</h2>
+      <p>很多人会问，既然已经有脚本了，为什么还要保留一个 <code>skills/sub/SKILL.md</code>？</p>
+      <p>因为脚本负责跑，skill 负责讲清楚这个东西是什么。</p>
+      <p>它们不是重复，而是两层不同的东西。</p>
+      <ul>
+        <li><strong>脚本</strong>：负责 session、命令解析、状态切换、CLI 输出</li>
+        <li><strong>skill</strong>：负责目标、交互原则、适用范围、质量边界</li>
+      </ul>
 
-    <h2>升级 nanobot 之后怎么办</h2>
-    <p>这一点反而是这篇里最值得记下来的。</p>
-    <p>因为 nanobot 一升级，site-packages 里的补丁很可能就没了。</p>
-    <p>所以这套结构的维护方法应该是：</p>
-    <ol>
-      <li>把主要逻辑保留在 workspace</li>
-      <li>把安装包里的改动压到最薄</li>
-      <li>升级后只需要重新补回 Telegram 菜单和 loop 接线</li>
-      <li>skill 文件和 workspace 脚本本身不用重写</li>
-    </ol>
+      <p>有了这个 skill，后面如果继续扩展 <code>/sub</code>，就不会只剩下一堆零散代码。</p>
+      <p>它会有一份明确的 workflow 说明，知道自己应该轻到什么程度，不该膨胀成什么样。</p>
 
-    <p>换句话说，升级后的恢复重点不是“把整个功能重做一遍”。</p>
-    <p>而是“把那一层薄补丁重新打上去”。</p>
+      <h2>升级 nanobot 之后怎么办</h2>
+      <p>这一点反而是这篇里最值得记下来的。</p>
+      <p>因为 nanobot 一升级，site-packages 里的补丁很可能就没了。</p>
+      <p>所以这套结构的维护方法应该是：</p>
+      <ol>
+        <li>把主要逻辑保留在 workspace</li>
+        <li>把安装包里的改动压到最薄</li>
+        <li>升级后只需要重新补回 Telegram 菜单和 loop 接线</li>
+        <li>skill 文件和 workspace 脚本本身不用重写</li>
+      </ol>
 
-    <p>这也是为什么我现在更偏向这种结构：</p>
-    <p><strong>installed package 是 adapter，workspace 才是 source of truth。</strong></p>
+      <p>换句话说，升级后的恢复重点不是“把整个功能重做一遍”。</p>
+      <p>而是“把那一层薄补丁重新打上去”。</p>
 
-    <h2>当前状态</h2>
-    <p><code>/sub</code> 现在已经具备这些能力：</p>
-    <ul>
-      <li>Telegram 菜单里可注册为独立命令</li>
-      <li>点 <code>/sub</code> 后进入 sub mode</li>
-      <li>下一条普通消息可直接作为 subagent 任务</li>
-      <li>支持 <code>cancel</code> / <code>取消</code> 退出</li>
-      <li>workspace 逻辑和安装包接线已经拆开</li>
-    </ul>
+      <p>这也是为什么我现在更偏向这种结构：</p>
+      <blockquote>
+        <p>installed package 是 adapter，workspace 才是 source of truth。</p>
+      </blockquote>
 
-    <p>它很小，但方向是对的。</p>
-    <p>比起再发明一条更复杂的命令，它更像是在 Telegram 里给 agent 留了一个顺手的小入口。</p>
+      <h2>当前状态</h2>
+      <p><code>/sub</code> 现在已经具备这些能力：</p>
+      <ul>
+        <li>Telegram 菜单里可注册为独立命令</li>
+        <li>点 <code>/sub</code> 后进入 sub mode</li>
+        <li>下一条普通消息可直接作为 subagent 任务</li>
+        <li>支持 <code>cancel</code> / <code>取消</code> 退出</li>
+        <li>workspace 逻辑和安装包接线已经拆开</li>
+      </ul>
 
-    <h2>附：这次涉及到的文件</h2>
-    <ul>
-      <li><code>/home/dj/.nanobot/workspace/scripts/telegram_sub.py</code></li>
-      <li><code>/home/dj/.nanobot/workspace/scripts/telegram_sub_cli.py</code></li>
-      <li><code>/home/dj/.nanobot/workspace/skills/sub/SKILL.md</code></li>
-      <li><code>~/.local/share/uv/tools/nanobot-ai/lib/python3.13/site-packages/nanobot/channels/telegram.py</code></li>
-      <li><code>~/.local/share/uv/tools/nanobot-ai/lib/python3.13/site-packages/nanobot/agent/loop.py</code></li>
-    </ul>
+      <p>它很小，但方向是对的。</p>
+      <p>比起再发明一条更复杂的命令，它更像是在 Telegram 里给 agent 留了一个顺手的小入口。</p>
+
+      <h2>附：这次涉及到的文件</h2>
+      <ul>
+        <li><code>/home/dj/.nanobot/workspace/scripts/telegram_sub.py</code></li>
+        <li><code>/home/dj/.nanobot/workspace/scripts/telegram_sub_cli.py</code></li>
+        <li><code>/home/dj/.nanobot/workspace/skills/sub/SKILL.md</code></li>
+        <li><code>~/.local/share/uv/tools/nanobot-ai/lib/python3.13/site-packages/nanobot/channels/telegram.py</code></li>
+        <li><code>~/.local/share/uv/tools/nanobot-ai/lib/python3.13/site-packages/nanobot/agent/loop.py</code></li>
+      </ul>
+    </article>
   </main>
 </body>
 </html>
