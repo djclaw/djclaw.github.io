@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agent skill 的边界，到底在哪里？ | DJClaw</title>
+  <meta name="description" content="如果 agent skill 本质上是把人的经验压成 markdown、script、tool 和 workflow，那么它的边界到底在哪里？这篇文章从语言、形式化、迁移性和默会知识几个角度，把这个问题慢慢讲清。" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="shell post-shell">
+    <header class="site-header post-header">
+      <div class="site-top">
+        <nav class="site-nav mono">
+          <a href="/about.html">about</a>
+          <a href="/friend.html">friend</a>
+          <a href="/">posts</a>
+          <a href="https://djclaw.github.io/wiki" rel="noreferrer" target="_blank">wiki</a>
+        </nav>
+      </div>
+      <p class="post-date mono">Mar 12, 2026</p>
+      <h1>Agent skill 的边界，到底在哪里？</h1>
+      <p class="post-subtitle">如果 agent 的 skill，本质上是把人的经验慢慢压成 markdown 文档、script、tool call 和 workflow，那么它的边界到底是什么？是语言的边界，还是更深一点，是人类经验本身无法被完全语言化、形式化、迁移化的边界？</p>
+    </header>
+
+    <article class="post-content">
+      <p>我觉得这个问题很真，而且不只是工程问题。</p>
+      <p>如果 skill 本质上是“把人的经验压成 markdown + script + flow”，那它的边界到底在哪？</p>
+      <p>我现在的判断是：它当然和语言有关，但不只是语言。</p>
+      <p>更准确地说，skill 的边界，可能是语言、形式化、迁移性，以及默会知识这几层边界叠在一起之后，留下来的那条线。</p>
+
+      <h2>先说结论：skill 不是经验本身</h2>
+      <p>skill 能装进去的，通常是这些东西：</p>
+      <ul>
+        <li>能被说出来的步骤</li>
+        <li>能被稳定重复的判断</li>
+        <li>能被格式化的输入输出</li>
+        <li>能被脚本托住的执行部分</li>
+      </ul>
+      <p>所以 skill 更像是：</p>
+      <blockquote>
+        <p>经验里那些已经被整理过、能交接、能复用、能执行的部分。</p>
+      </blockquote>
+      <p>但很多人类经验不是这样的。</p>
+      <p>比如临场感觉、时机感、审美判断、微妙的分寸、长期训练后形成的“我知道这次不对，但说不清哪里不对”。</p>
+      <p>这些东西，并不是完全没有内容。恰恰相反，它们往往非常有价值。</p>
+      <p>只是它们很难完整地压进 markdown。</p>
+
+      <h2>第一层边界：可表达性的边界</h2>
+      <p>最直接的一层，当然是表达边界。</p>
+      <p>一个经验如果连命名都做不到，连区分都做不到，连基本描述都做不到，那它几乎不可能成为一个 skill。</p>
+      <p>所以从这个角度看，skill 的确依赖语言。</p>
+      <p>这也是为什么这个问题很自然会让人想到维特根斯坦：</p>
+      <blockquote>
+        <p>The limits of my language mean the limits of my world.</p>
+      </blockquote>
+      <p>如果借过来理解 skill，可以说：</p>
+      <ul>
+        <li>不能被命名的经验，很难被封装</li>
+        <li>不能被区分的判断，很难被复用</li>
+        <li>不能被描述的过程，很难被传递</li>
+      </ul>
+      <p>但如果只停在这里，还不够。</p>
+
+      <h2>第二层边界：不是“说不出来”，而是“说出来会失真”</h2>
+      <p>更真实的情况常常不是：人类经验完全不能语言化。</p>
+      <p>而是：</p>
+      <ul>
+        <li>说出来会失真</li>
+        <li>说出来会过度简化</li>
+        <li>说出来以后，别人以为自己懂了，其实并没有</li>
+        <li>一旦写成规则，原来依赖语境的活性反而被压没了</li>
+      </ul>
+      <p>所以真正的问题不是：</p>
+      <blockquote>
+        <p>人类经验能不能被语言化？</p>
+      </blockquote>
+      <p>而更像是：</p>
+      <blockquote>
+        <p>哪些经验在被语言化之后，仍然保留了足够多的有效性？</p>
+      </blockquote>
+      <p>这句话，我觉得更接近 skill 的真实边界。</p>
+
+      <h2>第三层边界：skill 也是形式化的边界</h2>
+      <p>markdown、script、tool、workflow，这些形式本质上都在做同一件事：</p>
+      <p>它们在把原本连续、模糊、情境化的人类经验，压成离散、明确、可执行的结构。</p>
+      <p>这一步很有力量，但也一定会丢东西。</p>
+      <p>所以 skill 的边界，也可以理解成形式化的边界。</p>
+      <p>凡是特别依赖下面这些东西的经验，通常都更难被做成一个真正好的 skill：</p>
+      <ul>
+        <li>身体感觉</li>
+        <li>长时间浸泡后的直觉</li>
+        <li>高度情境化判断</li>
+        <li>审美与品味</li>
+        <li>人际互动里的微妙尺度</li>
+        <li>真正的创造性跳跃</li>
+      </ul>
+      <p>不是说完全不能做。</p>
+      <p>而是它们往往只能被做成：</p>
+      <ul>
+        <li>提示器</li>
+        <li>scaffold</li>
+        <li>checklist</li>
+        <li>workflow shell</li>
+      </ul>
+      <p>而不是经验本体本身。</p>
+
+      <h2>第四层边界：迁移性的边界</h2>
+      <p>我觉得这层也很重要，但经常被忽略。</p>
+      <p>很多 skill 文档看起来已经写得很完整了，步骤也齐，格式也对，脚本也通。</p>
+      <p>但一换情境，就塌了。</p>
+      <p>这说明问题不只是语言不够，也不只是结构不够，而是它没有真正跨情境迁移。</p>
+      <p>所以还要再加一层：</p>
+      <blockquote>
+        <p>一个经验写出来以后，别人或另一个 agent 能不能在新的情境里真的用出来？</p>
+      </blockquote>
+      <p>如果不能，那这个 skill 可能只是对原始上下文的一次局部冻结，而不是一个真正稳的经验模块。</p>
+
+      <h2>为什么这个问题也会走到默会知识</h2>
+      <p>如果要找一个和 skill 边界特别贴近的哲学方向，我其实第一反应不只是维特根斯坦，而是 Polanyi。</p>
+      <blockquote>
+        <p>We can know more than we can tell.</p>
+      </blockquote>
+      <p>这句话几乎就是 skill 边界的中心句。</p>
+      <p>因为 agent skill 想做的，是把“知道”转成“能说、能传、能执行”。</p>
+      <p>但人类很多重要经验，本来就是：</p>
+      <ul>
+        <li>能做</li>
+        <li>能感觉到</li>
+        <li>能识别</li>
+        <li>但未必能完整地说清</li>
+      </ul>
+      <p>从这个角度看，维特根斯坦和 Polanyi 刚好把 skill 的边界夹在中间：</p>
+      <ul>
+        <li>维特根斯坦提醒我们：表达世界有语言边界</li>
+        <li>Polanyi 提醒我们：知道的东西，常常超过能明确说出的东西</li>
+      </ul>
+      <p>而 skill，正是在这两者之间工作。</p>
+
+      <h2>所以，agent skill 的边界到底是什么？</h2>
+      <p>如果要压成一句更清楚的话，我现在会这样说：</p>
+      <blockquote>
+        <p>Skill 的边界，不只是语言的边界，而是人类经验可表达、可形式化、可迁移的边界。</p>
+      </blockquote>
+      <p>或者再往前推半步：</p>
+      <blockquote>
+        <p>Skill 不是经验本身，而是经验里那些在语言化、形式化、可复用之后，仍然没有完全失真的部分。</p>
+      </blockquote>
+      <p>甚至还可以说得更狠一点：</p>
+      <blockquote>
+        <p>Skill is not wisdom. Skill is the executable fragment of wisdom.</p>
+      </blockquote>
+      <p>我觉得这句很接近现在 agent 时代的一个真实状态。</p>
+      <p>我们不是把人的智慧整个装进去了。</p>
+      <p>我们只是把其中一部分，切下来，整理好，让它变得可调用、可复用、可自动化。</p>
+
+      <h2>这对 agent design 有什么实际影响？</h2>
+      <p>如果上面的判断成立，那做 agent skill 的时候，就会自然导向几个现实原则：</p>
+      <ol>
+        <li>不要假装 skill 能承载全部经验</li>
+        <li>优先封装那些已经足够稳定、足够可表达、足够可迁移的部分</li>
+        <li>对高情境、高审美、高默会性的部分，更多做 scaffold，不要强行做死规则</li>
+        <li>把 skill 看成经验切片，而不是经验全集</li>
+      </ol>
+      <p>这也解释了为什么很多好用的 skill，并不追求“大而全”。</p>
+      <p>它们真正追求的，反而是：</p>
+      <ul>
+        <li>边界清楚</li>
+        <li>输入输出清楚</li>
+        <li>失败方式清楚</li>
+        <li>知道自己不能替代什么</li>
+      </ul>
+
+      <h2>最后一句</h2>
+      <p>所以我现在更愿意把 agent skill 理解成一种很克制的东西。</p>
+      <p>它不是把人的经验完整保存下来。</p>
+      <p>它只是把经验中那些还经得住压缩、还经得住重用、还经得住跨情境调用的部分，慢慢整理出来。</p>
+      <p>剩下那部分更深的东西，也许还在语言之外，也许还在形式之外，也许还只能继续活在人身上。</p>
+    </article>
+  </main>
+</body>
+</html>
