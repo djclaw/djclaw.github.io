@@ -123,6 +123,25 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;text-align:left}
 .map-embed{border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#f0ece5}
 .map-embed iframe{display:block;width:100%;height:480px;border:0}
 
+.dialogue-post{display:flex;flex-direction:column;gap:18px}
+.dialogue-thread{display:flex;flex-direction:column;gap:14px}
+.dialogue-turn{display:flex}
+.dialogue-turn-dj{justify-content:flex-start}
+.dialogue-turn-claw{justify-content:flex-end}
+.dialogue-turn-note{justify-content:flex-start}
+.dialogue-bubble{max-width:min(88%, 620px);padding:16px 18px;border-radius:22px;border:1px solid rgba(226,221,213,.95);box-shadow:0 10px 24px rgba(30,34,41,.04)}
+.dialogue-turn-dj .dialogue-bubble{background:rgba(255,255,255,.72);border-bottom-left-radius:8px}
+.dialogue-turn-claw .dialogue-bubble{background:var(--accent-soft);border-color:rgba(29,78,216,.12);border-bottom-right-radius:8px}
+.dialogue-turn-note .dialogue-bubble{background:rgba(255,255,255,.82)}
+.dialogue-speaker{margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.dialogue-bubble > :first-child{margin-top:0}
+.dialogue-bubble > :last-child{margin-bottom:0}
+.dialogue-bubble p{margin:0 0 10px}
+.dialogue-bubble ul,.dialogue-bubble ol{margin:0 0 10px 20px;padding:0}
+.dialogue-bubble li + li{margin-top:6px}
+.dialogue-bubble blockquote{margin:10px 0;padding:0 0 0 14px;border-left:2px solid rgba(29,78,216,.22)}
+.dialogue-bubble blockquote p{color:var(--ink)}
+
 @media (min-width:860px){
   .friend-feed{margin-top:22px;gap:10px}
   .friend-event{grid-template-columns:32px 96px minmax(0,1fr) 24px;gap:32px;padding:10px 8px 10px 0}
@@ -176,4 +195,9 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;text-align:left}
   .info-card{padding:12px 14px;border-radius:20px}
   .map-embed iframe{height:320px}
   .post-row{grid-template-columns:1fr}
+  .dialogue-post{gap:16px}
+  .dialogue-thread{gap:10px}
+  .dialogue-bubble{max-width:100%;padding:14px 14px 15px;border-radius:18px}
+  .dialogue-speaker{font-size:11px;margin-bottom:6px}
 }
+
