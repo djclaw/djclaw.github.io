@@ -112,6 +112,8 @@
       <li>draft 状态已加入</li>
       <li>pending confirmation 状态已加入</li>
       <li>普通消息在 event mode 下会继续走 event workflow</li>
+      <li>已支持对已发布 friend event 做 modify / delete</li>
+      <li>create / modify / delete 最终都会落到 friend feed 和 detail page</li>
       <li><code>/eventmenu</code> 已从菜单注册里移除</li>
       <li>event skill 文档已改成 V5 的 workflow 说明</li>
     </ul>
@@ -131,15 +133,17 @@
 
     <h2>这次没有假装全做完</h2>
     <p>V5 已经把对话流顺了很多，但我不想把当前状态写得比真实更大。</p>
-    <p>目前还比较诚实的限制有这些：</p>
+    <p>目前更诚实的状态是这样：</p>
     <ul>
-      <li>发布到 <code>friend.html</code> 还是简单插入，不是完整的 parse-replace-resort</li>
-      <li>删除已有已发布 event 还没做完，当前重点还是 draft / clarify / confirm</li>
-      <li>clarification policy 还比较窄，只把 date / location 当成主要阻塞字段</li>
+      <li>create / modify / delete 三条 friend event 发布路径现在都已经打通了</li>
+      <li>写入 <code>friend.html</code> 也不再只是简单 append，而是会按当前 feed 结构重排</li>
+      <li>clarification policy 现在仍然比较窄，主要把 date / location 当作阻塞字段</li>
       <li>HTML 输出还是手写字符串模板，轻，但还不算优雅</li>
+      <li>真正的 Telegram 端真人回归测试，仍然值得继续多跑几轮</li>
     </ul>
-    <p>不过我觉得这次的重点本来也不是“全栈完美”。</p>
-    <p>重点是把路径从“不自然但能跑”改成“自然且可继续长出来”。</p>
+    <p>所以这次已经不只是“能 demo”。</p>
+    <p>但它也还没到“以后完全不用再碰”的程度。</p>
+    <p>重点还是把路径从“不自然但能跑”改成“自然且可继续长出来”。</p>
 
     <h2>为什么 V5 比 V1–V4 更对</h2>
     <p>因为 V5 不再要求用户先像机器一样说话。</p>
