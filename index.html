@@ -23,7 +23,7 @@
 <p class="intro">Personal changelog for running the djclaw stack—short notes on infra, assistants, and moves worth remembering.</p>
 </header>
 <section aria-label="Filter posts by tag" class="tag-filter">
-<span class="tag-label mono">filter:</span>
+<span class="tag-label mono">filter</span>
 <div class="tag-buttons" id="tag-buttons">
 <button class="tag active" data-tag="all" type="button">#all</button>
 </div>
@@ -288,38 +288,106 @@
 <script>
     const tagButtonsWrap = document.getElementById('tag-buttons');
     const posts = Array.from(document.querySelectorAll('article[data-tags]'));
+    const MOBILE_BREAKPOINT = 640;
+    const MOBILE_TAG_LIMIT = 10;
 
-    const allTags = Array.from(new Set(
-      posts.flatMap(post =>
-        post.dataset.tags
-          .split(',')
-          .map(s => s.trim())
-          .filter(Boolean)
-      )
-    )).sort((a, b) => a.localeCompare(b));
+    const tagCounts = new Map();
+    posts.forEach(post => {
+      post.dataset.tags
+        .split(',')
+        .map(s => s.trim())
+        .filter(Boolean)
+        .forEach(tag => tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1));
+    });
 
-    allTags.forEach(tag => {
+    const allTags = Array.from(tagCounts.keys()).sort((a, b) => {
+      const diff = (tagCounts.get(b) || 0) - (tagCounts.get(a) || 0);
+      return diff !== 0 ? diff : a.localeCompare(b);
+    });
+
+    const topMobileTags = allTags.slice(0, MOBILE_TAG_LIMIT);
+    let mobileExpanded = false;
+
+    function createTagButton(tag) {
       const btn = document.createElement('button');
       btn.className = 'tag';
       btn.type = 'button';
       btn.dataset.tag = tag;
       btn.textContent = `#${tag}`;
-      tagButtonsWrap.appendChild(btn);
-    });
+      return btn;
+    }
 
-    const buttons = Array.from(document.querySelectorAll('.tag-filter .tag'));
+    function createMoreButton() {
+      const btn = document.createElement('button');
+      btn.className = 'tag tag-more';
+      btn.type = 'button';
+      btn.dataset.tag = '__more__';
+      btn.textContent = mobileExpanded ? 'less' : 'more';
+      btn.setAttribute('aria-expanded', mobileExpanded ? 'true' : 'false');
+      return btn;
+    }
 
-    buttons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        buttons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const tag = btn.dataset.tag;
-        posts.forEach(post => {
-          const tags = post.dataset.tags.split(',').map(s => s.trim());
-          const show = tag === 'all' || tags.includes(tag);
-          post.style.display = show ? 'grid' : 'none';
-        });
+    function renderButtons() {
+      const currentActive = document.querySelector('.tag-filter .tag.active')?.dataset.tag || 'all';
+      const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+      tagButtonsWrap.innerHTML = '';
+
+      const allBtn = createTagButton('all');
+      if (currentActive === 'all') allBtn.classList.add('active');
+      tagButtonsWrap.appendChild(allBtn);
+
+      const visibleTags = isMobile && !mobileExpanded ? topMobileTags : allTags;
+      visibleTags.forEach(tag => {
+        const btn = createTagButton(tag);
+        if (currentActive === tag) btn.classList.add('active');
+        tagButtonsWrap.appendChild(btn);
       });
+
+      if (isMobile && allTags.length > MOBILE_TAG_LIMIT) {
+        tagButtonsWrap.appendChild(createMoreButton());
+      }
+
+      bindButtons();
+    }
+
+    function applyFilter(tag) {
+      const buttons = Array.from(document.querySelectorAll('.tag-filter .tag'));
+      buttons.forEach(b => b.classList.toggle('active', b.dataset.tag === tag));
+      posts.forEach(post => {
+        const tags = post.dataset.tags.split(',').map(s => s.trim());
+        const show = tag === 'all' || tags.includes(tag);
+        post.style.display = show ? 'grid' : 'none';
+      });
+    }
+
+    function bindButtons() {
+      const buttons = Array.from(document.querySelectorAll('.tag-filter .tag'));
+      buttons.forEach(btn => {
+        btn.onclick = () => {
+          const tag = btn.dataset.tag;
+          if (tag === '__more__') {
+            mobileExpanded = !mobileExpanded;
+            renderButtons();
+            return;
+          }
+          applyFilter(tag);
+        };
+      });
+    }
+
+    let lastIsMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+    renderButtons();
+    applyFilter('all');
+
+    window.addEventListener('resize', () => {
+      const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+      if (isMobile !== lastIsMobile) {
+        if (!isMobile) mobileExpanded = false;
+        renderButtons();
+        const active = document.querySelector('.tag-filter .tag.active')?.dataset.tag || 'all';
+        applyFilter(active === '__more__' ? 'all' : active);
+        lastIsMobile = isMobile;
+      }
     });
   </script>
 </body>
