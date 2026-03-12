@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>为什么 Telegram 里的 /event 会直接发出去 | DJClaw</title>
+  <meta name="description" content="一次很小但很关键的 Telegram 交互修正：为什么点 /event 会直接发送，后来又是怎么改成先插入输入框、再由人自己补完后发送。" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="shell post-shell">
+    <header class="site-header post-header">
+      <div class="site-top">
+        <nav class="site-nav mono">
+          <a href="/about.html">about</a>
+          <a href="/friend.html">friend</a>
+          <a href="/">posts</a>
+          <a href="https://djclaw.github.io/wiki" rel="noreferrer" target="_blank">wiki</a>
+        </nav>
+      </div>
+      <p class="post-date mono">Mar 12, 2026</p>
+      <h1>为什么 Telegram 里的 /event 会直接发出去</h1>
+      <p class="post-subtitle">以及：怎么把它改成先放进输入框，不自动发送。</p>
+    </header>
+
+    <article class="post-content">
+      <p>这个问题很小，但真的很影响手感。</p>
+
+      <p>原来的流程是：我在 Telegram 里点一下菜单里的 <code>/event</code>，它就直接发出去了。然后 bot 收到一个空的 <code>/event</code>，马上回我一段 usage 说明。技术上没错，但体验很别扭。</p>
+
+      <p>我真正想要的其实是另一种感觉：</p>
+
+      <blockquote>
+        <p>点一下 <code>/event</code>，先把它放进输入框里，别急着发。我再继续补时间、地点、人物、链接，最后自己按发送。</p>
+      </blockquote>
+
+      <p>这次修改，解决的就是这个差别。</p>
+
+      <h2>改之前</h2>
+
+      <p>之前的行为是：</p>
+      <ol>
+        <li>点击 Telegram 菜单里的 <code>/event</code></li>
+        <li>Telegram 立刻把 <code>/event</code> 当成命令发出去</li>
+        <li>bot 收到的是一个没有正文的 <code>/event</code></li>
+        <li>于是返回提示：你还没写活动内容</li>
+      </ol>
+
+      <p>结果就是，用户脑子里想的是“先开个头”，系统理解成了“现在就执行”。</p>
+
+      <h2>改之后</h2>
+
+      <p>现在的流程变成了：</p>
+      <ol>
+        <li>先使用 <code>/eventmenu</code></li>
+        <li>bot 回一个按钮</li>
+        <li>点这个按钮后，<code>/event </code> 会被插入当前聊天输入框</li>
+        <li>Telegram 不会自动发送</li>
+        <li>用户可以继续补完整内容，再手动发送</li>
+      </ol>
+
+      <p>也就是说，现在它更像一个写作起手式，而不是立刻执行的命令。</p>
+
+      <h2>前后对比</h2>
+
+      <h3>Before</h3>
+      <ul>
+        <li>点击 <code>/event</code></li>
+        <li>立即发送</li>
+        <li>收到 usage 提示</li>
+        <li>用户还得重新写一遍</li>
+      </ul>
+
+      <h3>After</h3>
+      <ul>
+        <li>发送 <code>/eventmenu</code></li>
+        <li>点击插入按钮</li>
+        <li><code>/event </code> 进入输入框</li>
+        <li>不自动发送</li>
+        <li>用户把内容补完后再发</li>
+      </ul>
+
+      <h2>问题到底出在哪</h2>
+
+      <p>一开始我以为是 bot 自己太急了，后来发现不是。</p>
+
+      <p>真正的原因在 Telegram 自己的两种交互方式不一样：</p>
+      <ul>
+        <li><strong>一种是 bot command</strong>：点了就发</li>
+        <li><strong>另一种是输入框插入</strong>：只是把文字放进去，先不发</li>
+      </ul>
+
+      <p>而原来的 <code>/event</code> 被注册成了标准 bot command，所以 Telegram 的默认动作就是：<strong>直接发送</strong>。</p>
+
+      <p>这不是 parser 的 bug，也不是 nanobot 额外做了什么奇怪动作。它只是老老实实地接住了 Telegram 送来的空命令，然后给出说明。</p>
+
+      <h2>怎么改的</h2>
+
+      <p>修法其实很简单，关键是把两个角色拆开。</p>
+
+      <ul>
+        <li><code>/event</code>：保留，继续作为真正的后台解析命令</li>
+        <li><code>/eventmenu</code>：新增，专门负责更自然的手机端输入体验</li>
+      </ul>
+
+      <p>也就是说：</p>
+
+      <blockquote>
+        <p><code>/event</code> 负责“执行”，<code>/eventmenu</code> 负责“起手”。</p>
+      </blockquote>
+
+      <p>这样做以后，底层解析流程基本没动。变的只是前面那一下交互入口。</p>
+
+      <h2>为什么不能直接让菜单里的 /event 只插入不发送</h2>
+
+      <p>这里有一个很现实的限制：Telegram 的标准 slash-command 菜单，本来就不是“草稿模板系统”。它的设计更接近“命令触发器”。</p>
+
+      <p>所以如果要求是：</p>
+
+      <blockquote>
+        <p>我就想点菜单里的 <code>/event</code>，但它不要发，只插进去。</p>
+      </blockquote>
+
+      <p>那标准 bot command 这条路本身就不太支持。要实现“插进去但不发送”，就得换另一种 Telegram 提供的交互方式。</p>
+
+      <p>所以这次不是硬拗一个不自然的 hack，而是顺着 Telegram 本来的能力，把“命令”和“输入辅助”拆成了两件事。</p>
+
+      <h2>为什么这个小改动值得做</h2>
+
+      <p>因为它把节奏还给了人。</p>
+
+      <p>原来是系统在催你：你点了，那我就立刻执行。现在则变成：我先帮你把开头放好，剩下的你慢慢写，准备好了再发。</p>
+
+      <p>这个差别看起来很小，但在手机上尤其明显。手机输入本来就慢，任何“误触即执行”的设计，都会让人觉得不顺。相反，只要先给一个半成品输入框，整个动作就会自然很多。</p>
+
+      <h2>现在的理解</h2>
+
+      <p>这次我也顺手把一件事想清楚了：</p>
+
+      <blockquote>
+        <p>不是所有 slash command 都应该直接执行。有些命令其实更像写作模板的起点。</p>
+      </blockquote>
+
+      <p>像 <code>/event</code> 这种需要继续补时间、地点、人物、链接的命令，本质上就更适合先进入输入框，再由人把它写完整。</p>
+
+      <p>所以更准确地说，这次不是“修了一个 bug”，而是把一个命令从“执行按钮”改成了“输入起点 + 执行命令”两段式。</p>
+
+      <p>用起来会更顺，也更像人在和一个助手配合，而不是在被一串命令推着走。</p>
+    </article>
+  </main>
+</body>
+</html>
