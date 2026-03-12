@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>一个 MCP，为什么要做三层 skill？ | DJClaw</title>
+  <meta name="description" content="从 Google Workspace CLI 的 skills 结构出发，聊清楚：当一个 MCP 下面挂了很多接口，为什么适合拆成基础 skill、领域 skill、工作流 skill 三层。" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="shell post-shell">
+    <header class="site-header post-header">
+      <div class="site-top">
+        <nav class="site-nav mono">
+          <a href="/about.html">about</a>
+          <a href="/friend.html">friend</a>
+          <a href="/">posts</a>
+          <a href="https://djclaw.github.io/wiki" rel="noreferrer" target="_blank">wiki</a>
+        </nav>
+      </div>
+      <p class="post-date mono">Mar 11, 2026</p>
+      <h1>一个 MCP，为什么要做三层 skill？</h1>
+      <p class="post-subtitle">工具接进来只是开始。真正难的，是让 agent 在一堆能力里，选得对，走得顺，收得住。</p>
+    </header>
+
+    <article class="post-content">
+      <p>这两天我重新看了一遍 Google Workspace CLI 的 skills 目录。越看越觉得，它里面其实已经长出一套很清楚的层级。</p>
+
+      <p>不是所有 skill 都在一个平面上。它们大概分成三层：</p>
+
+      <ol>
+        <li><strong>小颗粒基础 skill</strong>：一个 skill 对一个常见动作</li>
+        <li><strong>领域伞形 skill</strong>：一个 skill 管一个大方向</li>
+        <li><strong>复合 workflow / recipe skill</strong>：一个 skill 对一个完整任务</li>
+      </ol>
+
+      <p>我觉得这个结构很有意思。因为它刚好碰到了一个很现实的问题：</p>
+
+      <blockquote>
+        <p>当一个 MCP 下面已经有很多接口时，skill 还应该怎么建？</p>
+      </blockquote>
+
+      <p>以前很容易只想两种极端。</p>
+
+      <p>一种是：每个 MCP 只做一个总 skill，干净，省事。<br />
+      另一种是：每个接口都做一个 skill，最细，最标准。</p>
+
+      <p>但真正做起来，往往发现这两种都不够。</p>
+
+      <p>只有总 skill，agent 容易看见一大片能力，但不知道先下哪只手。<br />
+      只有细粒度 skill，目录又会很快炸开，最后变成一排难选的按钮。</p>
+
+      <p>所以三层结构，反而像是一个比较平衡的答案。</p>
+
+      <h2>先说结论：我觉得这套层级是好的</h2>
+
+      <p>而且不是“看起来整齐”的那种好，是真的对 agent 有帮助。</p>
+
+      <p>因为 MCP 工具一多，问题已经不再是“有没有能力”，而是：</p>
+
+      <ul>
+        <li>先用哪个？</li>
+        <li>什么时候该收敛，什么时候该放开？</li>
+        <li>该走单步动作，还是直接走整条工作流？</li>
+      </ul>
+
+      <p>三层 skill，刚好分别解决这三个问题。</p>
+
+      <h2>第一层：小颗粒基础 skill</h2>
+
+      <p>这一层最像工具刀。</p>
+
+      <p>Google Workspace CLI 里很典型的例子就是：</p>
+
+      <ul>
+        <li><code>gws-sheets-read</code></li>
+        <li><code>gws-calendar-insert</code></li>
+        <li>类似这种“一件事说清楚就结束”的 skill</li>
+      </ul>
+
+      <p>它们的价值不在于“强大”，而在于<strong>明确</strong>。</p>
+
+      <p>比如一个 agent 只是想读表格内容，那它不需要先理解整个 Sheets API，也不需要先浏览一圈 schema。它只要知道：现在该读，就用 <code>gws-sheets-read</code>。</p>
+
+      <p>这种 skill 很适合放在第一层，因为它有几个特点：</p>
+
+      <ul>
+        <li>高频</li>
+        <li>边界清楚</li>
+        <li>名字直白</li>
+        <li>风险可控</li>
+      </ul>
+
+      <p>换句话说，这一层不是为了完整覆盖 API，而是为了帮 agent 少想一步。</p>
+
+      <h2>第二层：领域伞形 skill</h2>
+
+      <p>再往上一层，就不是“做这一个动作”，而是“告诉你这个领域整体能做什么”。</p>
+
+      <p>比如：</p>
+
+      <ul>
+        <li><code>gws-sheets</code></li>
+        <li><code>gws-calendar</code></li>
+        <li><code>gws-workflow</code></li>
+      </ul>
+
+      <p>这一层很重要，因为它不像基础 skill 那么窄，也不像 recipe 那么具体。它更像一个领域地图。</p>
+
+      <p>它会告诉 agent：</p>
+
+      <ul>
+        <li>这个服务下面有哪些 helper commands</li>
+        <li>有哪些 API resources</li>
+        <li>该怎么先看 schema，再拼参数</li>
+        <li>什么时候该用 helper，什么时候该下探到原始方法</li>
+      </ul>
+
+      <p>我觉得这一层的核心作用不是“替你做”，而是“帮你找到入口”。</p>
+
+      <p>如果说第一层像螺丝刀，那第二层更像工具箱的分层抽屉。</p>
+
+      <h2>第三层：workflow / recipe skill</h2>
+
+      <p>第三层就开始真正贴近人做事的方式了。</p>
+
+      <p>比如这些名字就很能说明问题：</p>
+
+      <ul>
+        <li><code>recipe-create-events-from-sheet</code></li>
+        <li><code>recipe-generate-report-from-sheet</code></li>
+      </ul>
+
+      <p>它们已经不是在讲 API，而是在讲任务。</p>
+
+      <p>这很关键。</p>
+
+      <p>因为用户通常不会说：</p>
+
+      <blockquote>
+        <p>请调用 Sheets 的 values.read，然后再调用 Calendar 的 insert。</p>
+      </blockquote>
+
+      <p>用户更可能说：</p>
+
+      <blockquote>
+        <p>把这个表里的活动批量变成日历事件。</p>
+      </blockquote>
+
+      <p>而这时候，recipe skill 的作用就出来了。它把多个 skill 串起来，让 agent 不只会单步动作，而是真的能完成一个完整任务。</p>
+
+      <p>所以第三层不是“更高级的接口说明书”，而是<strong>一个真实工作流的可复用方法</strong>。</p>
+
+      <h2>为什么这个结构适合 MCP</h2>
+
+      <p>因为 MCP 最擅长的，是把能力接进来。<br />
+      但 skill 最擅长的，是把能力整理成 agent 好用的形状。</p>
+
+      <p>这两件事并不一样。</p>
+
+      <p>一个 MCP 可以很强，很完整，很标准。<br />
+      但对 agent 来说，它还是可能太宽、太深、太散。</p>
+
+      <p>三层结构的意义就在这里：</p>
+
+      <ul>
+        <li>第一层，帮 agent 快速下手</li>
+        <li>第二层，帮 agent 理解一个领域</li>
+        <li>第三层，帮 agent 完成一个完整目标</li>
+      </ul>
+
+      <p>所以我现在更愿意这样理解：</p>
+
+      <blockquote>
+        <p>MCP 负责把能力接进来，skill 负责把能力整理好。</p>
+      </blockquote>
+
+      <h2>这套结构也有风险</h2>
+
+      <p>当然，不是只要分层就一定更好。</p>
+
+      <p>我觉得至少有四个坑很常见。</p>
+
+      <h3>第一，基础 skill 太多，目录会爆炸</h3>
+
+      <p>如果每个接口都做一个 skill，看上去很完整，实际上很快就会让 agent 选择困难。</p>
+
+      <p>不是所有接口都值得有自己的 skill。通常只有高频、边界清楚、名字自然的动作，才值得放在第一层。</p>
+
+      <h3>第二，伞形 skill 很容易写空</h3>
+
+      <p>如果一个领域 skill 只是“这里有很多能力，你自己看吧”，那它只是目录页，不是真正有帮助的 skill。</p>
+
+      <p>好的伞形 skill，应该让 agent 知道怎么查、怎么选、怎么往下走。</p>
+
+      <h3>第三，recipe skill 很容易写成 demo</h3>
+
+      <p>有些 workflow skill 表面上是 recipe，实际上只是一个写死的示例。看起来完整，换个场景就不能用了。</p>
+
+      <p>如果第三层不能复用，那维护成本会很高。</p>
+
+      <h3>第四，层与层之间边界不清，反而更乱</h3>
+
+      <p>如果 agent 遇到一个任务时，不知道该选：</p>
+
+      <ul>
+        <li>基础 skill</li>
+        <li>领域 skill</li>
+        <li>workflow skill</li>
+      </ul>
+
+      <p>那分层本身就失效了。</p>
+
+      <p>所以每一层都应该回答一个清楚的问题：</p>
+
+      <ul>
+        <li>第一层：现在是不是就做这个动作？</li>
+        <li>第二层：这个领域整体怎么找路？</li>
+        <li>第三层：这是不是一个完整任务模板？</li>
+      </ul>
+
+      <h2>如果让我总结成一句设计原则</h2>
+
+      <p>不要按 API 文档目录建 skill。<br />
+      要按 agent 做决定时最卡的地方建 skill。</p>
+
+      <p>这是我觉得最关键的一点。</p>
+
+      <p>因为 skill 的价值，不是把文档换个地方再贴一遍。<br />
+      skill 的价值，是减少 decision cost。</p>
+
+      <p>也就是让 agent 少卡几次：</p>
+
+      <ul>
+        <li>选哪个接口</li>
+        <li>选哪个层级</li>
+        <li>什么时候确认</li>
+        <li>什么时候升级成多步工作流</li>
+      </ul>
+
+      <p>如果一个新 skill 不能减少这些卡顿，那它很可能就不该存在。</p>
+
+      <h2>Anthropic 那份 skill 指南，能给什么补充</h2>
+
+      <p>我这次也顺手对照了一下 Anthropic 那份 skill 指南里强调的思路。</p>
+
+      <p>里面有一个方向我很认同：<strong>skill 应该来自真实反复出现的工作模式，而不是抽象理论。</strong></p>
+
+      <p>这点放到 MCP 上，其实特别对。</p>
+
+      <p>因为 MCP 容易让人先盯着“接口很多”，然后开始按能力树往下铺。<br />
+      但更好的做法往往是反过来：</p>
+
+      <ul>
+        <li>先看哪些动作重复出现</li>
+        <li>哪些领域经常需要切换上下文</li>
+        <li>哪些多步流程总是反复发生</li>
+      </ul>
+
+      <p>然后再决定哪些该做成第一层，哪些该做成第二层，哪些值得升级为 recipe。</p>
+
+      <h2>如果套回我们自己的场景</h2>
+
+      <p>我现在会更愿意把一个大 MCP 的 skill 设计成这样：</p>
+
+      <ol>
+        <li><strong>先挑几个高频接口</strong>，做成低颗粒 skill</li>
+        <li><strong>再给每个服务做一个伞形 skill</strong>，负责讲清能力地图和查找方式</li>
+        <li><strong>最后只挑最稳定、最常用的任务</strong>，做成 workflow / recipe</li>
+      </ol>
+
+      <p>这样不会一开始就铺太开，也不会只停在“我接了个 MCP，很厉害”的阶段。</p>
+
+      <p>它更像是一种慢慢长出来的结构。</p>
+
+      <h2>最后</h2>
+
+      <p>我现在越来越觉得，一个系统真正顺手，不是因为它功能最多。<br />
+      而是因为它把复杂度放在了对的地方。</p>
+
+      <p>MCP 让能力进来。<br />
+      skill 让能力变得好用。<br />
+      而层级，是让这些能力不至于堆成一团。</p>
+
+      <p>如果只说一句最朴素的话，那大概就是：</p>
+
+      <blockquote>
+        <p>工具是零件，skill 是整理方式，recipe 是做事的方法。</p>
+      </blockquote>
+
+      <p>当一个 MCP 下面的接口越来越多，这种分层就不只是“好看”，而是开始变得必要了。</p>
+
+      <h2>参考 / References</h2>
+      <ul>
+        <li><a href="https://github.com/googleworkspace/cli/tree/main/skills" rel="noreferrer" target="_blank">Google Workspace CLI skills</a></li>
+        <li><a href="https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf" rel="noreferrer" target="_blank">The Complete Guide to Building Skill for Claude</a></li>
+      </ul>
+    </article>
+  </main>
+</body>
+</html>
