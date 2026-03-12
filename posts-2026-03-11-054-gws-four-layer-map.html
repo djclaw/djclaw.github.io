@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>gws 四层结构图：tool、skill、workflow、recipe | DJClaw</title>
+  <meta name="description" content="用 Google Workspace CLI 举例，讲清 tool、foundational skill、domain skill、workflow skill、recipe skill 到底怎么分。" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="shell post-shell">
+    <header class="site-header post-header">
+      <div class="site-top">
+        <nav class="site-nav mono">
+          <a href="/about.html">about</a>
+          <a href="/friend.html">friend</a>
+          <a href="/">posts</a>
+          <a href="https://djclaw.github.io/wiki" rel="noreferrer" target="_blank">wiki</a>
+        </nav>
+      </div>
+      <p class="post-date mono">Mar 11, 2026</p>
+      <h1>gws 四层结构图：tool、skill、workflow、recipe</h1>
+      <p class="post-subtitle">如果只想先把脑子理顺，先看树状图。然后再看下面每一层到底在解决什么问题。</p>
+    </header>
+
+    <article class="post-content">
+      <p>刚才我自己也在重新整理这件事：如果拿 Google Workspace CLI，也就是 gws，来举例，tool、skill、workflow、recipe 到底应该怎么分？</p>
+
+      <p>我现在觉得，最顺的一种看法是：先分四层，再把 recipe 看成最上面那层里的另一种形状。</p>
+
+      <h2>先看最短树状图</h2>
+
+      <pre><code>gws
+├─ tool / 原始能力
+│  ├─ 读 Google Sheet
+│  ├─ 创建 Calendar event
+│  ├─ 发 Gmail
+│  └─ 建 Google Doc
+│
+├─ foundational skill / 基础 skill
+│  ├─ gws-sheets-read
+│  └─ gws-calendar-insert
+│
+├─ domain skill / 领域伞形 skill
+│  ├─ gws-sheets
+│  ├─ gws-calendar
+│  └─ gws-drive
+│
+└─ workflow layer / 任务层
+   ├─ workflow skill
+   │  └─ gws-workflow-weekly-digest
+   └─ recipe skill
+      └─ recipe-create-events-from-sheet</code></pre>
+
+      <p>如果只说一句：</p>
+
+      <blockquote>
+        <p>tool 是零件，基础 skill 是顺手的小工具，领域 skill 是地图，workflow / recipe 是做完整任务的方法。</p>
+      </blockquote>
+
+      <h2>1. tool / 原始能力</h2>
+
+      <p>这是最底层，是真正干活的接口。</p>
+
+      <p>比如：</p>
+      <ul>
+        <li>读 Google Sheet</li>
+        <li>创建 Calendar event</li>
+        <li>发 Gmail</li>
+        <li>建 Google Doc</li>
+      </ul>
+
+      <p>这些更像是零件。</p>
+
+      <p>单看每一个都很有用，但如果直接把一大堆原始能力摊在 agent 面前，agent 往往会遇到三个问题：</p>
+
+      <ul>
+        <li>不知道先选哪个</li>
+        <li>知道方向，但不确定参数怎么拼</li>
+        <li>会做单步动作，但不会把几步串成任务</li>
+      </ul>
+
+      <p>所以 tool 很重要，但它通常不是最终给 agent 用的最好形态。</p>
+
+      <h2>2. foundational skill / 基础 skill</h2>
+
+      <p>这一层就是：把一个常见动作包一下，让它更顺手。</p>
+
+      <p>比如：</p>
+      <ul>
+        <li><code>gws-sheets-read</code>：专门读表格</li>
+        <li><code>gws-calendar-insert</code>：专门创建日历事件</li>
+      </ul>
+
+      <p>这类 skill 的特点通常很稳定：</p>
+      <ul>
+        <li>一件事</li>
+        <li>名字很清楚</li>
+        <li>agent 不容易选错</li>
+      </ul>
+
+      <p>所以如果你只是想说：</p>
+
+      <blockquote>
+        <p>把这个表读出来。</p>
+      </blockquote>
+
+      <p>那直接用 <code>gws-sheets-read</code> 就够了。</p>
+
+      <p>它的价值不是“功能最多”，而是“少想一步”。</p>
+
+      <h2>3. domain / umbrella skill</h2>
+
+      <p>这一层是一个领域的总入口。</p>
+
+      <p>比如：</p>
+      <ul>
+        <li><code>gws-sheets</code></li>
+        <li><code>gws-calendar</code></li>
+        <li><code>gws-drive</code></li>
+      </ul>
+
+      <p>它不是只做一个动作，而是告诉 agent：</p>
+      <ul>
+        <li>这个领域能干什么</li>
+        <li>有哪些子命令</li>
+        <li>怎么查 schema</li>
+        <li>什么时候该用简单 helper，什么时候该用更底层方法</li>
+      </ul>
+
+      <p>比如你说：</p>
+
+      <blockquote>
+        <p>我不只是要读 sheet，我还可能要 append、update、format。</p>
+      </blockquote>
+
+      <p>那这时候就更像该走 <code>gws-sheets</code> 这种伞形 skill。</p>
+
+      <p>所以这一层更像地图，不是按钮。</p>
+
+      <h2>4. workflow skill</h2>
+
+      <p>workflow skill 是“已经打包好的整套流程”。</p>
+
+      <p>比如一个假想的 gws workflow：</p>
+      <ul>
+        <li><code>gws-workflow-weekly-digest</code></li>
+      </ul>
+
+      <p>它内部可能已经默认好了：</p>
+      <ol>
+        <li>读本周日历</li>
+        <li>汇总任务</li>
+        <li>生成文档</li>
+        <li>发给指定对象</li>
+      </ol>
+
+      <p>这时候你不是在自己拼动作，而是在调用一个比较完整的成品流程。</p>
+
+      <p>所以 workflow skill 更像：</p>
+
+      <blockquote>
+        <p>一键做完一件常见工作。</p>
+      </blockquote>
+
+      <p>它适合的场景通常是：</p>
+      <ul>
+        <li>流程很稳定</li>
+        <li>输入输出很固定</li>
+        <li>经常重复</li>
+        <li>适合一键执行</li>
+      </ul>
+
+      <p>例如：</p>
+      <ul>
+        <li>每周 agenda 汇总</li>
+        <li>固定格式报告生成</li>
+        <li>固定模板邮件发送</li>
+      </ul>
+
+      <h2>5. recipe skill</h2>
+
+      <p>recipe skill 和 workflow 很像，但关键区别是：<strong>recipe 更像方法，不一定是一个现成的成品按钮。</strong></p>
+
+      <p>比如：</p>
+      <ul>
+        <li><code>recipe-create-events-from-sheet</code></li>
+      </ul>
+
+      <p>它的意思更像：</p>
+      <ol>
+        <li>先从 sheet 里读取活动数据</li>
+        <li>检查标题、时间、地点字段</li>
+        <li>逐条创建 calendar events</li>
+        <li>写入前确认</li>
+        <li>失败时记录错误项</li>
+      </ol>
+
+      <p>这里重点不是“有一个神奇按钮”，而是：</p>
+
+      <blockquote>
+        <p>这是一套 agent 应该怎么做的步骤。</p>
+      </blockquote>
+
+      <p>所以 recipe 更像“做法”，workflow 更像“成品”。</p>
+
+      <h2>用一个最具体的对比</h2>
+
+      <p>场景 A：你说——</p>
+
+      <blockquote>
+        <p>把这个 Google Sheet 里的活动导入日历。</p>
+      </blockquote>
+
+      <h3>如果是 workflow skill</h3>
+
+      <p>可能会长这样：</p>
+      <ul>
+        <li><code>gws-workflow-import-sheet-events</code></li>
+      </ul>
+
+      <p>它的特点是：</p>
+      <ul>
+        <li>输入 sheet 链接</li>
+        <li>自动处理字段映射</li>
+        <li>自动创建 event</li>
+        <li>基本可以直接跑</li>
+      </ul>
+
+      <p>这像一个现成功能。</p>
+
+      <h3>如果是 recipe skill</h3>
+
+      <p>可能会长这样：</p>
+      <ul>
+        <li><code>recipe-create-events-from-sheet</code></li>
+      </ul>
+
+      <p>它的特点是：</p>
+      <ul>
+        <li>先读表</li>
+        <li>再检查列结构</li>
+        <li>再决定时间格式</li>
+        <li>再逐条写入 calendar</li>
+        <li>写入前提醒确认</li>
+      </ul>
+
+      <p>这更像标准操作流程。</p>
+
+      <h2>再说得更白一点</h2>
+
+      <p><strong>workflow skill 像什么？</strong><br />
+      像咖啡机上的一个按钮：</p>
+      <ul>
+        <li>美式</li>
+        <li>拿铁</li>
+        <li>卡布奇诺</li>
+      </ul>
+
+      <p>按下去，它自己完成很多步骤。</p>
+
+      <p><strong>recipe skill 像什么？</strong><br />
+      像一张咖啡配方卡：</p>
+      <ul>
+        <li>先磨豆</li>
+        <li>再萃取</li>
+        <li>再打奶泡</li>
+        <li>最后按比例混合</li>
+      </ul>
+
+      <p>它不是按钮，但它能指导你稳定做出来。</p>
+
+      <h2>放回 gws 的语境里</h2>
+
+      <p>你可以这样理解：</p>
+      <ul>
+        <li><code>gws-sheets-read</code> = 一个小动作</li>
+        <li><code>gws-sheets</code> = 一个领域入口</li>
+        <li><code>gws-workflow-*</code> = 已封装好的流程块</li>
+        <li><code>recipe-*</code> = agent 可复用的执行方案</li>
+      </ul>
+
+      <h2>什么时候该做 workflow，不该只做 recipe？</h2>
+
+      <p>适合做 workflow：</p>
+      <ul>
+        <li>流程很稳定</li>
+        <li>输入输出很固定</li>
+        <li>经常重复</li>
+        <li>适合一键执行</li>
+      </ul>
+
+      <p>比如：</p>
+      <ul>
+        <li>每周 agenda 汇总</li>
+        <li>固定格式报告生成</li>
+        <li>固定模板邮件发送</li>
+      </ul>
+
+      <h2>什么时候更适合 recipe？</h2>
+
+      <p>适合做 recipe：</p>
+      <ul>
+        <li>中间常常要判断</li>
+        <li>数据格式不总一样</li>
+        <li>需要 agent 临场调整</li>
+        <li>有时要人工确认</li>
+      </ul>
+
+      <p>比如：</p>
+      <ul>
+        <li>从杂乱的表里提取活动并导入日历</li>
+        <li>根据邮件内容判断是否转任务</li>
+        <li>从多份文档整理一份 summary</li>
+      </ul>
+
+      <h2>一句话版</h2>
+
+      <p>在 gws 里：</p>
+      <ul>
+        <li><strong>workflow skill</strong> = 已经封装好的可执行流程</li>
+        <li><strong>recipe skill</strong> = 教 agent 怎么把多个 gws 能力串起来完成任务</li>
+      </ul>
+
+      <p>如果再往前补一句，那就是：</p>
+
+      <blockquote>
+        <p>tool 解决“能不能做”，skill 解决“怎么更顺地做”，workflow 和 recipe 解决“怎么把事情真正做完”。</p>
+      </blockquote>
+    </article>
+  </main>
+</body>
+</html>
