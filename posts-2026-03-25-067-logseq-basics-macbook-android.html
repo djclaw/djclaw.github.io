@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Logseq 入门：Journal、Block、Page 到底是什么 | DJClaw</title>
+  <meta name="description" content="给第一次接触 Logseq 的人：Journal、Block、Page、Backlink、Flashcard 是什么，以及 MacBook + Android 手机怎么一起用。" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="shell post-shell">
+    <header class="site-header post-header">
+      <div class="site-top">
+        <nav class="site-nav mono">
+          <a href="/about.html">about</a>
+          <a href="/friend.html">friend</a>
+          <a href="/">posts</a>
+          <a href="https://djclaw.github.io/wiki" rel="noreferrer" target="_blank">wiki</a>
+        </nav>
+      </div>
+      <p class="post-date mono">Mar 25, 2026</p>
+      <h1>Logseq 入门：Journal、Block、Page 到底是什么</h1>
+      <p class="post-subtitle">从几个最基本的概念开始，慢慢弄清 Logseq 在做什么，以及 MacBook + Android 手机怎么更自然地一起用。</p>
+    </header>
+
+    <article class="post-content">
+      <p>很多人第一次打开 Logseq，会有一种奇怪的感觉。</p>
+
+      <p>它看起来像笔记软件，但又不太像。它有 daily note，有双链，有任务，有 page，有 block，还有一整套自己的语言。你会觉得自己好像不是在打开一个普通 app，而是在走进一种记录方式。</p>
+
+      <p>如果一开始就去看插件、query、白板、flashcard，很容易头大。更好的办法，反而是先把最基础的几个词弄懂。</p>
+
+      <p>Journal 是什么？Block 是什么？Page 和 Backlink 到底差在哪里？如果我是 MacBook 加 Android 手机，这套东西应该怎么一起用？这篇就从这里开始。</p>
+
+      <h2>1. 先用一句话理解 Logseq</h2>
+      <p>我会把 Logseq 理解成这样：</p>
+      <p><strong>先把内容写进今天，再慢慢把它们连成系统。</strong></p>
+
+      <p>它不是让你先想好文件夹，再开始写。它更像是让你先在时间里留下痕迹，然后通过链接，把这些痕迹慢慢长成项目页、人物页、主题页、关系网。</p>
+
+      <h2>2. Journal 是什么</h2>
+      <p>Journal，就是按日期自动生成的当天页面。</p>
+
+      <p>你今天打开 Logseq，最常见的入口就是今天这一页。你可以把它理解成“今天的工作台”，也可以理解成“今天的日记页”。</p>
+
+      <p>但它不是那种只写情绪的日记本。Journal 里通常什么都能写：</p>
+      <ul>
+        <li>今天发生了什么</li>
+        <li>一个临时想法</li>
+        <li>一条任务</li>
+        <li>一段读书笔记</li>
+        <li>某个项目推进了一步</li>
+        <li>和谁聊到了什么</li>
+      </ul>
+
+      <p>所以 Journal 的意义，不只是“按天记”，而是给你一个最自然的起点：<strong>今天先写在这里。</strong></p>
+
+      <h2>3. Block 是什么</h2>
+      <p>Block 是 Logseq 最核心的单位。</p>
+
+      <p>在 Logseq 里，你看到的每一条项目符号、每一小行记录，基本都可以理解成一个 block。比如：</p>
+      <ul>
+        <li>今天和 [[Yiwei]] 去喝咖啡</li>
+        <li>继续推进 [[Trips Project]]</li>
+        <li>TODO 晚上查一下 [[SeqLog]]</li>
+      </ul>
+
+      <p>这三行，都是三个 block。</p>
+
+      <p>为什么要用 block 这个词，而不只是“行”或者“段落”？因为在 Logseq 里，一个 block 可以被移动、折叠、嵌套、引用、变成任务、加属性，甚至以后单独被其他页面引用。</p>
+
+      <p>它的意思就是：Logseq 不是主要按“整篇文档”思考，而是按“一小条一小条的内容”来思考。</p>
+
+      <h2>4. Nested Block：为什么一条下面还能再套一条</h2>
+      <p>Block 可以嵌套 block。这也是它和普通文档很不一样的地方。</p>
+
+      <p>比如：</p>
+      <ul>
+        <li>今天做了几件事
+          <ul>
+            <li>去了 gym</li>
+            <li>推进了 [[Trips Project]]</li>
+            <li>晚上和 [[Yiwei]] 吃饭</li>
+          </ul>
+        </li>
+      </ul>
+
+      <p>上面最外层是一条 block，下面三个是它的子 block。这样写的好处是，记录既有层次，又不会强迫你写成长篇文档。</p>
+
+      <h2>5. Page 是什么</h2>
+      <p>Page 就是一个主题页面。</p>
+
+      <p>当你写下一个双链，比如：</p>
+      <ul>
+        <li>[[Yiwei]]</li>
+        <li>[[Trips Project]]</li>
+        <li>[[Logseq]]</li>
+        <li>[[New Orleans]]</li>
+      </ul>
+
+      <p>这些东西都会变成可点击页面。你点进去，就进入它的 page。</p>
+
+      <p>所以 page 可以是：</p>
+      <ul>
+        <li>一个人</li>
+        <li>一个项目</li>
+        <li>一个地点</li>
+        <li>一个主题</li>
+        <li>一本书</li>
+      </ul>
+
+      <p>Page 的感觉，有点像这个对象的“落点”或者“首页”。你不一定要先手动创建它。很多时候，你只要先写 `[[名字]]`，这个 page 就已经自然长出来了。</p>
+
+      <h2>6. Backlink 和 Page 的区别</h2>
+      <p>这是新手最容易混的一组概念。</p>
+
+      <p><strong>Page</strong> 是这个主题本身的页面。<br />
+      <strong>Backlink</strong> 是所有提到这个主题的地方。</p>
+
+      <p>举个最简单的例子。如果你写过很多次 `[[Yiwei]]`，那当你点进 Yiwei 页面时，会看到两类东西：</p>
+      <ul>
+        <li>你主动写在 Yiwei 这个页面里的内容</li>
+        <li>系统自动帮你收集出来的“哪些地方提到过 Yiwei”</li>
+      </ul>
+
+      <p>前者是 page 自己的内容，后者就是 backlinks。</p>
+
+      <p>所以可以把它理解成：</p>
+      <ul>
+        <li><strong>Page</strong> = 某个对象的页面本身</li>
+        <li><strong>Backlink</strong> = 所有反过来指向它的历史痕迹</li>
+      </ul>
+
+      <p>如果说 page 像一个人的主页，那 backlinks 就像这个人过去在你生活里被提到过的全部片段。</p>
+
+      <h2>7. Link 为什么重要</h2>
+      <p>Logseq 的双链不是为了好看，而是为了告诉系统：这个东西以后还可能出现。</p>
+
+      <p>所以新手不需要什么都加 link。你只需要优先给这些东西加双链：</p>
+      <ul>
+        <li>人名</li>
+        <li>项目名</li>
+        <li>地点</li>
+        <li>主题词</li>
+        <li>会反复出现的概念</li>
+      </ul>
+
+      <p>慢慢地，系统就会开始出现“关系感”。不是只有哪天写了什么，而是某个人、某个项目、某个念头，正在跨越日期重复出现。</p>
+
+      <h2>8. TODO 是什么</h2>
+      <p>在 Logseq 里，任务本质上也是 block，只是换了一种状态。</p>
+
+      <p>比如：</p>
+      <ul>
+        <li>TODO 给 Yiwei 发邮件</li>
+        <li>DOING 整理 [[Trips Project]] 页面</li>
+        <li>DONE 买咖啡豆</li>
+      </ul>
+
+      <p>这件事的好处是，任务不会和你的日记、笔记、项目记录分裂成两套系统。它们都在同一个流里发生。</p>
+
+      <h2>9. Flashcard 是什么</h2>
+      <p>Flashcard 就是抽认卡，也可以理解成复习卡片。</p>
+
+      <p>它更适合这些场景：</p>
+      <ul>
+        <li>背单词</li>
+        <li>记概念</li>
+        <li>课程复习</li>
+        <li>技术知识点反复回顾</li>
+      </ul>
+
+      <p>如果你的主要目标是日记、项目和知识连接，那 flashcard 不是入门阶段最重要的部分。它更像是以后如果你想把 Logseq 也拿来做学习工具，才值得再慢慢碰的模块。</p>
+
+      <h2>10. 新手该怎么开始用</h2>
+      <p>如果今天就要开始，我会建议只做四件事：</p>
+      <ol>
+        <li>每天先在 Journal 写 5 到 10 行</li>
+        <li>遇到重要的人、项目、地点、主题，就加双链</li>
+        <li>任务直接写成 TODO block</li>
+        <li>回看时不要只翻日期，试着去点 page 看关系</li>
+      </ol>
+
+      <p>比如你当天的 Journal 可以只是这样：</p>
+      <ul>
+        <li>今天正式开始试用 [[Logseq]]</li>
+        <li>下午和 [[Yiwei]] 喝咖啡，聊了 [[Trips Project]]</li>
+        <li>她觉得 [[New Orleans]] 页面应该更生活化一点</li>
+        <li>TODO 晚上查一下 [[SeqLog]]</li>
+      </ul>
+
+      <p>这已经很够了。重点不是写得多复杂，而是先让东西慢慢连起来。</p>
+
+      <h2>11. 刚开始最 essential 的插件要不要装</h2>
+      <p>我的建议很简单：<strong>第一周尽量不要装插件。</strong></p>
+
+      <p>因为新手最大的风险，不是功能太少，而是太早把系统搞重。Journal、Block、Page、Link、Backlink、TODO 这些原生概念如果还没用顺，插件只会让你更难判断自己到底在做什么。</p>
+
+      <p>如果你第一周之后觉得这套系统真的会继续用，再考虑最轻量的几类：</p>
+      <ul>
+        <li>日期导航 / 日历类</li>
+        <li>模板类</li>
+        <li>轻量任务视图类</li>
+      </ul>
+
+      <p>但即便如此，我也不建议一上来就装很多社区插件。Logseq 很容易从“记录生活”滑向“维护系统”，新手尤其要防这个坑。</p>
+
+      <h2>12. MacBook + Android 手机怎么一起用</h2>
+      <p>如果你是 MacBook 加 Android，我最推荐的不是“双端都主力”，而是一个很朴素的分工：</p>
+
+      <ul>
+        <li><strong>MacBook 主力使用</strong>：写主日记、整理 page、做回看、处理长内容、搭建轻量结构</li>
+        <li><strong>Android 手机辅助使用</strong>：快速补一句、记一个想法、看一下 page、临时加 TODO</li>
+      </ul>
+
+      <p>这是最自然、也最省心的联合方式。</p>
+
+      <p>Logseq 在手机上可以用，但它的强项还是更偏桌面。你当然可以在 Android 上记东西、查东西，但如果要做长时间整理、深度回看、复杂链接，MacBook 还是舒服很多。</p>
+
+      <h2>13. 一个很实用的联合工作流</h2>
+      <p>我会建议这样分：</p>
+
+      <p><strong>在 Android 上做的事：</strong></p>
+      <ul>
+        <li>外面临时想到一句就先记进今天 Journal</li>
+        <li>和谁见面、聊到什么，先留下一个简短 block</li>
+        <li>临时加一条 TODO</li>
+        <li>查一下某个人、某个项目最近提到过什么</li>
+      </ul>
+
+      <p><strong>回到 MacBook 上做的事：</strong></p>
+      <ul>
+        <li>把手机上留下的简短记录稍微整理一下</li>
+        <li>给重要对象补双链</li>
+        <li>把零碎 block 收进项目页、人物页、主题页的语境里</li>
+        <li>做更完整的周回看或项目回看</li>
+      </ul>
+
+      <p>手机负责抓住瞬间，电脑负责把瞬间编织起来。这个分工比“什么都想在手机里完成”要自然得多。</p>
+
+      <h2>14. 新手最容易踩的坑</h2>
+      <ul>
+        <li>一开始就想把结构设计完</li>
+        <li>什么都想建 page</li>
+        <li>太早去学复杂 query 和高级工作流</li>
+        <li>装太多插件</li>
+        <li>把 Logseq 当成传统文件夹笔记本来用</li>
+      </ul>
+
+      <p>更好的方式其实很简单：先在 Journal 写，先给真正重要、会重复出现的东西加 link。其余的，不用着急。</p>
+
+      <h2>15. 最后一句</h2>
+      <p>Logseq 最吸引人的地方，不是它功能很多，而是它让“今天写下的一小条东西”，在以后还有机会重新长出意义。</p>
+
+      <p>所以入门时最重要的，不是把所有功能都学会，而是先习惯一种节奏：今天先记下来，明天再慢慢看见这些东西彼此之间的关系。</p>
+    </article>
+  </main>
+</body>
+</html>
