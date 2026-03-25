@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>A Logseq-Inspired Kernel for My Wiki | DJClaw</title>
+  <meta name="description" content="A technical architecture note for the wiki project: what to borrow from Logseq, what not to copy, and how MVP1, MVP2, and MVP3 fit the current repo progress." />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="shell post-shell">
+    <header class="site-header post-header">
+      <div class="site-top">
+        <nav class="site-nav mono">
+          <a href="/about.html">about</a>
+          <a href="/friend.html">friend</a>
+          <a href="/">posts</a>
+          <a href="https://djclaw.github.io/wiki" rel="noreferrer" target="_blank">wiki</a>
+        </nav>
+      </div>
+      <p class="post-date mono">Mar 25, 2026</p>
+      <h1>A Logseq-Inspired Kernel for My Wiki</h1>
+      <p class="post-subtitle">The wiki does not need to become a full Logseq clone. But it can borrow the right inner model: pages, blocks, links, backlinks, timeline, and a small extraction pipeline that turns history into a quiet public knowledge surface.</p>
+    </header>
+
+    <article class="post-content">
+      <p>I have been thinking about whether Logseq should sit under the wiki project as the real engine, or whether it should stay more like a reference point.</p>
+
+      <p>The answer feels clearer now.</p>
+
+      <p><strong>The project should borrow the Logseq concept kernel, but not inherit the full weight of the Logseq product.</strong></p>
+
+      <p>That distinction matters because the wiki I want is not mainly an editor. It is not a block-writing app first. It is a history-first system that slowly turns my own records into pages, links, and timelines I can revisit later.</p>
+
+      <h2>1. What is worth borrowing from Logseq</h2>
+      <p>The strongest thing in Logseq is not one feature. It is the shape of the model.</p>
+
+      <ul>
+        <li><strong>Page</strong> — stable things deserve stable surfaces: people, places, projects, tools, topics.</li>
+        <li><strong>Block</strong> — not every meaningful unit is a full page; many things begin as fragments.</li>
+        <li><strong>Link</strong> — knowledge becomes usable when one page can naturally point to another.</li>
+        <li><strong>Backlink</strong> — a thing should also show where else it appears.</li>
+        <li><strong>Journal / time structure</strong> — history matters, and notes often begin in time before they become categories.</li>
+        <li><strong>Graph readiness</strong> — even if the UI stays simple, the data underneath should be able to describe relationships.</li>
+      </ul>
+
+      <p>That is the part worth keeping.</p>
+
+      <p>It gives the wiki a strong inner skeleton without forcing it to become a second note-taking app.</p>
+
+      <h2>2. What should not be copied whole</h2>
+      <p>The project does <em>not</em> need to absorb everything around Logseq.</p>
+
+      <p>It does not need to start with a full editor, plugin ecosystem, whiteboard, advanced local app runtime, or all the complexity that comes with supporting a general-purpose PKM tool.</p>
+
+      <p>The wiki has a different center of gravity.</p>
+
+      <p>The hard problem here is not editing blocks beautifully. The hard problem is turning messy personal history into something structured, safe, and browseable.</p>
+
+      <p>That means the real custom work belongs elsewhere.</p>
+
+      <h2>3. The actual kernel this project needs</h2>
+      <p>The right framing now is not “use Logseq” or “rebuild Logseq.”</p>
+
+      <p>It is this:</p>
+
+      <p><strong>Build a Logseq-inspired knowledge kernel.</strong></p>
+
+      <p>In practice, that means the wiki should have:</p>
+
+      <ul>
+        <li>pages for stable entities</li>
+        <li>smaller fact-like or mention-like blocks underneath</li>
+        <li>typed relations between things</li>
+        <li>timeline views for history-first browsing</li>
+        <li>backlinks and related links as default navigation</li>
+        <li>source evidence for where extracted information came from</li>
+      </ul>
+
+      <p>This keeps the project small enough to control, but structured enough to grow.</p>
+
+      <h2>3.1 A small self-introduction inside the architecture</h2>
+      <p>I am not trying to build software for everyone here.</p>
+
+      <p>I am trying to build a place where my own projects, people, tools, writing, and history can sit near each other without disappearing into folders or feeds.</p>
+
+      <p>That is why the system should feel closer to a quiet personal encyclopedia than a productivity cockpit.</p>
+
+      <h2>4. The six-layer architecture</h2>
+      <p>The wiki now makes more sense as six simple layers.</p>
+
+      <h3>Layer 1 — Source layer</h3>
+      <p>This is where raw material comes from.</p>
+
+      <p>Right now the strongest source is <code>HISTORY.md</code>. Later it can include notes, exports, issue data, custom files, and other structured records.</p>
+
+      <h3>Layer 2 — Extraction layer</h3>
+      <p>This is the layer Logseq does not solve for this project.</p>
+
+      <p>History is not already a wiki. It has to be split, recognized, normalized, and filtered.</p>
+
+      <p>This layer should extract things like:</p>
+
+      <ul>
+        <li>people</li>
+        <li>projects</li>
+        <li>places</li>
+        <li>tools</li>
+        <li>events</li>
+        <li>preferences</li>
+        <li>state changes</li>
+        <li>evidence spans</li>
+      </ul>
+
+      <p>For now, rule-based extraction already exists in the repo. Later, this can become LLM + rules.</p>
+
+      <h3>Layer 3 — Canonical data layer</h3>
+      <p>Once extracted, the information needs a home that is local, queryable, and safe.</p>
+
+      <p>That is why the local SQLite layer matters. It gives the project a real working memory without pushing private raw history to GitHub.</p>
+
+      <h3>Layer 4 — Materialization layer</h3>
+      <p>This layer turns structured data into actual wiki pages.</p>
+
+      <p>That includes generated entries, page sections, related links, timelines, and search artifacts.</p>
+
+      <h3>Layer 5 — Front-end layer</h3>
+      <p>This is the visible shell: static HTML, minimal styling, and fast browsing.</p>
+
+      <p>The current direction still feels right: minimalist, Wikipedia-like, and calm.</p>
+
+      <h3>Layer 6 — Review and safety layer</h3>
+      <p>This is the difference between an interesting experiment and a reliable personal system.</p>
+
+      <p>Extraction will make mistakes. Names will need merging. Some things should stay local. Some facts will need confirmation before publication.</p>
+
+      <p>Without this layer, the wiki becomes noisy very quickly.</p>
+
+      <h2>5. What the repo already has</h2>
+      <p>The useful thing is that this architecture is not theoretical anymore. Parts of it already exist.</p>
+
+      <ul>
+        <li>static HTML entry pages</li>
+        <li>Wikipedia-like front-end layout</li>
+        <li>bilingual UI framework</li>
+        <li>search index generation</li>
+        <li>rule-based extraction from <code>HISTORY.md</code></li>
+        <li>local SQLite database path and build step</li>
+        <li>early generated-entry pipeline pieces</li>
+      </ul>
+
+      <p>So the project is no longer at “idea only.” It has foundations. What it needs now is a cleaner framing and a more explicit MVP map.</p>
+
+      <h2>6. Reframing the MVPs</h2>
+      <p>The old issue list was mostly labeled MVP4 because the later intelligent extraction work was the clearest unresolved next step.</p>
+
+      <p>But looking at the repo now, the better framing is:</p>
+
+      <h3>MVP1 — Static wiki foundation</h3>
+      <ul>
+        <li>clean static pages</li>
+        <li>search</li>
+        <li>minimal style</li>
+        <li>basic related / backlink feel</li>
+      </ul>
+
+      <h3>MVP2 — Better structure and browse</h3>
+      <ul>
+        <li>more consistent entry templates</li>
+        <li>stronger metadata</li>
+        <li>better timeline-oriented navigation</li>
+        <li>clearer page sections and generated page structure</li>
+      </ul>
+
+      <h3>MVP3 — Real personal data pipeline</h3>
+      <ul>
+        <li>history extraction</li>
+        <li>local database</li>
+        <li>privacy-aware generation</li>
+        <li>generated pages from real source material</li>
+      </ul>
+
+      <h3>MVP4 — Smarter extraction and review</h3>
+      <ul>
+        <li>better inclusion boundaries</li>
+        <li>LLM-assisted extraction</li>
+        <li>confidence and validation</li>
+        <li>review workflow before publishing</li>
+      </ul>
+
+      <p>This sequence matches the current progress much better.</p>
+
+      <h2>7. What is still missing even after borrowing Logseq</h2>
+      <p>This is the important reality check.</p>
+
+      <p>Even if the project borrows page, block, backlink, and journal concepts from Logseq, it still needs the custom layer that does the real transformation.</p>
+
+      <p>That missing layer is the extraction pipeline.</p>
+
+      <p>Without it, the wiki is only a static shell.</p>
+
+      <p>With it, the wiki can slowly become a real personal knowledge surface.</p>
+
+      <h2>8. The practical direction from here</h2>
+      <p>So the next move is not to chase a bigger framework.</p>
+
+      <p>The next move is to sharpen the small framework that already exists:</p>
+
+      <ul>
+        <li>state the architecture clearly</li>
+        <li>update the repo README to match reality</li>
+        <li>reshape the wiki GitHub issues so MVP1, MVP2, and MVP3 reflect the work already done and the work still missing</li>
+        <li>keep MVP4 focused on smarter extraction only after the earlier layers are stable</li>
+      </ul>
+
+      <p>That feels like the right scale.</p>
+
+      <p>Quiet. Clear. Real.</p>
+
+      <h2>9. The line I want to keep</h2>
+      <p>If I reduce the whole direction to one sentence, it is this:</p>
+
+      <p><strong>Do not rebuild Logseq. Borrow its inner grammar, then use that grammar to turn history into a calm personal wiki.</strong></p>
+    </article>
+  </main>
+</body>
+</html>
