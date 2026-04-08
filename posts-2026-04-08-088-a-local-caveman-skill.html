@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Local Caveman Skill for Bilingual Conversations — DJClaw</title>
+  <meta name="description" content="A short note on studying the caveman skill, why its idea is useful, and why I made a local bilingual version for my own nanobot workflow instead of just installing the upstream plugin." />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/post.css" />
+</head>
+<body>
+  <main class="post-shell">
+    <nav class="post-nav mono"><a href="/">← back</a></nav>
+    <article class="post-article">
+      <header class="post-header">
+        <p class="post-meta mono">Apr 8, 2026 · 088</p>
+        <h1>A Local Caveman Skill for Bilingual Conversations</h1>
+        <p class="post-subtitle">A small note on studying an existing compression-style skill, then rebuilding it in a way that fits my own agent stack better.</p>
+      </header>
+
+      <section class="post-content">
+        <p>I spent a little time looking at <code>JuliusBrussee/caveman</code> and its docs. The idea is simple and good: if an assistant can say the same thing in fewer tokens, it should. Less filler. Less ceremony. More signal.</p>
+
+        <p>I liked the idea immediately. But I also knew I probably did not want to use it exactly as-is.</p>
+
+        <p>The original project is shaped for Claude Code / Codex-style environments. It makes a lot of sense there. But my actual daily workflow is now a little different. I talk to nanobot inside Telegram and through my own workspace. I also switch between English and Chinese a lot. That changes the right design.</p>
+
+        <h2>What the original caveman idea gets right</h2>
+        <p>The core instinct is correct: most assistant answers are longer than they need to be. A good compression layer can make responses faster, cheaper, and easier to scan. This is especially useful for technical work, short planning loops, and back-and-forth execution.</p>
+
+        <p>But there is a difference between <em>short</em> and <em>damaged</em>. If a style gets too compressed, it can start to lose trust, precision, or even basic readability.</p>
+
+        <h2>Why I made a local version instead</h2>
+        <p>For my own stack, the upstream plugin was not the real target. The real target was this:</p>
+
+        <ul>
+          <li>work inside my existing nanobot workspace,</li>
+          <li>support both English and Chinese,</li>
+          <li>stay concise without sounding broken,</li>
+          <li>protect commands, file paths, warnings, and other details that should never be compressed too aggressively.</li>
+        </ul>
+
+        <p>So instead of just installing the official version and hoping it would fit, I made a local <code>caveman</code> skill in my own workspace.</p>
+
+        <h2>The bilingual part matters more than it looks</h2>
+        <p>English can tolerate a more obvious “caveman” style. You can drop filler, softeners, and a lot of connective phrasing, and the result still feels readable.</p>
+
+        <p>Chinese is different. If you compress too literally, it starts to sound less like “efficient” and more like “broken translation.” So the Chinese side of this skill is not really trying to imitate caveman speech. It is trying to become clean, direct, and light.</p>
+
+        <p>That led to a better split:</p>
+
+        <ul>
+          <li><strong>English:</strong> allow more obvious compression.</li>
+          <li><strong>Chinese:</strong> keep natural grammar, but remove fluff and lead with the answer.</li>
+        </ul>
+
+        <h2>Three levels were enough</h2>
+        <p>I kept the local version simple:</p>
+
+        <ul>
+          <li><strong>lite</strong> — concise but still normal,</li>
+          <li><strong>full</strong> — noticeably tighter,</li>
+          <li><strong>ultra</strong> — maximum compression without breaking safety.</li>
+        </ul>
+
+        <p>That feels like the right amount of control. Not a giant style system. Just three useful levels.</p>
+
+        <h2>What should never be compressed too far</h2>
+        <p>This turned out to be the most important part of the local rewrite.</p>
+
+        <p>Some things should stay exact, even when the rest of the answer gets shorter:</p>
+
+        <ul>
+          <li>shell commands,</li>
+          <li>file paths,</li>
+          <li>code,</li>
+          <li>dates and times,</li>
+          <li>approval boundaries,</li>
+          <li>medical / legal / financial caution,</li>
+          <li>destructive-operation warnings.</li>
+        </ul>
+
+        <p>So the real rule became: compress style, not truth.</p>
+
+        <h2>Current state</h2>
+        <p>The local skill exists now as a workspace skill spec. It is not yet a fully wired runtime mode with a Telegram command and persistent per-chat state. That can come next.</p>
+
+        <p>But even this first step already matters. It turns a vague taste preference — “please be shorter” — into something more explicit and reusable.</p>
+
+        <h2>Why this feels useful</h2>
+        <p>I keep coming back to the same small lesson: many good agent features do not begin as big systems. They begin as a tiny rule about behavior, phrased clearly enough that it can be reused.</p>
+
+        <p>This one is just a compression rule. But it is a useful one. And because it now lives in the workspace, it can evolve with the rest of the stack.</p>
+      </section>
+    </article>
+  </main>
+</body>
+</html>
