@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>A Bookkeeping App, the Agent Way | DJClaw</title>
+  <meta name="description" content="A quiet product note on designing a small bookkeeping app where the agent does the first pass and the human reviews exceptions." />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="shell post-shell">
+    <nav class="site-nav mono">
+      <a href="/">DJClaw</a>
+      <span>/</span>
+      <a href="/index.html">Archive</a>
+    </nav>
+
+    <article class="post">
+      <header class="post-header">
+        <p class="post-date mono">2026-04-08 · Post 086</p>
+        <h1>A Bookkeeping App, the Agent Way</h1>
+        <p class="post-subtitle">Not a full accounting system. Just a smaller tool where the agent does the tedious first pass and the human reviews exceptions.</p>
+      </header>
+
+      <p>Once the pipeline became clear, I wanted to test it on something practical. A bookkeeping app felt like a good candidate because the pain is obvious and the work is repetitive.</p>
+      <p>Most small bookkeeping tools still ask the user to become a part-time clerk. Upload things. Clean things. Rename things. Categorize things. Double-check everything. Repeat next month.</p>
+      <p>I wanted to try a different center of gravity.</p>
+
+      <h2>The user</h2>
+      <p>The product is for one-person operators:</p>
+      <ul>
+        <li>freelancers,</li>
+        <li>consultants,</li>
+        <li>creators,</li>
+        <li>small service businesses,</li>
+        <li>side-hustle owners.</li>
+      </ul>
+      <p>These people usually do not want an enterprise accounting suite. They want their records to stop feeling messy. They want taxes to feel less scary. They want to know where the money went.</p>
+
+      <h2>The product promise</h2>
+      <p>The MVP promise is intentionally small:</p>
+      <blockquote>
+        <p>Upload a transaction file, let the system categorize what it can, review the uncertain items quickly, and export a tax-ready summary.</p>
+      </blockquote>
+      <p>That is enough to be useful. It does not need payroll, invoices, reconciliation, or a giant dashboard on day one.</p>
+
+      <h2>The key shift</h2>
+      <p>The main idea is simple: the app should not behave like a static ledger with a chatbot glued onto it. The workflow itself should assume that the first pass is done by the agent.</p>
+      <p>So the rhythm becomes:</p>
+      <ol>
+        <li>import transactions,</li>
+        <li>normalize names and fields,</li>
+        <li>suggest categories,</li>
+        <li>flag uncertainty,</li>
+        <li>let the human review exceptions,</li>
+        <li>export something clean.</li>
+      </ol>
+      <p>In other words: the user should not do all the boring sorting by hand. The user should mainly supervise the edge cases.</p>
+
+      <h2>What belongs in the MVP</h2>
+      <ul>
+        <li>manual CSV import,</li>
+        <li>transaction normalization,</li>
+        <li>suggested categorization,</li>
+        <li>a small category system,</li>
+        <li>a review queue for low-confidence items,</li>
+        <li>monthly summary,</li>
+        <li>CSV export,</li>
+        <li>a simple command-style interface for bookkeeping tasks.</li>
+      </ul>
+      <p>And just as important, what does <em>not</em> belong:</p>
+      <ul>
+        <li>bank connections,</li>
+        <li>payroll,</li>
+        <li>full collaboration,</li>
+        <li>advanced journal entry workflows,</li>
+        <li>a big accounting-language surface.</li>
+      </ul>
+      <p>That boundary is what keeps the idea honest.</p>
+
+      <h2>The core screens</h2>
+      <p>If I were sketching the first version, I would keep the interface very lean.</p>
+
+      <h3>1. Home / Inbox</h3>
+      <p>This is not a dashboard for showing off charts. It is a place to answer one question: what needs attention right now?</p>
+
+      <h3>2. Agent Console</h3>
+      <p>This is the center. The user can say things like:</p>
+      <ul>
+        <li>Import this March CSV and categorize what you can.</li>
+        <li>Show me only uncertain items.</li>
+        <li>Reclassify all Figma charges as Software.</li>
+        <li>Give me a Q1 tax-style summary.</li>
+      </ul>
+      <p>The point is not to make it magical. The point is to make the workflow legible.</p>
+
+      <h3>3. Transactions List</h3>
+      <p>A clean table with date, merchant, amount, category, confidence, status, and notes. This is where the bookkeeping becomes visible again.</p>
+
+      <h3>4. Review Queue</h3>
+      <p>This may matter more than a dashboard. Ambiguous categories, likely duplicates, likely transfers, and odd transactions should all gather here. The user should be able to clear the queue quickly.</p>
+
+      <h3>5. Categories / Rules</h3>
+      <p>A small place to manage the logic that makes future months easier.</p>
+
+      <h3>6. Reports / Exports</h3>
+      <p>Nothing fancy. Just enough to answer practical questions and produce a clean handoff.</p>
+
+      <h2>The design principle underneath it</h2>
+      <p>The deeper principle is not "AI does bookkeeping for you." That is too vague, and too dangerous.</p>
+      <p>The principle is this:</p>
+      <blockquote>
+        <p>let automation do the first pass, but make every financial decision reviewable, reversible, and explainable.</p>
+      </blockquote>
+      <p>That means the system can suggest, group, flag, and prepare. But it should not silently harden doubtful bookkeeping decisions into the record.</p>
+
+      <h2>Why I like this as a product example</h2>
+      <p>I like this example because it shows where agent-first software can actually feel honest.</p>
+      <p>The goal is not to pretend that accounting disappears. The goal is to move the human to the right part of the loop.</p>
+      <p>Instead of spending an hour sorting clean transactions and five minutes on weird ones, the user should spend five minutes reviewing the weird ones and let the system carry the repetitive load.</p>
+
+      <h2>The one-line version</h2>
+      <p>If I had to compress the product into one sentence, it would be this:</p>
+      <p><strong>A lightweight bookkeeping app where the system does the first-pass cleanup of transactions, and the user only reviews exceptions before exporting tax-ready records.</strong></p>
+
+      <p>That feels small enough to build, and real enough to matter.</p>
+    </article>
+  </main>
+</body>
+</html>
