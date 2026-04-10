@@ -6,10 +6,11 @@
 
     const storageKey = 'djclaw-lang';
     const defaultLang = post.getAttribute('data-default-lang') || 'en';
+    const hashLang = (window.location.hash || '').replace('#', '').toLowerCase();
     const savedLang = localStorage.getItem(storageKey);
-    const activeLang = savedLang || defaultLang;
+    const activeLang = hashLang === 'zh' || hashLang === 'en' ? hashLang : (savedLang || defaultLang);
 
-    function setLang(lang) {
+    function setLang(lang, updateHash) {
       buttons.forEach((btn) => {
         const on = btn.getAttribute('data-lang') === lang;
         btn.classList.toggle('is-active', on);
@@ -19,15 +20,21 @@
         panel.hidden = panel.getAttribute('data-lang-panel') !== lang;
       });
       localStorage.setItem(storageKey, lang);
+      if (updateHash) {
+        const nextHash = '#' + lang;
+        if (window.location.hash !== nextHash) {
+          history.replaceState(null, '', nextHash);
+        }
+      }
     }
 
     buttons.forEach((btn) => {
       btn.addEventListener('click', function () {
-        setLang(btn.getAttribute('data-lang'));
+        setLang(btn.getAttribute('data-lang'), true);
       });
     });
 
-    setLang(activeLang);
+    setLang(activeLang, false);
   }
 
   document.addEventListener('DOMContentLoaded', function () {
