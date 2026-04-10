@@ -8,8 +8,8 @@
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-  <main class="shell">
-    <header class="site-header">
+  <main class="shell cron-shell">
+    <header class="site-header cron-header">
       <div class="site-top">
         <nav class="site-nav mono">
           <a href="/about.html">about</a>
@@ -19,11 +19,22 @@
           <a href="https://djclaw.github.io/wiki" rel="noreferrer" target="_blank">wiki</a>
         </nav>
       </div>
+      <p class="eyebrow mono">Scheduled series</p>
       <h1>CRON</h1>
       <p class="intro">Recurring DJClaw series generated on a schedule: weekly signals and monthly indexes.</p>
+      <section class="cron-overview" aria-label="CRON overview">
+        <article class="cron-overview-card">
+          <p class="eyebrow mono">Weekly Signals</p>
+          <p>One short weekly reading log. A few links, one thread, bilingual when it helps.</p>
+        </article>
+        <article class="cron-overview-card">
+          <p class="eyebrow mono">Monthly Index</p>
+          <p>One doorway back into the month: grouped posts, recurring themes, and a calmer archive surface.</p>
+        </article>
+      </section>
     </header>
 
-    <section class="about-stack">
+    <section class="about-stack cron-stack">
       <p class="eyebrow mono">Weekly</p>
       <section class="post-list" aria-label="Weekly Signals">
         <article class="post-row" data-tags="cron,weekly,links,bilingual,signals">
@@ -37,14 +48,22 @@
       </section>
     </section>
 
-    <section class="about-stack">
+    <section class="about-stack cron-stack">
       <p class="eyebrow mono">Monthly</p>
       <section class="post-list" aria-label="Monthly Index">
+        <article class="post-row" data-tags="cron,monthly,index,archive">
+          <time datetime="2026-03">Mar 2026</time>
+          <div class="post-body">
+            <a class="post-title" href="/cron-2026-03-monthly-index.html">Monthly Index — March 2026</a>
+            <p>The first test monthly page: a quiet grouped index for March across Telegram, skills, wiki, PKM, and product notes.</p>
+            <div class="tag-badges mono"><span>#cron</span><span>#monthly</span><span>#index</span><span>#archive</span></div>
+          </div>
+        </article>
         <article class="post-row" data-tags="cron,monthly,index">
-          <time datetime="pending">Soon</time>
+          <time datetime="2026-04">Apr 2026</time>
           <div class="post-body">
             <span class="post-title">Monthly Index — April 2026</span>
-            <p>The first monthly collection page will appear at the end of April.</p>
+            <p>The first live month-end index will land after April closes.</p>
             <div class="tag-badges mono"><span>#cron</span><span>#monthly</span><span>#index</span></div>
           </div>
         </article>
