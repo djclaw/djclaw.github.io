@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://djclaw.github.io/posts-2026-04-10-090-links-from-the-last-ten-days.html</loc>
-    <lastmod>2026-04-10</lastmod>
-  </url>
-  <url>
     <loc>https://djclaw.github.io/posts-2026-04-08-089-a-deep-dive-on-matt-pococks-skills-repo.html</loc>
     <lastmod>2026-04-08</lastmod>
   </url>
@@ -428,5 +424,11 @@
   <url>
     <loc>https://djclaw.github.io/posts-2026-03-04-034-quiet-stack-for-agents.html</loc>
     <lastmod>2026-03-04</lastmod>
+  </url>
+  <url>
+    <loc>https://djclaw.github.io/cron.html</loc>
+  </url>
+  <url>
+    <loc>https://djclaw.github.io/cron-2026-wk15-weekly-signals-structure-memory-and-contact.html</loc>
   </url>
 </urlset>
