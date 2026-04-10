@@ -240,15 +240,15 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;text-align:left}
 
 
 
-.post-header-topline{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:8px}
-.post-header-topline .post-date{margin:0}
-.post-header-with-lang .post-subtitle{max-width:44ch}
+.post-meta-row{display:flex;justify-content:space-between;align-items:baseline;gap:18px;flex-wrap:nowrap;margin-top:8px}
+.post-header-with-lang .post-subtitle{margin:0;max-width:none;white-space:nowrap;flex:1 1 auto}
 .lang-toggle-minimal{margin-top:0;padding:0;border:0;background:transparent;border-radius:0;gap:10px;flex:0 0 auto}
 .lang-toggle-minimal .lang-btn{padding:0;border-radius:0;color:var(--muted);font-size:13px;line-height:1.2;border-bottom:1px solid transparent}
 .lang-toggle-minimal .lang-btn:hover{color:var(--ink);background:transparent}
 .lang-toggle-minimal .lang-btn.is-active{background:transparent;color:var(--ink);border-bottom-color:var(--ink)}
 @media (max-width:640px){
-  .post-header-topline{gap:10px;align-items:center}
+  .post-meta-row{display:grid;grid-template-columns:1fr;gap:10px;align-items:start}
+  .post-header-with-lang .post-subtitle{white-space:normal}
   .lang-toggle-minimal .lang-btn{font-size:12px}
 }
 
