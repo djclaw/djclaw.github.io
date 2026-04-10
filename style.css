@@ -221,14 +221,15 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;text-align:left}
 
 
 .cron-shell{max-width:760px}
-.cron-header{margin-bottom:32px}
+.cron-header{margin-bottom:20px}
 .cron-overview{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:24px 0 4px}
 .cron-overview-card,.cron-intro-card{background:rgba(255,255,255,.72);border:1px solid rgba(226,221,213,.95);border-radius:24px;padding:16px 18px}
 .cron-overview-card p:last-child,.cron-intro-card p:last-child{margin-bottom:0}
 .cron-stack .post-list{border-top:1px solid var(--line);background:transparent;border-radius:0;overflow:visible}
 .cron-post .post-header{margin-bottom:26px}
-.cron-stack h2{font-size:17px;font-weight:500;letter-spacing:-0.01em;margin:0 0 10px}
-.cron-group{margin:24px 0}
+.cron-stack h2{font-size:16px;font-weight:500;letter-spacing:-0.01em;margin:0 0 4px}
+.cron-note{margin:0 0 8px;color:var(--muted);font-size:14px;line-height:1.45}
+.cron-group{margin:20px 0}
 .cron-link-list{display:grid;gap:10px;padding-left:20px}
 .cron-link-list li{margin:0}
 .cron-link-list a{color:var(--ink);text-decoration:none;border-bottom:1px solid transparent}
