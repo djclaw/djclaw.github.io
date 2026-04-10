@@ -238,22 +238,6 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;text-align:left}
 }
 
 
-.cron-hub-grid,.cron-meta-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:24px 0 8px}
-.cron-hub-card,.cron-meta-card{background:rgba(255,255,255,.66);border:1px solid rgba(226,221,213,.95);border-radius:20px;padding:14px 16px}
-.cron-hub-card p:last-child,.cron-meta-card p:last-child{margin-bottom:0}
-.cron-section-head{display:flex;justify-content:space-between;gap:18px;align-items:end;margin-bottom:10px}
-.cron-section-head h2{margin:0;font-size:24px;letter-spacing:-.02em}
-.cron-series-meta{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;color:var(--muted);font-size:12px;text-transform:uppercase}
-.cron-series-meta span{display:inline-flex;padding:5px 9px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.55)}
-.cron-section-note{margin:0 0 14px;color:#4f5661;max-width:58ch}
-.cron-summary-list{display:grid;gap:10px;padding-left:20px}
-.monthly-index-post h2{margin-top:34px}
-@media (max-width:760px){
-  .cron-hub-grid,.cron-meta-grid{grid-template-columns:1fr;gap:10px;margin-top:18px}
-  .cron-section-head{display:grid;gap:10px;align-items:start}
-  .cron-section-head h2{font-size:22px}
-  .cron-series-meta{justify-content:flex-start}
-}
 
 
 .post-header-topline{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:8px}
@@ -267,3 +251,7 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;text-align:left}
   .post-header-topline{gap:10px;align-items:center}
   .lang-toggle-minimal .lang-btn{font-size:12px}
 }
+
+.cron-section-note{margin:0 0 14px;color:#4f5661;max-width:58ch}
+.cron-summary-list{display:grid;gap:10px;padding-left:20px}
+.monthly-index-post h2{margin-top:34px}
