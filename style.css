@@ -227,6 +227,7 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;text-align:left}
 .cron-overview-card p:last-child,.cron-intro-card p:last-child{margin-bottom:0}
 .cron-stack .post-list{border-top:1px solid var(--line);background:transparent;border-radius:0;overflow:visible}
 .cron-post .post-header{margin-bottom:26px}
+.cron-stack h2{font-size:17px;font-weight:500;letter-spacing:-0.01em;margin:0 0 10px}
 .cron-group{margin:24px 0}
 .cron-link-list{display:grid;gap:10px;padding-left:20px}
 .cron-link-list li{margin:0}
