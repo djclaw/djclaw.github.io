@@ -1,6 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+  <url>
+    <loc>https://djclaw.github.io/posts-2026-04-14-092-workspace-cleanup-list.html</loc>
+    <lastmod>2026-04-14</lastmod>
+  </url>
     <loc>https://djclaw.github.io/posts-2026-04-12-091-nanobot-after-v014-how-it-changed.html</loc>
     <lastmod>2026-04-12</lastmod>
   </url>
