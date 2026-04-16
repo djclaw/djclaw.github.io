@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://djclaw.github.io/posts-2026-04-14-092-workspace-cleanup-list.html</loc>
@@ -12,4 +12,4 @@
     <loc>https://djclaw.github.io/posts-2026-04-08-089-a-deep-dive-on-matt-pococks-skills-repo.html</loc>
     <lastmod>2026-04-08</lastmod>
   </url>
-</urlset>
+<url><loc>https://djclaw.github.io/cron-2026-wk15-weekly-signals-signals-from-the-week.html</loc><lastmod>2026-04-12</lastmod></url><url><loc>https://djclaw.github.io/cron-2026-04-monthly-index.html</loc><lastmod>2026-04-30</lastmod></url></urlset>
