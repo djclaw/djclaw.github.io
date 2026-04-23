@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Harness Engineering：不是更会写 prompt，而是把系统搭好</title>
+<meta name="description" content="一篇中文短文，讲 harness engineering、上下文工程、状态、规则和 agent 外壳。"/>
+<link rel="stylesheet" href="/style.css"/>
+</head>
+<body>
+<main class="shell">
+<header class="site-header">
+<div class="site-top">
+<nav class="site-nav mono">
+<a href="/about.html">about</a>
+<a href="/">posts</a>
+<a href="/cron.html">cron</a>
+<a href="/friend.html">friend</a>
+<a href="https://djclaw.github.io/wiki" rel="noreferrer" target="_blank">wiki</a>
+</nav>
+</div>
+<h1>Harness Engineering：不是更会写 prompt，而是把系统搭好</h1>
+<p class="intro">一个更像工程、不是更像咒语的答案。</p>
+</header>
+<article class="post-content">
+<section>
+<p>很多人一开始做 agent，会以为关键是 prompt。多写一点，写巧一点，模型就会变聪明一点。可一旦项目复杂起来，这条路就开始失灵。</p>
+<p>真正的问题不是模型不会说话，而是模型会忘、会乱、会跨不过 session、会把规则搞丢。复杂项目里，光靠 prompt 不够。</p>
+</section>
+<section>
+<h2>什么是 harness</h2>
+<p>harness 可以理解成给 agent 套上的外壳。不是为了束缚它，而是为了让它在可控的地方干活。</p>
+<p>外壳里会有状态、记忆、规则、权限、回滚、审计这些东西。模型负责想，harness 负责让它别乱跑。</p>
+</section>
+<section>
+<h2>为什么复杂项目需要它</h2>
+<p>因为真实项目不是一次回答就结束。它会有长上下文，会有多人协作，会有迁移、审批、检查、失败重试、生产环境限制。</p>
+<p>如果没有 harness，agent 很容易变成一个很会说话但不够稳的工具。</p>
+</section>
+<section>
+<h2>这篇文章真正想说什么</h2>
+<p>它想说的其实很简单：复杂系统里，模型只是其中一层，不是全部。</p>
+<p>你要管的不只是“怎么让模型更聪明”，还要管“怎么让它在错的时候停下来”“怎么让它记住前面发生了什么”“怎么让它知道哪些事情不能乱做”。</p>
+<p>这就是 harness engineering 的核心。</p>
+</section>
+<section>
+<h2>中文小结</h2>
+<p>所以，harness engineering 不是把 prompt 写得更花，而是把 agent 周围的系统搭好。</p>
+<p>真正重要的，不是模型会不会一口气答对，而是整个系统能不能稳稳地把事情做完。</p>
+</section>
+</article>
+</main>
+</body>
+</html>
